@@ -10,8 +10,11 @@
   },
   "dependencies": {
     "@prisma/client": "^5.12.1",
+    "@radix-ui/react-slot": "^1.0.2",
+    "axios": "^1.6.8",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
+    "embla-carousel-react": "^8.0.1",
     "lucide-react": "^0.364.0",
     "next": "14.1.4",
     "next-themes": "^0.3.0",
@@ -19,6 +22,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-icons": "^5.0.1",
+    "swr": "^2.2.5",
     "tailwind-merge": "^2.2.2",
     "tailwindcss-animate": "^1.0.7"
   },

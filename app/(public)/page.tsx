@@ -1,11 +1,16 @@
-
+import { AlbumCarousel } from "@/components/album/album-carousel";
+import { Header } from "@/components/header";
 
 const HomePage = () => {
     return (
-        <div className="h-full p-4 md:p-8 overflow-y-auto">
-            HomePage
+        <div className="h-full overflow-y-auto space-y-12 md:space-y-16 pb-10">
+            <Header/>
+            <div className="px-4 md:px-10 w-full mt-20 space-y-10 md:space-y-16">
+                <AlbumCarousel label="New Releases" href="/api/v1/new-releases" />
+                <AlbumCarousel label="Recommended Albums" href="/api/v1/recommended" />
+            </div>
         </div>
-    )
+    );
 }
 
-export default HomePage
+export default HomePage;

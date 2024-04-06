@@ -98,6 +98,7 @@ model PlayList {
   name      String
   image     String?
   userId    String         @db.ObjectId
+  private   Boolean        @default(false)
   user      User           @relation(fields: [userId], references: [id])
   songs     PlaylistSong[]
   createdAt DateTime       @default(now())
@@ -136,4 +137,46 @@ model SongPlays {
   updatedAt DateTime @updatedAt
 
   @@unique([songId, userId])
+}
+
+model Genre {
+  id    String      @id @default(auto()) @map("_id") @db.ObjectId
+  name  String
+  image String
+  songs GenreSong[]
+  remix Remix[]
+}
+
+model Remix {
+  id      String      @id @default(auto()) @map("_id") @db.ObjectId
+  name    String
+  image   String
+  songs   RemixSong[]
+  genreId String      @db.ObjectId
+  genre   Genre       @relation(fields: [genreId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model GenreSong {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  songId    String   @db.ObjectId
+  genreId   String   @db.ObjectId
+  genre     Genre    @relation(fields: [genreId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([genreId])
+}
+
+model RemixSong {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  songId    String   @db.ObjectId
+  remixId   String   @db.ObjectId
+  remix     Remix    @relation(fields: [remixId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([remixId])
 }

@@ -17,7 +17,7 @@ export const AlbumCard = ({
     const router = useRouter();
 
     return (
-        <div className="aspect-[3/4] h-48 md:h-60 rounded-md space-y-4 md:cursor-pointer">
+        <div className="aspect-[3/4] h-44 md:h-48 rounded-md space-y-4 md:cursor-pointer">
             <div 
                 onClick={()=>router.push(`/album/${album.id}`)}
                 className="aspect-[15/16] relative rounded-md overflow-hidden group"

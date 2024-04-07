@@ -5,7 +5,7 @@ export async function GET () {
     try {
         
         const albums = await db.album.findMany({
-            take:10,
+            take:15,
         });
 
         return NextResponse.json(albums);

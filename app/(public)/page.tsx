@@ -3,7 +3,7 @@ import { Header } from "@/components/header";
 
 const HomePage = () => {
     return (
-        <div className="h-full overflow-y-auto space-y-12 md:space-y-16 pb-10">
+        <div className="space-y-12 md:space-y-16 mb-10">
             <Header/>
             <div className="px-4 md:px-10 w-full mt-20 space-y-10 md:space-y-16">
                 <AlbumCarousel label="New Releases" href="/api/v1/new-releases" />

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Figtree } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/providers/theme-provider";
+import { QueryProvider } from "@/providers/query-provider";
 
 const inter = Figtree({subsets : ["latin"] });
 
@@ -23,7 +24,9 @@ export default function RootLayout({
                     defaultTheme="dark"
                     disableTransitionOnChange
                 >
-                    {children}
+                    <QueryProvider>
+                        {children}
+                    </QueryProvider>
                 </ThemeProvider>
             </body>
         </html>

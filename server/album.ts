@@ -13,12 +13,13 @@ export const getAlbum =  async ( id : string ) => {
                 songs : {
                     include : { artists : true }
                 }
-            } 
+            },
         });
 
         return album;
 
     } catch (error) {
+        console.error("GET ALBUM SERVER ERROR");
         return null;
     }
 }

@@ -39,12 +39,12 @@ export const Header = ({
                             />
                         </div>
                         <div
-                            className="flex flex-col gap-y-3 mt-4 md:mt-0 text-center sm:text-left"
+                            className="flex flex-col gap-y-2 mt-4 md:mt-0 text-center sm:text-left"
                         >
                             <p className="hidden md:block font-semibold text-sm">
                                 { songs === 1 ? "Single" : "Playlist" }
                             </p>
-                            <h1 className="text-white text-4xl sm:text-5xl lg:text-8xl font-extrabold line-clamp-1">
+                            <h1 className="text-white text-4xl sm:text-5xl lg:text-8xl font-extrabold line-clamp-1 py-2">
                                 {name}
                             </h1>
                             <div className="font-semibold text-sm flex items-center justify-center md:justify-start">

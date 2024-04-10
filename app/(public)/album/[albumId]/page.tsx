@@ -1,6 +1,6 @@
 import { Header } from "@/components/album/header";
 import { SongsList } from "@/components/song/songs-list";
-import { getAlbum } from "@/server/album"
+import { getAlbum } from "@/server/album";
 import { redirect } from "next/navigation";
 
 interface AlbumPageProps  {

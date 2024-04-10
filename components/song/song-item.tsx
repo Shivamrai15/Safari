@@ -1,42 +1,44 @@
 "use client";
-import { songLength } from "@/lib/utils";
-import { Artist, Song } from "@prisma/client"
+
+import Image from "next/image";
+import { Album, Artist, Song } from "@prisma/client";
 import { useRouter } from "next/navigation";
+import { songLength } from "@/lib/utils";
 import { SongOptions } from "./song-options";
 import { SmallDevicesSongOptions } from "./small-devices-song-options";
 
-interface ListItemProps {
-    song : Song & {
-        artists : Artist[]
-    };
-    index : number
+interface SongItemProps {
+    song : (Song & {
+        artists : Artist[],
+        album : Album
+    })   
+    
 }
 
-export const ListItem = ({
-    song,
-    index
-} : ListItemProps ) => {
+export const SongItem = ({
+    song
+} : SongItemProps ) => {
 
     const router = useRouter();
 
     return (
-        <div className="w-full h-full px-4 gap-4 md:gap-6 py-3 group hover:bg-neutral-800/70 rounded-sm transition-all md:cursor-pointer">
+        <div className="w-full h-full px-4 gap-4 md:gap-6 py-2 group hover:bg-neutral-800/70 rounded-sm transition-all md:cursor-pointer">
             <div className="flex items-center gap-4 md:gap-6 font-semibold text-lg">
-                <h4 className="w-8 text-base shrink-0">{index}</h4>
+                <div className="w-10 aspect-square relative rounded-sm overflow-hidden">
+                    <Image
+                        src={song.image}
+                        alt={song.name}
+                        fill
+                        className="object-cover"
+                    />
+                </div>
                 <div className="w-full flex-1 shrink overflow-hidden">
                     <p className="text-base line-clamp-1" >{song.name.trim()}</p>
-                    <div className="text-sm text-zinc-300 line-clamp-1 font-normal overflow-hidden space-x-2" >
-                        {
-                            song.artists.map((artist, idx)=>(
-                                <span
-                                    key={artist.id}
-                                    onClick={()=>router.push(`/artist/${artist.id}`)}
-                                    className="hover:underline"
-                                >
-                                    {artist.name}{ (idx !== song.artists.length-1)&&"," }
-                                </span>
-                            ))
-                        }
+                    <div
+                        className="text-sm text-zinc-300 line-clamp-1 font-normal overflow-hidden space-x-2 hover:underline"
+                        onClick={()=>router.push(`/album/${song.albumId}`)}
+                    >
+                        {song.album.name}
                     </div>
                 </div>
                 <div className="flex items-center">
@@ -53,6 +55,7 @@ export const ListItem = ({
                     </div>
                 </div>
             </div>
+            
         </div>
     )
 }

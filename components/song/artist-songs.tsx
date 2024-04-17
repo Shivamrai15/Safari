@@ -1,6 +1,6 @@
 "use client";
 
-import { useSongQuery } from "@/hooks/use-song";
+import { useQuery } from "@/hooks/use-query";
 import { Album, Artist, Song } from "@prisma/client";
 import { Fragment, useEffect } from "react";
 import { SongItem } from "./song-item";
@@ -17,7 +17,7 @@ export const ArtistSongs = ({
     id
 } : ArtistSongsProps ) => {
 
-    const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } = useSongQuery({ id, queryKey:id })
+    const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } = useQuery({ url : "/api/v1/artist/songs", paramKey : "id" , paramValue : id, queryKey:id })
 
     const { ref, inView } = useInView();
 

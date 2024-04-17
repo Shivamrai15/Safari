@@ -4,27 +4,31 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import qs from "query-string";
 
 interface UseSongQueryProps {
-    id: string
+    url : string
+    paramKey: string
+    paramValue : string
     queryKey: string
 }
 
-export const useSongQuery = ({
-    id,
+export const useQuery = ({
+    url,
+    paramKey,
+    paramValue,
     queryKey
 }: UseSongQueryProps) => {
 
     const fetchSongs = async ({ pageParam = undefined }) => {
-        const url = qs.stringifyUrl({
-            url: '/api/v1/artist/songs',
+        const fetch_url = qs.stringifyUrl({
+            url,
             query: {
                 cursor: pageParam,
-                id
+                [paramKey] : paramValue
             }
         }, {
             skipNull: true
         });
 
-        const res = await fetch(url);
+        const res = await fetch(fetch_url);
         return res.json();
     }
 

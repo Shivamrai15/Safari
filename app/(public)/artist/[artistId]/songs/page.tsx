@@ -1,7 +1,5 @@
 import { ArtistSongs } from "@/components/song/artist-songs";
 import { ArtistHeader } from "@/components/song/header";
-import { ListItem } from "@/components/song/list-item";
-import { getSongsByArtistId } from "@/server/song";
 
 interface ShowAllPageProps {
     params : { artistId : string }

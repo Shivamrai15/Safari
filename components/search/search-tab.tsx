@@ -9,19 +9,21 @@ interface SearchTabProps {
     url : string;
     label : string;
     active : boolean;
+    query : string;
 }
 
 export const SearchTab = ({
     label,
     url,
-    active
+    active,
+    query
 } : SearchTabProps ) => {
 
     const router = useRouter();
 
     return (
         <Button
-            onClick={()=>router.push(url)}
+            onClick={()=>router.push(`${url}?query=${query}`)}
             className={cn(
                 "rounded-full font-bold",
                 !active && "bg-neutral-800 hover:bg-neutral-800/80 text-zinc-300"

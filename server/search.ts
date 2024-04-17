@@ -53,3 +53,85 @@ export const getTopSearches =  async( query: string ) => {
         return null;
     }
 }
+
+export const getAlbumSearches = async( query: string ) => {
+    try {
+        
+        const albums = await db.album.findMany({
+            where : {
+                name : {
+                    contains : query,
+                    mode : "insensitive"
+                }
+            }
+        });
+
+        const fuse = new Fuse(albums, fuseOptions);
+        const result = fuse.search(query);
+        if ( result.length > 0 ) {
+            return result;
+        }
+
+        return null;
+
+    } catch (error) {
+        console.error("ALBUM SEARCH API ERROR", error);
+        return null;
+    }
+}
+
+export const getSongSearches = async( query: string ) => {
+    try {
+        
+        const songs = await db.song.findMany({
+            where : {
+                name : {
+                    contains : query,
+                    mode : "insensitive"
+                }
+            },
+            include : {
+                album : true,
+                artists : true
+            }
+        });
+
+        const fuse = new Fuse(songs, fuseOptions);
+        const result = fuse.search(query);
+        if ( result.length > 0 ) {
+            return result;
+        }
+
+        return null;
+
+    } catch (error) {
+        console.error("SONGS SEARCH API ERROR", error);
+        return null;
+    }
+}
+
+export const getArtistSearches = async( query: string ) => {
+    try {
+        
+        const artists = await db.artist.findMany({
+            where : {
+                name : {
+                    contains : query,
+                    mode : "insensitive"
+                }
+            }
+        });
+
+        const fuse = new Fuse(artists, fuseOptions);
+        const result = fuse.search(query);
+        if ( result.length > 0 ) {
+            return result;
+        }
+
+        return null;
+
+    } catch (error) {
+        console.error("SONGS SEARCH API ERROR", error);
+        return null;
+    }
+}

@@ -2,7 +2,7 @@
 
 import qs from "query-string";
 import { useEffect, useMemo, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -14,8 +14,12 @@ export const SearchForm = () => {
 
     const router = useRouter();
     const pathname = usePathname();
+    const searchParams = useSearchParams();
 
-    const [ query, setQuery ] = useState("");
+    const searchQuery = searchParams.get("query")
+
+    const [ query, setQuery ] = useState(searchQuery ? searchQuery :"");
+    const [ urlQuery, setUrlQuery ] = useState(searchQuery ? searchQuery :"");
     const debounceValue = useDebounce(query, 500);
 
     const routes = useMemo(()=>[
@@ -55,6 +59,8 @@ export const SearchForm = () => {
             }
         });
 
+        setUrlQuery(debounceValue);
+
         router.push(url);
 
     }, [debounceValue, router])
@@ -78,10 +84,11 @@ export const SearchForm = () => {
                             {
                                 routes.map((tab)=>(
                                     <SearchTab
-                                        key={tab.url}
-                                        label={tab.label}
-                                        url={tab.url}
+                                        key = {tab.url}
+                                        label = {tab.label}
+                                        url = {tab.url}
                                         active = {tab.active}
+                                        query = {urlQuery}
                                     />
                                 ))
                             }

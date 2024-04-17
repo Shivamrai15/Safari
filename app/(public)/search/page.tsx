@@ -22,7 +22,7 @@ const SearchPage = async({
     if ( !responses?.bestResult ) {
         return (
             <div className="w-full h-full flex items-center justify-center pt-32">
-                <h4 className="font-semibold text-lg md:text-xl text-center text-zinc-300">No results found for &quot;{searchParams.query}&quot;</h4>
+                <h4 className="font-semibold md:text-lg text-center text-zinc-300">No results found for &quot;{searchParams.query}&quot;</h4>
             </div>
         )
     }

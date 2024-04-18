@@ -5,12 +5,11 @@ import { useMemo } from "react";
 
 import { GoHome, GoHomeFill } from "react-icons/go";
 import { RiSearchFill, RiSearchLine } from "react-icons/ri";
-import { FaRegCompass, FaCompass, FaRegHeart, FaHeart } from "react-icons/fa";
+import { FaRegCompass, FaCompass, FaRegUser, FaUser } from "react-icons/fa";
 import { BsCollection, BsFillCollectionFill } from "react-icons/bs";
-import { TbSquareRoundedPlus } from "react-icons/tb";
 import { SidebarItem } from "./sidebar-item";
 
-export const Sidebar = () => {
+export const MobileMenu = () => {
 
     const pathname = usePathname();
 
@@ -39,20 +38,25 @@ export const Sidebar = () => {
             Icon : pathname === "/playlists" ? BsFillCollectionFill : BsCollection,
             active : pathname === "/playlists"
         },   
+        {
+            label : "User",
+            href : "/user",
+            Icon : pathname === "/user" ? FaUser : FaRegUser,
+            active : pathname === "/user"
+        },   
     ], [pathname]);
 
     return (
-        <aside className="w-full h-full overflow-y-auto flex flex-col items-center p-2 py-8 gap-y-6">
-            <div className="flex flex-col items-center gap-y-6">
+        <div className="flex items-center h-full w-full">
+            <div className="grid grid-cols-5 w-full place-items-center">
                 {
                     routes.map((route)=>(
-                        <SidebarItem key={route.href} route={route} />
+                    <div key={route.href} className="flex items-center justify-center h-full w-full">
+                        <SidebarItem route={route} />
+                    </div>
                     ))
                 }
-            </div>
-            <div className="flex flex-col items-center gap-y-6">
-                <TbSquareRoundedPlus className="h-8 w-8"/>
-            </div>
-        </aside>
+            </div>  
+        </div>
     )
 }

@@ -24,7 +24,7 @@ const ArtistPage = async({
     }
 
     return (
-        <div className="min-h-full bg-neutral-950 pb-10">
+        <div className="min-h-full bg-neutral-950 pb-20 md:pb-10">
             <div
                 className={cn(
                     "w-full h-[30vh] md:aspect-[5/2] md:h-auto bg-no-repeat bg-cover",

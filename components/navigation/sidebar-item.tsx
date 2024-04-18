@@ -20,12 +20,15 @@ export const SidebarItem = ({
 
     return (
         <div className={cn(
-                "text-zinc-400 hover:text-white transition-colors md:cursor-pointer",
+                "text-zinc-400 md:hover:text-white transition-colors cursor-default md:cursor-pointer",
                 route.active && "text-white"
             )}
             onClick={()=>router.push(route.href)}
         >
-            { <route.Icon className="h-7 w-7" /> }
+            { <route.Icon className={cn(
+                "h-7 w-7",
+                route.href === "/user" && "h-[26px] w-[26px]"
+            )} /> }
         </div>
     )
 }

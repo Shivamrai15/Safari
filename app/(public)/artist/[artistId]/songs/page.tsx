@@ -11,7 +11,7 @@ const ShowAllPage = async({
 
 
     return (
-        <div className="w-full px-4 md:px-20">
+        <div className="w-full px-4 md:px-20 pb-10 md:pb-0">
             <ArtistHeader id={params.artistId} />
             <ArtistSongs id={params.artistId} />
         </div>

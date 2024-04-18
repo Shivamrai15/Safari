@@ -1,18 +1,20 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useMemo } from "react";
 
 import { GoHome, GoHomeFill } from "react-icons/go";
 import { RiSearchFill, RiSearchLine } from "react-icons/ri";
-import { FaRegCompass, FaCompass, FaRegHeart, FaHeart } from "react-icons/fa";
+import { FaRegCompass, FaCompass } from "react-icons/fa";
 import { BsCollection, BsFillCollectionFill } from "react-icons/bs";
 import { TbSquareRoundedPlus } from "react-icons/tb";
 import { SidebarItem } from "./sidebar-item";
+import Image from "next/image";
 
 export const Sidebar = () => {
 
     const pathname = usePathname();
+    const router = useRouter();
 
     const routes = useMemo(()=>[
         {
@@ -42,7 +44,7 @@ export const Sidebar = () => {
     ], [pathname]);
 
     return (
-        <aside className="w-full h-full overflow-y-auto flex flex-col items-center p-2 py-8 gap-y-6">
+        <aside className="w-full h-full overflow-y-auto flex flex-col items-center p-1 py-8 gap-y-6">
             <div className="flex flex-col items-center gap-y-6">
                 {
                     routes.map((route)=>(
@@ -52,6 +54,17 @@ export const Sidebar = () => {
             </div>
             <div className="flex flex-col items-center gap-y-6">
                 <TbSquareRoundedPlus className="h-8 w-8"/>
+                <div
+                    className="w-10 aspect-square relative rounded-sm cursor-pointer overflow-hidden"
+                    onClick={()=>router.push("/liked-songs")}
+                >
+                    <Image
+                        src="/assets/liked-thumb.png"
+                        fill
+                        alt="Liked Songs"
+                        className="object-cover"
+                    />
+                </div>
             </div>
         </aside>
     )

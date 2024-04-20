@@ -3,6 +3,7 @@ import { Figtree } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { QueryProvider } from "@/providers/query-provider";
+import { Toaster } from "sonner";
 
 const inter = Figtree({subsets : ["latin"] });
 
@@ -25,6 +26,7 @@ export default function RootLayout({
                     disableTransitionOnChange
                 >
                     <QueryProvider>
+                        <Toaster position="bottom-right" />
                         {children}
                     </QueryProvider>
                 </ThemeProvider>

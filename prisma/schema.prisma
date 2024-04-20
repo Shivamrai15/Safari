@@ -11,7 +11,7 @@ model User {
   id           String       @id @default(auto()) @map("_id") @db.ObjectId
   name         String
   email        String       @unique
-  password     String
+  password     String?
   history      History[]
   accounts     Account[]
   playlists    PlayList[]
@@ -120,7 +120,8 @@ model PlaylistSong {
 
 model History {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  songId    String   @db.ObjectId
+  contentId String   @db.ObjectId
+  isAlbum   Boolean  @default(false)
   userId    String   @db.ObjectId
   user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
@@ -179,4 +180,22 @@ model RemixSong {
   updatedAt DateTime @updatedAt
 
   @@index([remixId])
+}
+
+model VerificationToken {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  token   String
+  expires DateTime
+  email   String
+
+  @@index([email])
+}
+
+model ForgetPasswordToken {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  token   String
+  expires DateTime
+  email   String
+
+  @@index([email])
 }

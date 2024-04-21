@@ -59,7 +59,7 @@ export const TopResult = ({
                         <div className="w-full overflow-hidden line-clamp-1">
                             By {
                                 data.artists.map((artist, idx)=>(
-                                    <span>
+                                    <span key={artist.id} >
                                         {artist.name}
                                         {
                                             idx !== (data.artists.length-1) && ", "

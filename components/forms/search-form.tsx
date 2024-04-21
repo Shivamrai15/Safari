@@ -63,7 +63,7 @@ export const SearchForm = () => {
 
         router.push(url);
 
-    }, [debounceValue, router])
+    }, [debounceValue, router, pathname])
 
     
     return (
@@ -94,7 +94,7 @@ export const SearchForm = () => {
                             }
                         </div>
                         <div className="sm:hidden">
-                            <SearchTabCarousel routes={routes} />  
+                            <SearchTabCarousel routes={routes} query = {urlQuery} />  
                         </div>
                     </>
                 )

@@ -13,10 +13,12 @@ interface SearchTabCarouselProps {
         url : string,
         active : boolean
     }[];
+    query : string;
 }
 
 export const SearchTabCarousel = ({
-    routes
+    routes,
+    query
 } : SearchTabCarouselProps ) => {   
     
     return (
@@ -30,7 +32,7 @@ export const SearchTabCarousel = ({
                 {
                     routes.map((route)=>(
                         <CarouselItem key={route.url} className="basis-auto" >
-                            <SearchTab label={route.label} url={route.url} active={route.active} />
+                            <SearchTab label={route.label} url={route.url} query={query} active={route.active} />
                         </CarouselItem>
                     ))
                 }

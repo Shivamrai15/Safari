@@ -7,7 +7,7 @@ export const metadata : Metadata = {
 
 const SignUpPage = () => {
     return (
-        <div className="h-full bg-gradient-to-b from-neutral-900 to-black flex items-center justify-center">
+        <div className="min-h-full bg-neutral-900 flex items-center justify-center">
             <RegistrationForm/>
         </div>
     )

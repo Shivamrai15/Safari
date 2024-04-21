@@ -74,6 +74,7 @@ export const RegistrationForm = () => {
                                         <Input
                                             {...field}
                                             disabled = {loading}
+                                            className="bg-transparent h-12 border-zinc-600"
                                         />
                                     </FormControl>
                                 </FormItem>
@@ -90,6 +91,7 @@ export const RegistrationForm = () => {
                                             type="email"
                                             {...field}
                                             disabled = {loading}
+                                            className="bg-transparent h-12 border-zinc-600"
                                         />
                                     </FormControl>
                                 </FormItem>
@@ -106,6 +108,7 @@ export const RegistrationForm = () => {
                                             type="password"
                                             {...field}
                                             disabled = {loading}
+                                            className="bg-transparent h-12 border-zinc-600"
                                         />
                                     </FormControl>
                                 </FormItem>
@@ -114,7 +117,7 @@ export const RegistrationForm = () => {
                     </div>
                     <Button
                         type="submit"
-                        className="w-full bg-red-600/90 hover:bg-red-600/80 text-white font-semibold text-base"
+                        className="w-full h-14 rounded-full bg-red-600/90 hover:bg-red-600/80 text-white font-semibold text-base"
                         disabled = {loading}
                     >
                         Create Account

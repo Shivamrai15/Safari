@@ -27,13 +27,13 @@ export const FormWrapper = ({
                     <>
                         <div className="relative">
                             <div className="w-full border" />
-                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black px-2 text-zinc-300 rounded-sm" >Or</div>
+                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-neutral-900 px-2 text-zinc-300 rounded-sm text-sm font-semibold cursor-default select-none" >Or</div>
                         </div>
                         <div className="w-full grid grid-cols-3 place-items-center gap-3">
                             <button
                                 className={cn(
-                                    "aspect-[5/3] h-full w-full bg-neutral-900 rounded-sm border flex items-center justify-center hover:bg-neutral-900/80 transition cursor-default md:cursor-pointer",
-                                    disabled && "cursor-default opacity-70 hover:bg-neutral-900"
+                                    "aspect-[5/3] h-full w-full bg-neutral-950/40 rounded-sm border flex items-center justify-center hover:bg-neutral-950/20 transition cursor-default md:cursor-pointer",
+                                    disabled && "cursor-default opacity-70 hover:bg-neutral-950/20 md:cursor-default"
                                 )}
                                 disabled = {disabled}
                             >
@@ -41,8 +41,8 @@ export const FormWrapper = ({
                             </button>
                             <button
                                 className={cn(
-                                    "aspect-[5/3] h-full w-full bg-neutral-900 rounded-sm border flex items-center justify-center hover:bg-neutral-900/80 transition cursor-default md:cursor-pointer",
-                                    disabled && "cursor-default opacity-70 hover:bg-neutral-900"
+                                    "aspect-[5/3] h-full w-full bg-neutral-950/40 rounded-sm border flex items-center justify-center hover:bg-neutral-950/20 transition cursor-default md:cursor-pointer",
+                                    disabled && "cursor-default opacity-70 hover:bg-neutral-950/20 md:cursor-default"
                                 )}
                                 disabled = {disabled}
                             >
@@ -50,8 +50,8 @@ export const FormWrapper = ({
                             </button>
                             <button
                                 className={cn(
-                                    "aspect-[5/3] h-full w-full bg-neutral-900 rounded-sm border flex items-center justify-center hover:bg-neutral-900/80 transition cursor-default md:cursor-pointer",
-                                    disabled && "cursor-default opacity-70 hover:bg-neutral-900"
+                                    "aspect-[5/3] h-full w-full bg-neutral-950/40 rounded-sm border flex items-center justify-center hover:bg-neutral-950/20 transition cursor-default md:cursor-pointer",
+                                    disabled && "cursor-default opacity-70 hover:bg-neutral-950/20 md:cursor-default"
                                 )}
                                 disabled = {disabled}
                             >

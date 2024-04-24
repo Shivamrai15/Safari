@@ -37,7 +37,7 @@ export const generateVerificationToken = async ( email: string ) => {
                 email
             },
             process.env.VERIFICATION_SECRET!,
-            { expiresIn : "10m"}
+            { expiresIn : "30m"}
         )
         
         return verificationToken;

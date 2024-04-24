@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Disc, Dot, MicVocalIcon } from "lucide-react"
 import { IoIosShareAlt } from "react-icons/io";
 import { SongPlayButton } from "@/components/utils/song-play-button";
+import { useRouter } from "next/navigation";
 
 interface TopResultProps {
     data : Album | (Song & { album : Album, artists : Artist[] }) | Artist
@@ -14,6 +15,8 @@ interface TopResultProps {
 export const TopResult = ({
     data
 } : TopResultProps ) => {
+
+    const router = useRouter();
 
     if ( 'release' in data ) {
         return (
@@ -97,6 +100,7 @@ export const TopResult = ({
                     <div className="mt-5 flex items-center gap-x-4">
                         <Button
                             className="px-6 rounded-full font-bold text-base"
+                            onClick={()=>router.push(`/artist/${data.id}`)}
                         >
                             <MicVocalIcon className="h-5 w-5 mr-2"/> Go to Artist
                         </Button>

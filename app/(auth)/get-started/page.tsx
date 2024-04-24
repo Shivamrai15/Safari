@@ -17,7 +17,7 @@ const GetStartedPage = () => {
                 </div>
                 <Button
                     onClick={()=>router.push("/sign-up")}
-                    className='max-w-sm h-12 bg-red-600/90 w-full text-white hover:bg-red-600/80 border border-red-600 text-lg font-semibold cursor-default md:cursor-pointer'
+                    className='max-w-sm h-14 rounded-full bg-red-600/90 w-full text-white hover:bg-red-600/80 border border-red-600 text-lg font-semibold cursor-default md:cursor-pointer'
                 >
                     Get Started
                 </Button>

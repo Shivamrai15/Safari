@@ -22,7 +22,7 @@ export const SongItem = ({
     const router = useRouter();
 
     return (
-        <div className="w-full h-full px-4 gap-4 md:gap-6 py-2 group hover:bg-neutral-800/70 rounded-sm transition-all md:cursor-pointer">
+        <div className="w-full h-full px-4 gap-4 md:gap-6 py-2 group hover:bg-neutral-800/70 rounded-sm transition-all md:cursor-pointer select-none">
             <div className="flex items-center gap-4 md:gap-6 font-semibold text-lg">
                 <div className="w-10 aspect-square relative rounded-sm overflow-hidden">
                     <Image

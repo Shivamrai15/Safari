@@ -41,6 +41,7 @@ export const RegistrationForm = () => {
             setLoading(true);
             await axios.post("/api/v1/register", values);
             toast.success("Verification email has been sent");
+            form.reset();
         } catch (error) {
             if ( axios.isAxiosError(error) ){
                 toast.error(`${error.response?.data}`);

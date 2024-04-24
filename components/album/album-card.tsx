@@ -21,7 +21,7 @@ export const AlbumCard = ({
 
     return (
         <div className={cn(
-            "aspect-[3/4] h-48 md:h-52 rounded-md space-y-4 md:cursor-pointer",
+            "aspect-[3/4] h-48 md:h-52 rounded-md space-y-4 md:cursor-pointer select-none",
             className
         )}>
             <div 

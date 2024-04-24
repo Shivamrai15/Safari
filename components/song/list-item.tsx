@@ -20,7 +20,7 @@ export const ListItem = ({
     const router = useRouter();
 
     return (
-        <div className="w-full h-full px-4 gap-4 md:gap-6 py-3 group hover:bg-neutral-800/70 rounded-sm transition-all md:cursor-pointer">
+        <div className="w-full h-full px-4 gap-4 md:gap-6 py-3 group hover:bg-neutral-800/70 rounded-sm transition-all md:cursor-pointer select-none">
             <div className="flex items-center gap-4 md:gap-6 font-semibold text-lg">
                 <h4 className="w-8 text-base shrink-0">{index}</h4>
                 <div className="w-full flex-1 shrink overflow-hidden">

@@ -8,8 +8,8 @@ export const FormSuccess = ({
     message
 } : FormSuccessProps ) => {
     return (
-        <div className="bg-emerald-500/25 p-3 rounded-md flex items-center gap-x-2 text-sm text-emerald-500 justify-center cursor-default">
-            <CheckCircle2 className="h-4 w-4"/>
+        <div className="bg-green-600 p-4 flex items-center gap-x-5 px-6 text-sm text-white cursor-default">
+            <CheckCircle2 className="h-6 w-6"/>
             <p className="font-medium">{message}</p>
         </div>
     );

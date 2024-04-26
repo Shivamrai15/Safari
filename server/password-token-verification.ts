@@ -3,10 +3,10 @@ import { db } from "@/lib/db";
 import { getUserByEmail } from "@/lib/user";
 import jwt from "jsonwebtoken";
 
-export const tokenVerification = async ( verificationToken: string ) => {
+export const passwordTokenVerification = async ( verificationToken: string ) => {
     try {
         
-        const verifiedToken = jwt.verify(verificationToken, process.env.VERIFICATION_SECRET!);
+        const verifiedToken = jwt.verify(verificationToken, process.env.FORGET_PASSWORD_SECRET!);
         
         if (!verifiedToken) {
             return { error: "Your verification link is not valid, or already used." };
@@ -22,7 +22,7 @@ export const tokenVerification = async ( verificationToken: string ) => {
             return { error: "Your verification link is not valid, or already used." };
         }
 
-        const dbToken = await db.verificationToken.findFirst({
+        const dbToken = await db.forgetPasswordToken.findFirst({
             where : {
                 token,
                 email
@@ -47,23 +47,9 @@ export const tokenVerification = async ( verificationToken: string ) => {
             }
         }
 
-        await db.user.update({
-            where : {
-                id : existingUser.id
-            },
-            data  : {
-                accountVerified : new Date()
-            }
-        });
-
-        await db.verificationToken.delete({
-            where : {
-                id : dbToken.id
-            }
-        });
 
         return {
-            success : "Email verified successfully"
+            id : dbToken.id
         }
 
     } catch (error ) {

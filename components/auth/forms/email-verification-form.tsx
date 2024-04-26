@@ -44,7 +44,7 @@ export const EmailVerificationFrom = () => {
     }, [verifyToken]);
     
     return (
-        <div className="max-w-sm w-full p-4 bg-neutral-800/70 rounded-md py-6">
+        <div className="max-w-sm w-full p-4 rounded-md py-6">
             <div className="w-full flex items-center justify-center">
                 {
                     !error && !success && (
@@ -64,13 +64,17 @@ export const EmailVerificationFrom = () => {
                     )
                 }
             </div>
-            <Button
-                onClick={()=>router.push("/login")}
-                disabled = { !error && !success  }
-                className="w-full mt-6 rounded-full bg-red-600/90 hover:bg-red-600/80 h-12 text-white font-semibold"
-            >
-                Back to Login
-            </Button>
+            {
+                ( error || success ) && (
+                    <Button
+                        onClick={()=>router.push("/login")}
+                        disabled = { !error && !success  }
+                        className="w-full mt-6 rounded-full bg-red-600/90 hover:bg-red-600/80 h-12 text-white font-semibold"
+                    >
+                        Back to login
+                    </Button>
+                )
+            }
         </div>
     )
 }

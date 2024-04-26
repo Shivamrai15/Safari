@@ -9,8 +9,8 @@ export const FormError = ({
 } : FormErorrProps ) => {
 
     return (
-        <div className="bg-destructive/25 p-3 rounded-md flex items-center gap-x-2 text-sm text-red-500 justify-center cursor-default">
-            <AlertTriangle className="h-4 w-4"/>
+        <div className="bg-destructive p-4 flex items-center gap-x-5 px-6 text-sm text-white cursor-default">
+            <AlertTriangle className="h-6 w-6"/>
             <p className="font-medium">{message}</p>
         </div>
     )

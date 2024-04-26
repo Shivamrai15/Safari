@@ -21,7 +21,9 @@ export const Header = () => {
                     </button>
                 </div>
                 <BellIcon/>
-                <Button className="hover:no-underline font-semibold text-zinc-300 hover:text-white text-base hover:scale-110 transition duration-150 " variant="link" >
+                <Button
+                    onClick={()=>router.push("/login")}
+                    className="hover:no-underline font-semibold text-zinc-300 hover:text-white text-base hover:scale-110 transition duration-150 " variant="link" >
                     Log In
                 </Button>
                 <Button

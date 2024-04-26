@@ -1,86 +1,56 @@
-"use client"
+"use client";
 
 import * as z from "zod";
-import axios from "axios";
-import Link from "next/link";
-import { toast } from "sonner";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-
-import { RegistrationSchema } from "@/schemas/registration.schema";
 import {
     Form,
     FormControl,
-    FormField,
     FormItem,
+    FormField,
     FormLabel,
     FormMessage
 } from "@/components/ui/form";
+import { LoginSchema } from "@/schemas/login.schema";
+import { FormWrapper } from "@/components/auth/utils/form-wrapper";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { FormWrapper } from "../utils/form-wrapper";
+import Link from "next/link";
 
+export const LoginForm = () => {
 
-export const RegistrationForm = () => {
-    
     const [ loading, setLoading ] = useState(false);
-
-    const form = useForm<z.infer<typeof RegistrationSchema>>({
-        resolver : zodResolver(RegistrationSchema),
+    
+    const form = useForm<z.infer<typeof LoginSchema>>({
+        resolver : zodResolver(LoginSchema),
         defaultValues : {
             email : "",
-            name : "",
             password : ""
         }
     });
 
-    const handleSubmit = async ( values : z.infer<typeof RegistrationSchema> ) => {
+    const handleLogin = async (values : z.infer<typeof LoginSchema>) => {
         try {
+            
             setLoading(true);
-            await axios.post("/api/v1/auth/register", values);
-            toast.success("Verification email has been sent");
-            form.reset();
+
         } catch (error) {
-            if ( axios.isAxiosError(error) ){
-                toast.error(`${error.response?.data}`);
-            } else {
-                toast.error("Something went wrong");
-            }
+            
         } finally {
             setLoading(false);
         }
     }
-    
+
     return (
-        <FormWrapper
-            label="Create Your"
-            socials
-            disabled = {loading}
-        >
+        <FormWrapper label="Login to your" socials disabled = {loading} >
             <Form {...form}>
                 <form
                     className="space-y-6"
-                    onSubmit={form.handleSubmit(handleSubmit)}
+                    onSubmit={form.handleSubmit(handleLogin)}
                 >
                     <div className="space-y-3">
-                        <FormField
-                            control={form.control}
-                            name="name"
-                            render={({field})=>(
-                                <FormItem>
-                                    <FormLabel className="text-zinc-300" >Your Name</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            {...field}
-                                            disabled = {loading}
-                                            className="bg-transparent h-12 border-zinc-600 outline-none focus-visible:ring-0 focus-visible:ring-offset-0 hover:border-zinc-200 transition-all focus:border-zinc-200 focus:border-2"
-                                        />
-                                    </FormControl>
-                                </FormItem>
-                            )}
-                        />
                         <FormField
                             control={form.control}
                             name="email"
@@ -95,6 +65,7 @@ export const RegistrationForm = () => {
                                             className="bg-transparent h-12 border-zinc-600 outline-none focus-visible:ring-0 focus-visible:ring-offset-0 hover:border-zinc-200 transition-all focus:border-zinc-200 focus:border-2"
                                         />
                                     </FormControl>
+                                    <FormMessage/>
                                 </FormItem>
                             )}
                         />
@@ -112,6 +83,13 @@ export const RegistrationForm = () => {
                                             className="bg-transparent h-12 border-zinc-600 outline-none focus-visible:ring-0 focus-visible:ring-offset-0 hover:border-zinc-200 transition-all focus:border-zinc-200 focus:border-2"
                                         />
                                     </FormControl>
+                                    <FormMessage/>
+                                    <Link
+                                        href="/forget-password"
+                                        className="text-sm pt-1 block text-zinc-400 hover:text-red-500"
+                                    >
+                                        Forget your password?
+                                    </Link>
                                 </FormItem>
                             )}
                         />
@@ -121,11 +99,11 @@ export const RegistrationForm = () => {
                         className="w-full h-14 rounded-full bg-red-600/90 hover:bg-red-600/80 text-white font-semibold text-base"
                         disabled = {loading}
                     >
-                        Create Account
+                        Log In
                     </Button>
                     <div>
-                        <Link href="/login" className="text-zinc-200 text-sm" aria-disabled = {loading} >
-                            Have an account? Log in now
+                        <Link href="/sign-up" className="text-zinc-200 text-sm" aria-disabled = {loading} >
+                            Don't have an account? Sign Up
                         </Link>
                     </div>
                 </form>

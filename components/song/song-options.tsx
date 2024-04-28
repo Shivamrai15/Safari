@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Artist, Song } from "@prisma/client";
+import { Album, Artist, Song } from "@prisma/client";
 
 import {
     DropdownMenu,
@@ -26,11 +26,13 @@ import {
     Plus,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useQueue } from "@/hooks/use-queue";
 
 interface SongOptionsProps {
-    song : Song & {
-        artists : Artist[]
-    };
+    song : (Song & {
+        artists : Artist[],
+        album : Album
+    });
 }
 
 export const SongOptions = ({
@@ -39,6 +41,7 @@ export const SongOptions = ({
 
     const router = useRouter();
     const [ origin, setOrigin ] = useState("");
+    const { enQueue } = useQueue();
     
     useEffect(()=>{
         setOrigin(window.location.origin);
@@ -46,12 +49,15 @@ export const SongOptions = ({
 
     return (
         <DropdownMenu>
-            <DropdownMenuTrigger asChild >
+            <DropdownMenuTrigger asChild onClick={(e)=>e.stopPropagation()} >
                 <EllipsisVertical className="md:cursor-pointer" />
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="end" >
                 <DropdownMenuGroup>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem onClick={(e)=>{
+                        e.stopPropagation();
+                        enQueue([song])
+                    }}>
                         <ListMusic className="mr-2 h-5 w-5" />
                         <span className="font-medium" >Add to queue</span>
                     </DropdownMenuItem>

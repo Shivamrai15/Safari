@@ -3,9 +3,11 @@
 import Image from "next/image";
 import { Album, Artist, Song } from "@prisma/client";
 import { useRouter } from "next/navigation";
-import { songLength } from "@/lib/utils";
+import { cn, songLength } from "@/lib/utils";
 import { SongOptions } from "./song-options";
 import { SmallDevicesSongOptions } from "./small-devices-song-options";
+import { useQueue } from "@/hooks/use-queue";
+import { Audio } from "react-loader-spinner";
 
 interface SongItemProps {
     song : (Song & {
@@ -20,23 +22,40 @@ export const SongItem = ({
 } : SongItemProps ) => {
 
     const router = useRouter();
+    const { priorityEnqueue, current } = useQueue()
 
     return (
-        <div className="w-full h-full px-4 gap-4 md:gap-6 py-2 group hover:bg-neutral-800/70 rounded-sm transition-all md:cursor-pointer select-none">
+        <div
+            className="w-full h-full px-4 gap-4 md:gap-6 py-2 group hover:bg-neutral-800/70 rounded-sm transition-all md:cursor-pointer select-none"
+            onClick={()=>priorityEnqueue([song])}
+        >
             <div className="flex items-center gap-4 md:gap-6 font-semibold text-lg">
                 <div className="w-10 aspect-square relative rounded-sm overflow-hidden">
                     <Image
                         src={song.image}
                         alt={song.name}
                         fill
-                        className="object-cover"
+                        className={cn(
+                            "object-cover",
+                            song.id === current?.id && "brightness-50"
+                        )}
                     />
+                    {
+                        song.id === current?.id && (
+                            <div className="h-full w-full absolute top-0 left-0 right-0 bottom-0 flex items-center justify-center">
+                                <Audio color="#ef4444" height={30} />
+                            </div>
+                        )
+                    }
                 </div>
                 <div className="w-full flex-1 shrink overflow-hidden">
                     <p className="text-base line-clamp-1" >{song.name.trim()}</p>
                     <div
                         className="text-sm text-zinc-300 line-clamp-1 font-normal overflow-hidden space-x-2 hover:underline"
-                        onClick={()=>router.push(`/album/${song.albumId}`)}
+                        onClick={(e)=>{
+                            e.stopPropagation();
+                            router.push(`/album/${song.albumId}`)
+                        }}
                     >
                         {song.album.name}
                     </div>

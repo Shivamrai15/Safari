@@ -10,6 +10,7 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
+    "@hello-pangea/dnd": "^16.6.0",
     "@hookform/resolvers": "^3.3.4",
     "@prisma/client": "^5.12.1",
     "@radix-ui/react-dialog": "^1.0.5",
@@ -38,6 +39,7 @@
     "react-hook-form": "^7.51.3",
     "react-icons": "^5.0.1",
     "react-intersection-observer": "^9.8.2",
+    "react-loader-spinner": "^6.1.6",
     "react-spinners": "^0.13.8",
     "sonner": "^1.4.41",
     "swr": "^2.2.5",
@@ -53,6 +55,7 @@
     "@types/node": "^20",
     "@types/nodemailer": "^6.4.14",
     "@types/react": "^18",
+    "@types/react-beautiful-dnd": "^13.1.8",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.0.1",
     "eslint": "^8",

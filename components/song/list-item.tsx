@@ -1,13 +1,16 @@
 "use client";
 import { songLength } from "@/lib/utils";
-import { Artist, Song } from "@prisma/client"
+import { Album, Artist, Song } from "@prisma/client"
 import { useRouter } from "next/navigation";
 import { SongOptions } from "./song-options";
 import { SmallDevicesSongOptions } from "./small-devices-song-options";
+import { useQueue } from "@/hooks/use-queue";
+import { Audio } from "react-loader-spinner";
 
 interface ListItemProps {
     song : Song & {
-        artists : Artist[]
+        artists : Artist[],
+        album : Album
     };
     index : number
 }
@@ -18,11 +21,17 @@ export const ListItem = ({
 } : ListItemProps ) => {
 
     const router = useRouter();
+    const { priorityEnqueue, current } = useQueue();
 
     return (
-        <div className="w-full h-full px-4 gap-4 md:gap-6 py-3 group hover:bg-neutral-800/70 rounded-sm transition-all md:cursor-pointer select-none">
+        <div
+            className="w-full h-full px-4 gap-4 md:gap-6 py-3 group hover:bg-neutral-800/70 rounded-sm transition-all md:cursor-pointer select-none"
+            onClick={()=>priorityEnqueue([song])}
+        >
             <div className="flex items-center gap-4 md:gap-6 font-semibold text-lg">
-                <h4 className="w-8 text-base shrink-0">{index}</h4>
+                <h4 className="w-8 text-base shrink-0">
+                    { current?.id===song.id ? <Audio color="#ef4444" height={25} /> : index}
+                </h4>
                 <div className="w-full flex-1 shrink overflow-hidden">
                     <p className="text-base line-clamp-1" >{song.name.trim()}</p>
                     <div className="text-sm text-zinc-300 line-clamp-1 font-normal overflow-hidden space-x-2" >
@@ -30,7 +39,10 @@ export const ListItem = ({
                             song.artists.map((artist, idx)=>(
                                 <span
                                     key={artist.id}
-                                    onClick={()=>router.push(`/artist/${artist.id}`)}
+                                    onClick={(e)=>{
+                                        e.stopPropagation();
+                                        router.push(`/artist/${artist.id}`);
+                                    }}
                                     className="hover:underline"
                                 >
                                     {artist.name}{ (idx !== song.artists.length-1)&&"," }

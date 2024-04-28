@@ -3,6 +3,7 @@
 import { cn } from "@/lib/utils";
 import { Sidebar } from "./navigation/sidebar";
 import { MobileMenu } from "./navigation/mobile-menu";
+import { Queue } from "./queue/queue";
 
        
 interface LayoutWrapperProps {
@@ -22,6 +23,7 @@ export const LayoutWrapper = ({
             </div>    
             <div className="w-full md:w-[calc(100%-2rem)] flex-1 h-[calc(100%-4rem)] md:h-full overflow-y-auto">
                 {children}
+                <Queue/>
             </div>
             <div className="md:hidden w-full h-16 fixed bottom-0 bg-gradient-to-b from-transparent via-15% to-30% via-neutral-950/90 to-neutral-950">
                 <MobileMenu/>

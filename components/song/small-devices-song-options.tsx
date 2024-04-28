@@ -39,7 +39,7 @@ export const SmallDevicesSongOptions = ({
 
     return (
         <Drawer>
-            <DrawerTrigger>
+            <DrawerTrigger onClick={(e)=>e.stopPropagation()} >
                 <EllipsisVertical className="md:cursor-pointer" />
             </DrawerTrigger>
             <DrawerContent>

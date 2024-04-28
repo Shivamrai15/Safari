@@ -4,23 +4,32 @@ import Image from "next/image";
 import { FaPlay } from "react-icons/fa";
 import { PiShuffleBold } from "react-icons/pi";
 import { SlOptionsVertical } from "react-icons/sl";
+import { SongPlayButton } from "../utils/song-play-button";
+import { Album, Artist, Song } from "@prisma/client";
 
 interface HeaderProps {
-    color : string
-    image : string,
-    name : string,
-    songs : number,
-    release : Date,
-    length : number
+    id : string; 
+    color : string;
+    image : string;
+    name : string;
+    songs : number;
+    release : Date;
+    length : number;
+    data : (Song & {
+        album : Album,
+        artists : Artist[]
+    })[];
 }
 
 export const Header = ({
+    id,
     color,
     image,
     length,
     name,
     songs,
-    release
+    release,
+    data
 } : HeaderProps ) => {
     return (
         <div className="px-4 md:px-20" style={{background :  `linear-gradient(160deg, ${color} 40%, #111 30%)` }} >
@@ -39,7 +48,7 @@ export const Header = ({
                             />
                         </div>
                         <div
-                            className="flex flex-col gap-y-2 mt-4 md:mt-0 text-center sm:text-left"
+                            className="flex flex-col gap-y-2 mt-4 md:mt-0 text-center md:text-left md:pr-28"
                         >
                             <p className="hidden md:block font-semibold text-sm">
                                 { songs === 1 ? "Single" : "Playlist" }
@@ -60,10 +69,8 @@ export const Header = ({
                                     { albumLength(length) }
                                 </span>
                             </div>
-                            <div className="flex justify-center md:justify-start items-center gap-6 pt-2" >
-                                <div className="h-12 w-12 bg-red-600 rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition cursor-pointer duration-150">
-                                    <FaPlay className="h-5 w-5" />
-                                </div>
+                            <div className="flex justify-center md:justify-start items-center gap-6 pt-2 md:pr-28" >
+                                <SongPlayButton songs={data} id={id} />
                                 <PiShuffleBold className="h-12 w-12 md:cursor-pointer" />
                                 <SlOptionsVertical className="h-9 w-9 md:cursor-pointer" />
                             </div>

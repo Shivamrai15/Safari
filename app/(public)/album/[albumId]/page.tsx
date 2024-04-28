@@ -20,6 +20,7 @@ const AlbumPage = async({
     return (
         <div className="min-h-full pb-10 md:pb-0" style={{background :  `linear-gradient(180deg, #111 70%,  ${album.color}5a 100%)` }}  >
             <Header
+                id={album.id}
                 color = {album.color}
                 name = {album.name}
                 image = {album.image}
@@ -28,8 +29,11 @@ const AlbumPage = async({
                 }, 0)}
                 songs = {album.songs.length}
                 release = {album.release}
+                data={album.songs}
             />
-            <SongsList songs = { album.songs } />
+            <div className="md:pr-28">
+                <SongsList songs = { album.songs } />
+            </div>
         </div>
     )
 }

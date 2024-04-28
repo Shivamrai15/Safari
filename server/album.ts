@@ -11,7 +11,7 @@ export const getAlbum =  async ( id : string ) => {
             },
             include : {
                 songs : {
-                    include : { artists : true }
+                    include : { artists : true, album : true }
                 }
             },
         });

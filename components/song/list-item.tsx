@@ -6,6 +6,7 @@ import { SongOptions } from "./song-options";
 import { SmallDevicesSongOptions } from "./small-devices-song-options";
 import { useQueue } from "@/hooks/use-queue";
 import { Audio } from "react-loader-spinner";
+import { usePlayer } from "@/hooks/use-player";
 
 interface ListItemProps {
     song : Song & {
@@ -22,6 +23,7 @@ export const ListItem = ({
 
     const router = useRouter();
     const { priorityEnqueue, current } = useQueue();
+    const { isPlaying } = usePlayer();
 
     return (
         <div
@@ -30,7 +32,7 @@ export const ListItem = ({
         >
             <div className="flex items-center gap-4 md:gap-6 font-semibold text-lg">
                 <h4 className="w-8 text-base shrink-0">
-                    { current?.id===song.id ? <Audio color="#ef4444" height={25} /> : index}
+                    { (current?.id===song.id && isPlaying ) ? <Audio color="#ef4444" height={25} /> : index}
                 </h4>
                 <div className="w-full flex-1 shrink overflow-hidden">
                     <p className="text-base line-clamp-1" >{song.name.trim()}</p>

@@ -1,9 +1,10 @@
 "use client";
+import { usePlayer } from '@/hooks/use-player';
 import { useQueue } from '@/hooks/use-queue';
 import { cn } from '@/lib/utils';
 import { getAlbum } from '@/server/album';
 import { Album, Artist, Song } from '@prisma/client';
-import { FaPlay } from 'react-icons/fa';
+import { FaPause, FaPlay } from 'react-icons/fa';
 
 interface SongPlayButton {
     songs? : (Song & {
@@ -20,7 +21,8 @@ export const SongPlayButton = ({
     className
 } : SongPlayButton ) => {
 
-    const { priorityEnqueue } = useQueue();
+    const { priorityEnqueue, current } = useQueue();
+    const { isPlaying } = usePlayer(); 
 
     const handleButton = async() =>{
         if ( songs ){
@@ -42,8 +44,11 @@ export const SongPlayButton = ({
                 e.stopPropagation();
                 handleButton();
             }}
+            disabled = { isPlaying && current?.albumId === id }
         >
-            <FaPlay className='h-5 w-5' />
+            {
+                (isPlaying && current?.albumId === id) ? <FaPause className='h-5 w-5' /> : <FaPlay className='h-5 w-5' /> 
+            }
         </button>
     )
 }

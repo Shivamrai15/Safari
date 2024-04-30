@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 import { Album, Song } from '@prisma/client';
-import { persist, createJSONStorage } from "zustand/middleware";
 
 interface UseQueueProps {
     
@@ -18,7 +17,7 @@ interface UseQueueProps {
     remove : ( id : string )=>null|void;
 }
 
-export const useQueue = create(persist<UseQueueProps>((set, get)=>({
+export const useQueue = create<UseQueueProps>((set, get)=>({
    
     queue : [],
     stack : [],
@@ -54,7 +53,10 @@ export const useQueue = create(persist<UseQueueProps>((set, get)=>({
     priorityEnqueue : ( songs : ( Song & { album : Album } )[] ) => {
         const currentQueue = get().queue;
         const uniqueSongs = songs.filter(song => !currentQueue.some(qSong => qSong.id === song.id));
-        set({ queue : [...uniqueSongs, ...get().queue], current : uniqueSongs[0] });
+        set({ queue : [...uniqueSongs, ...get().queue]});
+        if ( uniqueSongs[0] ) {
+            set({ current : uniqueSongs[0] });
+        }
     },
     clear : () => set({ queue: [], stack : [], current: null }),
     shiftToTopOfQueue : (id : string) => {
@@ -82,10 +84,7 @@ export const useQueue = create(persist<UseQueueProps>((set, get)=>({
     remove : ( id : string ) => {
         const queueList = [...get().queue];
         const filteredQueue = queueList.filter((item)=>item.id!==id);
-        set({ queue: filteredQueue });
+        set({ queue: filteredQueue })
     }
     
-}), {
-    name : "queue",
-    storage : createJSONStorage(()=>localStorage)
 }));

@@ -20,6 +20,7 @@ import { FaRegPlayCircle } from "react-icons/fa";
 import { cn, songLength } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 import { Audio } from "react-loader-spinner";
+import { usePlayer } from "@/hooks/use-player";
 
 export const Queue = () => {
 
@@ -31,6 +32,8 @@ export const Queue = () => {
             shiftToTopOfQueue,
     } = useQueue();
 
+    const { isPlaying } = usePlayer();
+
     const handleDragEnd = (e : DropResult ) => {
         const {destination, draggableId, source} = e;
 
@@ -39,7 +42,6 @@ export const Queue = () => {
         }
          
         // if dropped at the same position
-
         if ( destination.index === source.index && destination.droppableId === source.droppableId ) {
             return;
         }
@@ -52,7 +54,7 @@ export const Queue = () => {
     }
 
     return (
-        <div className="hidden group md:block w-20 h-96 right-0 fixed top-1/2 -translate-y-1/2 bg-neutral-800 z-50 rounded-l-md hover:w-96 transition-all duration-300 shadow-md">
+        <div className="hidden group md:block w-20 h-96 right-0 fixed top-1/2 -translate-y-1/2 bg-neutral-800 z-40 rounded-l-md hover:w-96 transition-all duration-300 shadow-md">
             <div className="flex items-center justify-between h-16 p-4">
                 <div className="w-20 group-hover:w-fit flex items-center justify-center">
                     <LibraryBig className="h-10 w-10 text-red-500"/>
@@ -100,21 +102,21 @@ export const Queue = () => {
                                                             )}
                                                         />
                                                         {
-                                                            index === 0 && (
+                                                            (index === 0 ) && (
                                                                 <div className="h-full w-full top-0 left-0 right-0 bottom-0 absolute flex items-center justify-center">
                                                                     {
-                                                                        true ? <Audio color="#ef4444" height={35} /> : <FaRegPlayCircle className="h-8 w-8"/>
+                                                                        isPlaying ? <Audio color="#ef4444" height={35} /> : <FaRegPlayCircle className="h-8 w-8"/>
                                                                     }
                                                                 </div>
                                                             )
                                                         }
                                                     </div>
-                                                    <div className="w-full hidden group-hover:block shrink truncate">
-                                                        <h3 className="text-sm font-medium text-zinc-100 line-clamp-1 overflow-x-hidden" >{ song.name }</h3>
+                                                    <div className="w-full hidden group-hover:block shrink flex-1">
+                                                        <h3 className="text-sm font-medium text-zinc-100 line-clamp-1" >{ song.name }</h3>
                                                         <div>
                                                             <Link
                                                                 href={`/album/${song.albumId}`}
-                                                                className="text-sm hover:underline transition-all text-zinc-300"
+                                                                className="text-sm hover:underline w-fit transition-all line-clamp-1 text-zinc-300"
                                                                 onClick={(e)=>e.stopPropagation()}
                                                             >
                                                                 {song.album.name}

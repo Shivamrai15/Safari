@@ -8,6 +8,7 @@ import { SongOptions } from "./song-options";
 import { SmallDevicesSongOptions } from "./small-devices-song-options";
 import { useQueue } from "@/hooks/use-queue";
 import { Audio } from "react-loader-spinner";
+import { usePlayer } from "@/hooks/use-player";
 
 interface SongItemProps {
     song : (Song & {
@@ -22,7 +23,8 @@ export const SongItem = ({
 } : SongItemProps ) => {
 
     const router = useRouter();
-    const { priorityEnqueue, current } = useQueue()
+    const { priorityEnqueue, current } = useQueue();
+    const { isPlaying } = usePlayer();
 
     return (
         <div
@@ -37,11 +39,11 @@ export const SongItem = ({
                         fill
                         className={cn(
                             "object-cover",
-                            song.id === current?.id && "brightness-50"
+                            (song.id === current?.id) && isPlaying && "brightness-50"
                         )}
                     />
                     {
-                        song.id === current?.id && (
+                        song.id === current?.id && isPlaying && (
                             <div className="h-full w-full absolute top-0 left-0 right-0 bottom-0 flex items-center justify-center">
                                 <Audio color="#ef4444" height={30} />
                             </div>
@@ -51,7 +53,7 @@ export const SongItem = ({
                 <div className="w-full flex-1 shrink overflow-hidden">
                     <p className="text-base line-clamp-1" >{song.name.trim()}</p>
                     <div
-                        className="text-sm text-zinc-300 line-clamp-1 font-normal overflow-hidden space-x-2 hover:underline"
+                        className="text-sm w-fit text-zinc-300 line-clamp-1 font-normal overflow-hidden space-x-2 hover:underline"
                         onClick={(e)=>{
                             e.stopPropagation();
                             router.push(`/album/${song.albumId}`)

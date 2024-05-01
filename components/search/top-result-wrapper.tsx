@@ -2,9 +2,10 @@
 
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 interface TopResultWrapperProps {
-    url : string;
+    url? : string;
     image : string;
     name : string;
     children : React.ReactNode;
@@ -21,12 +22,19 @@ export const TopResultWrapper = ({
     color
 } : TopResultWrapperProps ) => {
 
+    const router = useRouter()
+
     return (
         <div className={cn(
                 "p-6 bg-neutral-800 rounded-md md:cursor-default select-none md:w-[32rem]",
                 className
             )}
             style={ color ? { background : `linear-gradient( 210deg, ${color}8a, #171717 )` } : {} }
+            onClick={()=>{
+                if ( url ) {
+                    router.push(url);
+                }
+            }}
         >
             <div className="flex flex-col md:flex-row gap-5 md:gap-x-10 items-center md:justify-start">
                 <div className="flex items-center justify-center">

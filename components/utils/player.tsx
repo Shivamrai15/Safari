@@ -28,11 +28,12 @@ import { PlayerSongInfo } from "./player-song-info";
 import { Range } from "@/components/ui/range";
 import { SongSheet } from "./song-sheet";
 import { useSheet } from "@/hooks/use-sheet";
+import { LikeButton } from "./like-button";
 
 export const Player = () => {
 
     const { onOpen } = useSheet();
-    const { current, deQueue, pop } = useQueue();
+    const { current, deQueue, pop, shuffle } = useQueue();
     const { repeat, setRepeat, mute, setMute, volume, setVolume } = useControls();
     const { setAlbumId, setSongId , setIsPlaying } = usePlayer();
     const [ play, setPlay ] = useState(false);
@@ -141,8 +142,9 @@ export const Player = () => {
                             />
                             <span className="text-sm text-zinc-300" >{ songLength(current?.duration || 0)}</span>
                         </div>
-                        <div className="w-full flex items-center justify-end gap-x-6">
-                            <ShuffleIcon/>
+                        <div className="w-full flex items-center justify-end gap-x-3 lg:gap-x-6">
+                            <LikeButton id = { current?.id } className="h-6 w-6"/>
+                            <ShuffleIcon onClick={shuffle} />
                             <RepeatIcon onClick={toggleRepeat}  className="h-6 w-6 text-white cursor-pointer" />
                             <div className="flex items-center gap-2">
                                 <VolumeIcon
@@ -166,6 +168,7 @@ export const Player = () => {
                 <div
                     onClick={()=>onOpen()}
                     className="w-full h-full bg-neutral-900 rounded-lg overflow-hidden relative"
+                    style={{background : `${current?.album.color}`}}
                 >
                     <Slider
                         value={[currentTime]}

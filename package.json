@@ -26,6 +26,7 @@
     "clsx": "^2.1.0",
     "embla-carousel-react": "^8.0.1",
     "fuse.js": "^7.0.0",
+    "howler": "^2.2.4",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.364.0",
     "nanoid": "^5.0.7",
@@ -52,6 +53,7 @@
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
+    "@types/howler": "^2.2.11",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^20",
     "@types/nodemailer": "^6.4.14",

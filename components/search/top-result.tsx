@@ -24,7 +24,7 @@ export const TopResult = ({
                 <TopResultWrapper
                     image={data.image}
                     name={data.name}
-                    url=""
+                    url={`/album/${data.id}`}
                     color={data.color}
                 >
                     <>
@@ -37,6 +37,9 @@ export const TopResult = ({
                             <SongPlayButton id={data.id} />
                             <Button
                                 className="px-6 rounded-full font-bold text-base"
+                                onClick={(e)=>{
+                                    e.stopPropagation();
+                                }}
                             >
                                 <IoIosShareAlt className="h-5 w-5 mr-2"/> Share
                             </Button>
@@ -53,7 +56,6 @@ export const TopResult = ({
                 image={data.image}
                 name={data.name}
                 color={data.album.color}
-                url=""
             >
                 <>
                     <div className="text-sm flex gap-1 text-zinc-200">
@@ -91,7 +93,6 @@ export const TopResult = ({
                 image={data.image}
                 name={data.name}
                 color="#171717"
-                url=""
             >
                 <>
                     <div className="text-sm flex gap-1 text-zinc-200">

@@ -15,6 +15,7 @@ interface UseQueueProps {
     shiftToTopOfQueue : (id : string)=>void;
     replace : ( id: string, source : number, destination : number )=>null|void;
     remove : ( id : string )=>null|void;
+    shuffle : () => void;
 }
 
 export const useQueue = create<UseQueueProps>((set, get)=>({
@@ -53,9 +54,20 @@ export const useQueue = create<UseQueueProps>((set, get)=>({
     priorityEnqueue : ( songs : ( Song & { album : Album } )[] ) => {
         const currentQueue = get().queue;
         const uniqueSongs = songs.filter(song => !currentQueue.some(qSong => qSong.id === song.id));
-        set({ queue : [...uniqueSongs, ...get().queue]});
-        if ( uniqueSongs[0] ) {
-            set({ current : uniqueSongs[0] });
+        if ( songs.length === 1 && uniqueSongs.length === 0 ) {
+            const queueList = [...get().queue];
+            const index = queueList.findIndex((song)=>song.id === songs[0].id);
+            if ( index !== -1 ) {
+                const currentSong = queueList[index];
+                queueList.splice(index, 1);
+                queueList.unshift(currentSong);
+                set({ queue : queueList, current : queueList[0] });
+            }
+        } else {
+            set({ queue : [...uniqueSongs, ...get().queue]});
+            if ( uniqueSongs[0] ) {
+                set({ current : uniqueSongs[0] });
+            }
         }
     },
     clear : () => set({ queue: [], stack : [], current: null }),
@@ -85,6 +97,18 @@ export const useQueue = create<UseQueueProps>((set, get)=>({
         const queueList = [...get().queue];
         const filteredQueue = queueList.filter((item)=>item.id!==id);
         set({ queue: filteredQueue })
+    },
+    shuffle : () => {
+        const queueList = [...get().queue];
+        if ( queueList.length > 2 ) {
+            const currentItem = queueList.shift();
+            for ( let i =0 ; i < queueList.length ; i++ ) {
+                const j = Math.floor(Math.random()*(i+1));
+                [queueList[i], queueList[j]] = [queueList[j], queueList[i]];
+            }
+            if ( currentItem ) {
+                set({ queue : [currentItem, ...queueList] })
+            }
+        }
     }
-    
 }));

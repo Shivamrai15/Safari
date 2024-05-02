@@ -114,7 +114,7 @@ export const Player = () => {
             <div className="w-full h-full bg-neutral-900 hidden md:block relative">
                 <div className="w-full absolute -top-2 py-2">
                     <Slider 
-                        className="cursor-pointer h-0"
+                        className="cursor-pointer h-5"
                         value={[currentTime]}
                         step={1}
                         max={current?.duration||1}

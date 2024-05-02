@@ -13,11 +13,14 @@ import {
     FormLabel,
     FormMessage
 } from "@/components/ui/form";
+
 import { LoginSchema } from "@/schemas/login.schema";
 import { FormWrapper } from "@/components/auth/utils/form-wrapper";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { login } from "@/server/login";
+import { toast } from "sonner";
 
 export const LoginForm = () => {
 
@@ -35,6 +38,14 @@ export const LoginForm = () => {
         try {
             
             setLoading(true);
+            const response = await login(values);
+            
+            if (response.error) {
+                toast.error(response.error);
+            }
+            if (response.info) {
+                toast.info(response.info);
+            }
 
         } catch (error) {
             

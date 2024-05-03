@@ -21,6 +21,7 @@ import { cn, songLength } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 import { Audio } from "react-loader-spinner";
 import { usePlayer } from "@/hooks/use-player";
+import { LikeButton } from "../utils/like-button";
 
 export const Queue = () => {
 
@@ -124,7 +125,7 @@ export const Queue = () => {
                                                         </div>
                                                     </div>
                                                     <div className="items-center hidden group-hover:flex space-x-4">
-                                                        <ThumbsUp className="h-6 w-6" />
+                                                        <LikeButton className="h-6 w-6" id={song.id} />
                                                         <div className="text-sm">
                                                             {
                                                                 songLength(song.duration)

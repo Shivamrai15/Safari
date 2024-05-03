@@ -81,7 +81,7 @@ export const SongSheet = ({
                                     step={1}
                                     max={current?.duration||1}
                                     onValueChange={(e)=>seekTime(e[0])}
-                                    className="w-full"
+                                    className="w-full h-5 md:cursor-pointer"
                                 />
                                 <span className="w-10 text-sm hidden md:block font-semibold text-center" >{songLength(current?.duration || 0)}</span>
                                 <div className="md:hidden flex items-center justify-between mt-2">

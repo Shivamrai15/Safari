@@ -56,7 +56,7 @@ export const Sidebar = () => {
                 <TbSquareRoundedPlus className="h-8 w-8"/>
                 <div
                     className="w-10 aspect-square relative rounded-sm cursor-pointer overflow-hidden"
-                    onClick={()=>router.push("/liked-songs")}
+                    onClick={()=>router.push("/liked-music")}
                 >
                     <Image
                         src="/assets/liked-thumb.png"

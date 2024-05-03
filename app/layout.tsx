@@ -32,7 +32,7 @@ export default async function RootLayout({
                         disableTransitionOnChange
                     >
                         <QueryProvider>
-                            <Toaster position="bottom-right" />
+                            <Toaster position="top-right" />
                             {children}
                         </QueryProvider>
                     </ThemeProvider>

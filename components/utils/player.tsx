@@ -112,7 +112,7 @@ export const Player = () => {
     return (
         <>
             <div className="w-full h-full bg-neutral-900 hidden md:block relative">
-                <div className="w-full absolute -top-2 py-2">
+                <div className="w-full absolute -top-5 py-2">
                     <Slider 
                         className="cursor-pointer h-5"
                         value={[currentTime]}
@@ -152,7 +152,7 @@ export const Player = () => {
                                     onClick={toggleMute}
                                 />
                                 <Range
-                                    className="w-24 text-white"
+                                    className="w-24 text-white h-3"
                                     step={0.1}
                                     max={1}
                                     value={[volume]}

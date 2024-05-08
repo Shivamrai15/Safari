@@ -1,7 +1,9 @@
 "use client";
 
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Album, Artist, Song } from "@prisma/client";
+import { Album, Artist, PlayList, Song } from "@prisma/client";
 
 import {
     DropdownMenu,
@@ -25,8 +27,9 @@ import {
     MicVocal,
     Plus,
 } from "lucide-react";
-import { useEffect, useState } from "react";
 import { useQueue } from "@/hooks/use-queue";
+import { usePlaylist } from "@/hooks/use-playlist";
+import { usePlaylistModal } from "@/hooks/use-playlist-modal";
 
 interface SongOptionsProps {
     song : (Song & {
@@ -42,10 +45,23 @@ export const SongOptions = ({
     const router = useRouter();
     const [ origin, setOrigin ] = useState("");
     const { enQueue } = useQueue();
-    
+    const { data, error, isLoading } : { data : PlayList[], error : any, isLoading : boolean }  = usePlaylist();
+    const { mutate } = usePlaylist();
+    const { onOpen } = usePlaylistModal();
+
     useEffect(()=>{
         setOrigin(window.location.origin);
     }, []);
+
+    const handleAddSongInPlaylist = async( playlistId : string )=>{
+        try {
+            await axios.post(`/api/v1/user/playlist/${playlistId}`, { songId : song.id });
+            mutate();
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
 
     return (
         <DropdownMenu>
@@ -68,10 +84,23 @@ export const SongOptions = ({
                         </DropdownMenuSubTrigger>
                         <DropdownMenuPortal>
                             <DropdownMenuSubContent className="w-48" >
-                                <DropdownMenuItem>
+                                <DropdownMenuItem onClick={()=>onOpen()} >
                                 <Plus className="mr-2 h-5 w-5" />
                                 <span>New Playlist</span>
                                 </DropdownMenuItem>
+                                {  (!isLoading && !error )&& data.map((playlist)=>(
+                                    <DropdownMenuItem 
+                                        key={playlist.id}
+                                        onClick={(e)=>{ 
+                                            e.stopPropagation();
+                                            handleAddSongInPlaylist(playlist.id)
+                                        }}
+                                    >
+                                        <div className="line-clamp-1">
+                                            {playlist.name}
+                                        </div>
+                                    </DropdownMenuItem>
+                                )) }
                             </DropdownMenuSubContent>
                         </DropdownMenuPortal>
                     </DropdownMenuSub>

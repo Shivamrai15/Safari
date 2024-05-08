@@ -4,6 +4,7 @@ import { useLikedSongs } from "@/hooks/use-liked-songs";
 import { Album, Artist, Song } from "@prisma/client";
 import { SyncLoader } from "react-spinners";
 import { SongItem } from "./song-item";
+import { List } from "../playlist/list";
 
 export const LikedSongsList = () => {
 
@@ -18,12 +19,8 @@ export const LikedSongsList = () => {
     }
 
     return (
-        <div className="md:pr-28 px-4 md:px-20 pt-14  pb-10 md:pb-20">
-            {
-                data.map((song)=>(
-                    <SongItem key={song.id} song={song} />
-                ))
-            }
+        <div className="pt-14 pb-10">
+            <List songs={data} />
         </div>
     )
 }

@@ -1,34 +1,23 @@
-import { albumLength } from "@/lib/utils";
-import { Dot } from "lucide-react";
 import Image from "next/image";
-import { SlOptionsVertical } from "react-icons/sl";
-import { SongPlayButton } from "@/components/utils/song-play-button";
-import { Album, Artist, Song } from "@prisma/client";
 import { ShuffleButton } from "@/components/utils/shuffle-btn";
+import { SlOptionsVertical } from "react-icons/sl";
 
 interface HeaderProps {
-    id : string; 
-    color : string;
+    id : string;
     image : string;
     name : string;
+    color : string;
     songs : number;
-    release : Date;
-    length : number;
-    data : (Song & {
-        album : Album,
-        artists : Artist[]
-    })[];
+    description? : string;
 }
 
 export const Header = ({
     id,
-    color,
     image,
-    length,
     name,
+    color,
     songs,
-    release,
-    data
+    description
 } : HeaderProps ) => {
     return (
         <div className="px-4 md:px-20" style={{background :  `linear-gradient(160deg, ${color} 40%, #111 30%)` }} >
@@ -59,17 +48,8 @@ export const Header = ({
                                 <span>
                                     {`${songs} Songs`}
                                 </span>
-                                <Dot/>
-                                <span>
-                                    { release.getFullYear() }
-                                </span>
-                                <Dot/>
-                                <span>
-                                    { albumLength(length) }
-                                </span>
                             </div>
                             <div className="flex justify-center md:justify-start items-center gap-6 pt-2 md:pr-28" >
-                                <SongPlayButton songs={data} id={id} />
                                 <ShuffleButton/>
                                 <SlOptionsVertical className="h-9 w-9 md:cursor-pointer" />
                             </div>

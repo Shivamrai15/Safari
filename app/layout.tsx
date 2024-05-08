@@ -6,6 +6,7 @@ import { QueryProvider } from "@/providers/query-provider";
 import { Toaster } from "sonner";
 import { auth } from "@/auth";
 import { SessionProvider } from "next-auth/react";
+import { ModalProvider } from "@/providers/modal-provider";
 
 const inter = Figtree({subsets : ["latin"] });
 
@@ -33,6 +34,7 @@ export default async function RootLayout({
                     >
                         <QueryProvider>
                             <Toaster position="top-right" />
+                            <ModalProvider/>
                             {children}
                         </QueryProvider>
                     </ThemeProvider>

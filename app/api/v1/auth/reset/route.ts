@@ -32,7 +32,7 @@ export async function POST ( req : Request ) {
             return new NextResponse("Internal server error", { status: 500 });
         }
 
-        await sendForgetPasswordEmail(email, user.name, token);
+        await sendForgetPasswordEmail(email, user?.name||"User", token);
 
         return NextResponse.json({ success : true }, { status : 200 });
 

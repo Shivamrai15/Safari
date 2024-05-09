@@ -114,7 +114,7 @@ export const LoginForm = () => {
                     </Button>
                     <div>
                         <Link href="/sign-up" className="text-zinc-200 text-sm" aria-disabled = {loading} >
-                            Don't have an account? Sign Up
+                            Don&apos;t have an account? Sign Up
                         </Link>
                     </div>
                 </form>

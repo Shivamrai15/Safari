@@ -26,9 +26,6 @@ export const LikeButton = ({
         mutate : ()=>void
     } = useLikedSongs();
 
-    if(!id){
-        return null;
-    }
 
     const isLiked = useMemo(()=>{
         if (!isLoading) {

@@ -55,7 +55,7 @@ export const ForgetPasswordForm = () => {
         <div className="max-w-96 w-full space-y-8">
             <div className="space-y-3 text-base font-medium">
                 <h1 className="text-2xl md:text-3xl font-extrabold">Reset your password</h1>
-                <p>Can't remember your login details? Enter your email address. We'll send you a link to reset your password</p>
+                <p>Can&apos;t remember your login details? Enter your email address. We&apos;ll send you a link to reset your password</p>
             </div>
             <Form {...form}>
                 <form

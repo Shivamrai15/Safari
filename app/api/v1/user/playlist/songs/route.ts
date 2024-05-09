@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
-import { Album, Artist, Song } from "@prisma/client";
+import { Album, Artist, PlaylistSong, Song } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 const SONGS_BATCH = 10;
@@ -40,11 +40,13 @@ export async function GET (req : Request) {
         let songs : (Song & {
             artists : Artist[],
             album : Album
-        })[] = [];
+        })[] = [] ;
+
+        let playlistSongs : PlaylistSong[] = [] 
 
         if (cursor) {
             console.log(playlist.id)
-            const playlistSongs = await db.playlistSong.findMany({
+            playlistSongs = await db.playlistSong.findMany({
                 where : {
                     playlistId : playlist.id
                 },
@@ -57,7 +59,6 @@ export async function GET (req : Request) {
                     createdAt : "desc"
                 }
             });
-            console.log("Playlist songs", playlistSongs);
             const fetchedSongs = await Promise.all(playlistSongs.map( async(song)=>{
                 return db.song.findUnique({
                     where : {
@@ -69,9 +70,10 @@ export async function GET (req : Request) {
                     }
                 })
             }));
-            songs = fetchedSongs.filter((song) => song!==null);
+            // @ts-ignore
+            songs = fetchedSongs
         } else {
-            const playlistSongs = await db.playlistSong.findMany({
+                playlistSongs = await db.playlistSong.findMany({
                 where : {
                     playlistId : playlist.id
                 },
@@ -91,13 +93,14 @@ export async function GET (req : Request) {
                     }
                 })
             }));
-            songs = fetchedSongs.filter((song) => song!==null);
+            // @ts-ignore
+            songs = fetchedSongs
         }
 
         let nextCursor = null;
 
-        if(songs.length === SONGS_BATCH){
-            nextCursor = songs[SONGS_BATCH-1].id
+        if(playlistSongs.length === SONGS_BATCH){
+            nextCursor = playlistSongs[SONGS_BATCH-1].id
         }
 
         return NextResponse.json({

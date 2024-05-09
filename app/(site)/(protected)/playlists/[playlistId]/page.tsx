@@ -1,6 +1,5 @@
 import { auth } from "@/auth";
 import { Header } from "@/components/playlist/header";
-import { List } from "@/components/playlist/list";
 import { Songs } from "@/components/playlist/songs";
 import { getPlaylistById } from "@/server/playlist"
 import { redirect } from "next/navigation";

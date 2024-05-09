@@ -109,6 +109,21 @@ export const Player = () => {
         }
     }
 
+    const handleUpdateMetadata = ()=>{
+        if ( 'mediaSession' in navigator ){
+            navigator.mediaSession.metadata = new MediaMetadata({
+                title : current?.name || "",
+                album : current?.album.name || "",
+                artwork: [
+                    { src: `${current?.image}`, sizes: '96x96', type: 'image/avif' },
+                    { src: `${current?.image}`, sizes: '96x96', type: 'image/webp' },
+                    { src: current?.image||"", sizes: '96x96', type: 'image/jpeg' },
+                ],
+
+            });
+        }
+    }
+
     return (
         <>
             <div className="w-full h-full bg-neutral-900 hidden md:block relative">
@@ -204,12 +219,14 @@ export const Player = () => {
                     onEnded={()=>{
                         deQueue();
                     }}
+                    onLoadedMetadata={()=>handleUpdateMetadata()}
                     onTimeUpdate={handleTimeUpdate}
                     loop = {repeat}
                     muted = {mute}
                     title={current?.name}
                     className="h-0 w-0 sr-only"
-                    autoPlay src={current?.url}>    
+                    autoPlay src={current?.url}
+                    >   
             </audio>
             <SongSheet
                 currentTime={currentTime}

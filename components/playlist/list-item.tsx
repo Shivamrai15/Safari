@@ -10,6 +10,7 @@ import { useQueue } from "@/hooks/use-queue";
 import { SmallDevicesSongOptions } from "@/components/song/small-devices-song-options";
 import { usePlayer } from "@/hooks/use-player";
 import { Audio } from "react-loader-spinner";
+import { useSession } from "next-auth/react";
 
 interface ListItemProps {
     song : Song & { album : Album , artists : Artist[] };
@@ -23,12 +24,17 @@ export const ListItem = ({
     
     const router = useRouter();
     const { current ,priorityEnqueue } = useQueue();
-    const { isPlaying } = usePlayer()
+    const session = useSession();
+    const { isPlaying } = usePlayer();
 
     return (
         <div
             className="grid grid-cols-7 md:grid-cols-11 gap-4 px-4 py-3 rounded-md hover:bg-neutral-800/80 items-center md:cursor-pointer transition-all md:px-6 group"
-            onClick={()=>priorityEnqueue([song])}
+            onClick={()=>{
+                if ( session.status === "authenticated" ) {
+                    priorityEnqueue([song]);
+                }
+            }}
         >
                 <div className="hidden md:flex justify-start items-center" >{ (current?.id===song.id && isPlaying ) ? <Audio width={25} color="#ef4444" height={25} /> : index}</div>
                 <div className="col-span-5 flex items-center gap-x-4">

@@ -41,7 +41,7 @@ export const PlaylistNav = () => {
                             <TooltipTrigger className="w-full" asChild >
                                 <div 
                                     className="w-full aspect-square relative rounded-md overflow-hidden bg-neutral-800 md:cursor-pointer"
-                                    onClick={()=>router.push(`/playlist/${playlist.id}`)}
+                                    onClick={()=>router.push(`/playlists/${playlist.id}`)}
                                 >
                                     <Image
                                         src={playlist?.image || "/assets/playlist.png"}

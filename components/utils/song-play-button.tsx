@@ -5,6 +5,8 @@ import { cn } from '@/lib/utils';
 import { getAlbum } from '@/server/album';
 import { Album, Artist, Song } from '@prisma/client';
 import { FaPause, FaPlay } from 'react-icons/fa';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 interface SongPlayButton {
     songs? : (Song & {
@@ -23,14 +25,20 @@ export const SongPlayButton = ({
 
     const { priorityEnqueue, current } = useQueue();
     const { isPlaying } = usePlayer(); 
+    const session = useSession();
+    const router = useRouter();
 
     const handleButton = async() =>{
-        if ( songs ){
-            priorityEnqueue(songs);
+        if ( session.status === "unauthenticated" ) {
+            router.push("/login");
         } else {
-            const album = await getAlbum(id);
-            if (album) {
-                priorityEnqueue(album.songs);
+            if ( songs ){
+                priorityEnqueue(songs);
+            } else {
+                const album = await getAlbum(id);
+                if (album) {
+                    priorityEnqueue(album.songs);
+                }
             }
         }
     }

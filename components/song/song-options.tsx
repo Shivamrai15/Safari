@@ -3,6 +3,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { Album, Artist, PlayList, Song } from "@prisma/client";
 
 import {
@@ -22,7 +23,6 @@ import {
     Copy,
     Disc3,
     EllipsisVertical,
-    Heart,
     ListMusic,
     MicVocal,
     Plus,
@@ -30,6 +30,8 @@ import {
 import { useQueue } from "@/hooks/use-queue";
 import { usePlaylist } from "@/hooks/use-playlist";
 import { usePlaylistModal } from "@/hooks/use-playlist-modal";
+import { LikeButton } from "@/components/utils/like-button";
+import { toast } from "sonner";
 
 interface SongOptionsProps {
     song : (Song & {
@@ -43,6 +45,7 @@ export const SongOptions = ({
 } : SongOptionsProps ) => {
 
     const router = useRouter();
+    const session = useSession();
     const [ origin, setOrigin ] = useState("");
     const { enQueue } = useQueue();
     const { data, error, isLoading } : { data : PlayList[], error : any, isLoading : boolean }  = usePlaylist();
@@ -53,9 +56,10 @@ export const SongOptions = ({
         setOrigin(window.location.origin);
     }, []);
 
-    const handleAddSongInPlaylist = async( playlistId : string )=>{
+    const handleAddSongInPlaylist = async( playlistId : string, name: string )=>{
         try {
             await axios.post(`/api/v1/user/playlist/${playlistId}`, { songId : song.id });
+            toast.success(`Saved to ${name}`);
             mutate();
         } catch (error) {
             console.log(error);
@@ -68,12 +72,15 @@ export const SongOptions = ({
             <DropdownMenuTrigger asChild onClick={(e)=>e.stopPropagation()} >
                 <EllipsisVertical className="md:cursor-pointer" />
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56" align="end" >
+            <DropdownMenuContent className="w-56" align="end" onClick={(e)=>e.stopPropagation()} >
                 <DropdownMenuGroup>
-                    <DropdownMenuItem onClick={(e)=>{
-                        e.stopPropagation();
-                        enQueue([song])
-                    }}>
+                    <DropdownMenuItem
+                        disabled = { session.status === "unauthenticated" }
+                        onClick={(e)=>{
+                            e.stopPropagation();
+                            enQueue([song])
+                        }}
+                    >
                         <ListMusic className="mr-2 h-5 w-5" />
                         <span className="font-medium" >Add to queue</span>
                     </DropdownMenuItem>
@@ -83,8 +90,14 @@ export const SongOptions = ({
                             <span className="font-medium" >Add to playlist</span>
                         </DropdownMenuSubTrigger>
                         <DropdownMenuPortal>
-                            <DropdownMenuSubContent className="w-48" >
-                                <DropdownMenuItem onClick={()=>onOpen()} >
+                            <DropdownMenuSubContent className="w-48" onClick={(e)=>e.stopPropagation()} >
+                                <DropdownMenuItem 
+                                    disabled = { session.status === "unauthenticated" }
+                                    onClick={(e)=>{
+                                        e.stopPropagation();
+                                        onOpen()}
+                                    } 
+                                >
                                 <Plus className="mr-2 h-5 w-5" />
                                 <span>New Playlist</span>
                                 </DropdownMenuItem>
@@ -93,7 +106,7 @@ export const SongOptions = ({
                                         key={playlist.id}
                                         onClick={(e)=>{ 
                                             e.stopPropagation();
-                                            handleAddSongInPlaylist(playlist.id)
+                                            handleAddSongInPlaylist(playlist.id, playlist.name);
                                         }}
                                     >
                                         <div className="line-clamp-1">
@@ -104,9 +117,8 @@ export const SongOptions = ({
                             </DropdownMenuSubContent>
                         </DropdownMenuPortal>
                     </DropdownMenuSub>
-                    <DropdownMenuItem>
-                        <Heart className="mr-2 h-5 w-5" />
-                        <span className="font-medium" >Add to Liked Songs</span>
+                    <DropdownMenuItem disabled = {session.status === "unauthenticated"} >
+                        <LikeButton id={song.id} className="h-5 w-5" label={true} />
                     </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />

@@ -1,27 +1,46 @@
 "use client";
 
 import Image from "next/image";
+import axios from "axios";
 import { useRouter } from "next/navigation";
-import { Artist, Song } from "@prisma/client";
+import { Album, Artist, PlayList, Song } from "@prisma/client";
 
 import {
     Drawer,
-    DrawerClose,
     DrawerContent,
-    DrawerDescription,
-    DrawerFooter,
     DrawerHeader,
-    DrawerTitle,
     DrawerTrigger,
 } from "@/components/ui/drawer";
 
-import { Copy, Disc3, EllipsisVertical, Heart, ListMusic, MicVocal, Plus } from "lucide-react";
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from "@/components/ui/accordion";
+
+import { 
+    Copy,
+    Disc3,
+    EllipsisVertical,
+    ListMusic,
+    MicVocal,
+    Plus
+} from "lucide-react";
+
 import { Separator } from "@/components/ui/separator";
 import { useEffect, useState } from "react";
+import { useQueue } from "@/hooks/use-queue";
+import { useSession } from "next-auth/react";
+import { usePlaylistModal } from "@/hooks/use-playlist-modal";
+import { LikeButton } from "@/components/utils/like-button";
+import { usePlaylist } from "@/hooks/use-playlist";
+import { toast } from "sonner";
 
 interface SmallDevicesSongOptionsProps {
     song : Song & {
-        artists : Artist[]
+        artists : Artist[],
+        album : Album
     }
 }
 
@@ -30,11 +49,27 @@ export const SmallDevicesSongOptions = ({
 } : SmallDevicesSongOptionsProps ) => {
 
     const router = useRouter();
+    const session = useSession()
     const [ origin, setOrigin ] = useState("");
+    const { enQueue } = useQueue();
+    const { onOpen } = usePlaylistModal();
+    const { mutate } = usePlaylist();
+    const { data, error, isLoading } : { data : PlayList[], error : any, isLoading : boolean }  = usePlaylist();
+
     
     useEffect(()=>{
         setOrigin(window.location.origin);
     }, []);
+
+    const handleAddSongInPlaylist = async( playlistId : string, name : string )=>{
+        try {
+            await axios.post(`/api/v1/user/playlist/${playlistId}`, { songId : song.id });
+            toast.success(`Saved to ${name}`);
+            mutate();
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
 
     return (
@@ -72,28 +107,56 @@ export const SmallDevicesSongOptions = ({
                     </div>
                 </DrawerHeader>
                 <Separator/>
-                <div className="h-72 overflow-y-auto">
+                <div className="h-80 overflow-y-auto" onClick={(e)=>e.stopPropagation()}>
                     <div className="flex flex-col space-y-5 p-4 px-8">
-                        <div className="flex items-center cursor-pointer">
+                        <button 
+                            className="flex items-center"
+                            disabled = { session.status === "unauthenticated" }
+                            onClick={()=>enQueue([song])}
+                        >
                             <ListMusic className="mr-3 h-5 w-5" />
                             <span className="font-medium text-base" >Add to queue</span>
-                        </div>
-                        <div className="flex items-center cursor-pointer">
-                            <Plus className="mr-3 h-5 w-5" />
-                            <span className="font-medium text-base" >Add to playlist</span>
-                        </div>
-                        <div className="flex items-center cursor-pointer">
-                            <Heart className="mr-3 h-5 w-5" />
-                            <span className="font-medium" >Add to Liked Songs</span>
-                        </div>
-                        <div className="flex items-center cursor-pointer" onClick={()=>navigator.clipboard.writeText(`${origin}/album/${song.albumId}`)} >
+                        </button>
+                        <Accordion type="single" collapsible className="w-full"  >
+                            <AccordionItem value={song.id} >
+                                <AccordionTrigger className="justify-start no-underline pt-0 pb-4 hover:no-underline" disabled = {session.status === "unauthenticated"} >
+                                    <Plus className="mr-3 h-5 w-5" />
+                                    <span className="font-medium text-base" >Add to playlist</span>
+                                </AccordionTrigger>
+                                <AccordionContent className="flex flex-col items-start space-y-2">
+                                    <button
+                                        disabled={ session.status === "unauthenticated" }
+                                        onClick={()=>onOpen()}
+                                    >
+                                        <span className="font-medium text-base ml-8" >New playlist</span>
+                                    </button>
+                                    {  (!isLoading && !error )&& data.map((playlist)=>(
+                                        <button
+                                            key={playlist.id}
+                                            onClick={(e)=>{ 
+                                                e.stopPropagation();
+                                                handleAddSongInPlaylist(playlist.id, playlist.name)
+                                            }}
+                                        >
+                                            <div className="line-clamp-1 font-medium text-base ml-8">
+                                                {playlist.name}
+                                            </div>
+                                        </button>
+                                    )) }
+                                </AccordionContent>
+                            </AccordionItem>
+                        </Accordion>
+                        <button className="flex items-center" disabled = { session.status === "unauthenticated" } >
+                            <LikeButton id={song.id} className="h-5 w-5" label={true} />
+                        </button>
+                        <button className="flex items-center" onClick={()=>navigator.clipboard.writeText(`${origin}/album/${song.albumId}`)} >
                             <Copy className="mr-3 h-5 w-5" />
                             <span className="font-medium" >Copy album link</span>
-                        </div>
-                        <div className="flex items-center cursor-pointer" onClick={()=>router.push(`/album/${song.albumId}`)} >
+                        </button>
+                        <button className="flex items-center" onClick={()=>router.push(`/album/${song.albumId}`)} >
                             <Disc3 className="mr-3 h-5 w-5" />
                             <span className="font-medium" >Go to Album</span>
-                        </div>
+                        </button>
                     </div>
                     <Separator/>
                     <div className="flex flex-col space-y-5 p-4 px-8">

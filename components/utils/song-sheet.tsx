@@ -71,7 +71,7 @@ export const SongSheet = ({
                                 <h3 className="hidden md:block text-lg font-semibold">{current?.album.name}</h3>
                                 <div className="flex items-center justify-between gap-x-4">
                                     <h2 className="text-3xl md:text-5xl lg:text-8xl font-bold md:font-extrabold line-clamp-1 drop-shadow-2xl md:py-2 flex-1" >{current?.name}</h2>
-                                    <LikeButton id={current?.id} className="h-9 w-9 md:hidden"/>
+                                    <LikeButton id={current?.id} className="h-8 w-8 md:hidden"/>
                                 </div>
                             </div>
                             <div className="md:flex gap-x-6 w-full items-center">
@@ -89,7 +89,7 @@ export const SongSheet = ({
                                     <span className="text-sm text-zinc-200">{songLength(current?.duration || 0)}</span>
                                 </div>
                             </div>
-                            <div className="flex items-center w-full justify-center gap-x-5 md:gap-x-6 md:justify-start">
+                            <div className="hidden md:flex items-center w-full gap-x-6 md:justify-start">
                                 <ShuffleIcon className="md:h-8 md:w-8" onClick={shuffle} />
                                 <FaBackwardStep
                                     className="h-8 w-8 md:h-10 md:w-10 md:text-zinc-300 hover:text-white cursor-pointer"
@@ -105,6 +105,22 @@ export const SongSheet = ({
                                 />
                                 <RepeatIcon onClick={toggleRepeat}  className="h-6 w-6 md:h-8 md:w-8 text-white cursor-pointer" />
                                 <LikeButton id={current?.id} className="h-8 w-8 hidden md:block"/>
+                            </div>
+                            <div className="flex items-center w-full justify-center gap-x-5 md:hidden">
+                                <ShuffleIcon className="md:h-8 md:w-8" onClick={shuffle} />
+                                <FaBackwardStep
+                                    className="h-8 w-8 md:h-10 md:w-10 md:text-zinc-300 hover:text-white"
+                                    onClick={pop}
+                                />
+                                <Icon
+                                    className="h-10 md:h-14 w-10 md:w-14"
+                                    onClick={togglePlay}
+                                />
+                                <FaForwardStep
+                                    className="h-8 w-8 md:h-10 md:w-10 md:text-zinc-300 hover:text-white"
+                                    onClick={deQueue}
+                                />
+                                <RepeatIcon onClick={toggleRepeat}  className="h-6 w-6 md:h-8 md:w-8 text-white" />
                             </div>
                         </div>
                     </div>

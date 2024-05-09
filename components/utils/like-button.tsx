@@ -4,6 +4,7 @@ import { useLikedSongs } from "@/hooks/use-liked-songs";
 import { cn } from "@/lib/utils";
 import { Album, Song } from "@prisma/client";
 import axios from "axios";
+import { useSession } from "next-auth/react";
 import { useMemo, useState } from "react";
 import { MdOutlineThumbUpAlt, MdThumbUp } from "react-icons/md";
 import { toast } from "sonner";
@@ -11,14 +12,17 @@ import { toast } from "sonner";
 interface LikeButtonProps {
     id : string|undefined;
     className? : string;
+    label? : boolean;
 }
 
 export const LikeButton = ({
     id,
-    className
+    className,
+    label
 } : LikeButtonProps ) => {
 
     const [ loading, setLoading ] = useState(false);
+    const session = useSession();
     
     const { data, isLoading, mutate } : { 
         data : ( Song & { album : Album } )[],
@@ -28,14 +32,14 @@ export const LikeButton = ({
 
 
     const isLiked = useMemo(()=>{
-        if (!isLoading) {
+        if (session.status === "authenticated" && !isLoading) {
             const isExist = data.find((song)=> song.id === id)
             if ( isExist ) {
                 return true;
             }
             return false;
         }
-    }, [data, id, mutate, isLoading]);
+    }, [data, id, mutate, isLoading, session]);
 
 
     const toggleLikeButton = async() => {
@@ -72,23 +76,32 @@ export const LikeButton = ({
         >
             {
                 isLiked ? (
-                    <MdThumbUp
-                        className={cn(
-                            "h-6 w-6 ",
-                            className,
-                            loading && "opacity-80 cursor-default"
-                        )}
-                    />
+                    <div className="flex items-center" >
+                        <MdThumbUp
+                            className={cn(
+                                "h-6 w-6",
+                                className,
+                                loading && "opacity-80 cursor-default",
+                                label && "mr-3"
+                            )}
+                        />
+                        { label && "Remove from liked songs" }
+                    </div>
                 ) : (
-                    <MdOutlineThumbUpAlt
-                        className={cn(
-                            "h-6 w-6",
-                            className,
-                            loading && "opacity-80 cursor-default"
-                        )}
-                    />
+                    <div className="flex items-center" >
+                        <MdOutlineThumbUpAlt
+                            className={cn(
+                                "h-6 w-6",
+                                className,
+                                loading && "opacity-80 cursor-default",
+                                label && "mr-3"
+                            )}
+                        />
+                        { label && "Add to liked songs" }
+                    </div>
                 )
             }
+            {label}
         </button>
     )
 }

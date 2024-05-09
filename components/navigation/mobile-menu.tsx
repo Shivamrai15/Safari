@@ -39,10 +39,10 @@ export const MobileMenu = () => {
             active : pathname === "/playlists"
         },   
         {
-            label : "User",
-            href : "/user",
-            Icon : pathname === "/user" ? FaUser : FaRegUser,
-            active : pathname === "/user"
+            label : "Account",
+            href : "/account",
+            Icon : pathname === "/account" ? FaUser : FaRegUser,
+            active : pathname === "/account"
         },   
     ], [pathname]);
 

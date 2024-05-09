@@ -1,7 +1,9 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import Image from "next/image";
 import { useMemo } from "react";
+import { useSession } from "next-auth/react";
+import { usePathname, useRouter } from "next/navigation";
 
 import { GoHome, GoHomeFill } from "react-icons/go";
 import { RiSearchFill, RiSearchLine } from "react-icons/ri";
@@ -9,7 +11,6 @@ import { FaRegCompass, FaCompass } from "react-icons/fa";
 import { BsCollection, BsFillCollectionFill } from "react-icons/bs";
 import { TbSquareRoundedPlus } from "react-icons/tb";
 import { SidebarItem } from "./sidebar-item";
-import Image from "next/image";
 import { usePlaylistModal } from "@/hooks/use-playlist-modal";
 import { PlaylistNav } from "./playlist-nav";
 
@@ -17,6 +18,7 @@ export const Sidebar = () => {
 
     const pathname = usePathname();
     const router = useRouter();
+    const session = useSession();
     const { onOpen } = usePlaylistModal();
 
     const routes = useMemo(()=>[
@@ -59,7 +61,11 @@ export const Sidebar = () => {
                 <div className="flex items-center justify-center">
                     <TbSquareRoundedPlus
                         className="h-8 w-8 md:cursor-pointer"
-                        onClick={()=>onOpen()}
+                        onClick={()=>{
+                            if ( session.status === "authenticated" ) {
+                                onOpen();
+                            }
+                        }}
                     />
                 </div>
                 <div
@@ -73,7 +79,11 @@ export const Sidebar = () => {
                         className="object-cover"
                     />
                 </div>
-                <PlaylistNav/>
+                {
+                    session.status === "authenticated" && (
+                        <PlaylistNav/>
+                    )
+                }
             </div>
         </aside>
     )

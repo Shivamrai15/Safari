@@ -9,6 +9,7 @@ import { SmallDevicesSongOptions } from "./small-devices-song-options";
 import { useQueue } from "@/hooks/use-queue";
 import { Audio } from "react-loader-spinner";
 import { usePlayer } from "@/hooks/use-player";
+import { useSession } from "next-auth/react";
 
 interface SongItemProps {
     song : (Song & {
@@ -23,13 +24,21 @@ export const SongItem = ({
 } : SongItemProps ) => {
 
     const router = useRouter();
+    const session = useSession();
     const { priorityEnqueue, current } = useQueue();
     const { isPlaying } = usePlayer();
 
     return (
         <div
             className="w-full h-full px-4 gap-4 md:gap-6 py-2 group hover:bg-neutral-800/70 rounded-sm transition-all md:cursor-pointer select-none"
-            onClick={()=>priorityEnqueue([song])}
+            onClick={()=>{
+                if(session.status === "unauthenticated") {
+                    router.push("/login");
+
+                } else {
+                    priorityEnqueue([song])
+                }
+            }}
         >
             <div className="flex items-center gap-4 md:gap-6 font-semibold text-lg">
                 <div className="w-10 aspect-square relative rounded-sm overflow-hidden">

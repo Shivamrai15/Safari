@@ -11,7 +11,7 @@ const fuseOptions = {
 export const getTopSearches =  async( query: string ) => {
     try {
 
-        const [ albums, artists, songs ] = await Promise.all([
+        const [ albums, artists, songs ] = await db.$transaction([
             db.album.findMany({
                 where : {
                     name : { contains: query, mode : "insensitive" }

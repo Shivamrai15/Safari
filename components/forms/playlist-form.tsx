@@ -31,21 +31,27 @@ import { usePlaylist } from "@/hooks/use-playlist";
 export const PlaylistForm = () => {
 
 
-    const { loading, setLoading, onClose } = usePlaylistModal();
+    const { loading, setLoading, onClose, data, setData } = usePlaylistModal();
     const { mutate } = usePlaylist();
 
     const form = useForm<z.infer<typeof PlaylistSchema>>({
         resolver : zodResolver(PlaylistSchema),
         defaultValues : {
-            name : "",
-            private : true
+            name : data?.name || "",
+            private : data?.private || true,
+            description : data?.description
         }
     });
 
     const onSubmit = async( values : z.infer<typeof PlaylistSchema> )=>{
         try {
             setLoading(true);
-            await axios.post("/api/v1/user/playlist", values);
+            if ( !data ) {
+                await axios.post("/api/v1/user/playlist", values);
+            } else {
+                await axios.patch(`/api/v1/user/playlist/${data.id}`, values);
+                setData(undefined);
+            }
             onClose();
             mutate();
         } catch (error) {
@@ -61,7 +67,9 @@ export const PlaylistForm = () => {
 
     return (
         <div className="w-full space-y-4 mt-4">
-            <h2 className="text-lg font-semibold">Create Playlist</h2>
+            <h2 className="text-lg font-semibold">
+                { data ? "Edit Playlist" : "Create Playlist" }
+            </h2>
             <Form {...form}>
                 <form
                     onSubmit={form.handleSubmit(onSubmit)}

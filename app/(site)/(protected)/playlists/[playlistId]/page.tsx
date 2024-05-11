@@ -37,6 +37,8 @@ const PlaylistPage = async ({
                 name={playlist.name}
                 songs={playlist._count.songs}
                 description={playlist?.description||undefined}
+                isPrivate={playlist.private}
+                userId={playlist.userId}
             />
             <Songs id={playlist.id} />
         </div>

@@ -29,6 +29,7 @@ import { Range } from "@/components/ui/range";
 import { SongSheet } from "./song-sheet";
 import { useSheet } from "@/hooks/use-sheet";
 import { LikeButton } from "./like-button";
+import axios from "axios";
 
 export const Player = () => {
 
@@ -89,10 +90,17 @@ export const Player = () => {
         }
     };
 
-    useEffect(()=>{
+    const updateHistory = async() => {
+        if (current) {
+            await axios.post("/api/v1/user/history", { songId : current.id });
+        }
+    }
+
+    useEffect(() => {
         if (current) {
             setAlbumId( current.albumId );
             setSongId( current.id );
+            updateHistory();
         }
     }, [current]);
 

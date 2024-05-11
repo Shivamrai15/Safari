@@ -45,7 +45,6 @@ export async function GET (req : Request) {
         let playlistSongs : PlaylistSong[] = [] 
 
         if (cursor) {
-            console.log(playlist.id)
             playlistSongs = await db.playlistSong.findMany({
                 where : {
                     playlistId : playlist.id
@@ -59,21 +58,26 @@ export async function GET (req : Request) {
                     createdAt : "desc"
                 }
             });
-            const fetchedSongs = await Promise.all(playlistSongs.map( async(song)=>{
-                return db.song.findUnique({
-                    where : {
-                        id : song.songId
-                    },
-                    include : {
-                        album : true,
-                        artists : true
+
+            const playlistSongIds = playlistSongs.map((song)=>song.songId);
+    
+            songs = await db.song.findMany({
+                where : {
+                    id : {
+                        in : playlistSongIds
                     }
-                })
-            }));
-            // @ts-ignore
-            songs = fetchedSongs
+                },
+                include : {
+                    album : true,
+                    artists : true
+                }
+            });
+            
+            songs.sort((a, b)=>playlistSongIds.indexOf(a.id)-playlistSongIds.indexOf(b.id));
+
         } else {
-                playlistSongs = await db.playlistSong.findMany({
+                
+            playlistSongs = await db.playlistSong.findMany({
                 where : {
                     playlistId : playlist.id
                 },
@@ -82,19 +86,22 @@ export async function GET (req : Request) {
                     createdAt : "desc"
                 }
             });
-            const fetchedSongs = await Promise.all(playlistSongs.map( async(song)=>{
-                return db.song.findUnique({
-                    where : {
-                        id : song.songId
-                    },
-                    include : {
-                        album : true,
-                        artists : true
+
+            const playlistSongIds = playlistSongs.map((song)=>song.songId);
+    
+            songs = await db.song.findMany({
+                where : {
+                    id : {
+                        in : playlistSongIds
                     }
-                })
-            }));
-            // @ts-ignore
-            songs = fetchedSongs
+                },
+                include : {
+                    album : true,
+                    artists : true
+                }
+            });
+            
+            songs.sort((a, b)=>playlistSongIds.indexOf(a.id)-playlistSongIds.indexOf(b.id));
         }
 
         let nextCursor = null;

@@ -79,3 +79,42 @@ export async function POST (
         return new NextResponse("Internal server error", { status: 500 })
     }
 }
+
+export async function DELETE ( 
+    _req : Request,
+    { params } : { params : { playlistId : string } }
+) {
+    try {
+        
+        const session = await auth();
+        if ( !session || !session.user || !session.user.id ) {
+            return new NextResponse("Unauthorized", { status : 401 });
+        }
+
+        const playlist = await db.playList.findUnique({
+            where : {
+                id : params.playlistId
+            }
+        });
+
+        if ( !playlist ) {
+            return new NextResponse("Playlist Not Found", { status : 404 });
+        }
+
+        if ( playlist.userId !== session.user.id ) {
+            return new NextResponse("Unauthorized", { status : 401 });
+        }
+
+        await db.playList.delete({
+            where : {
+                id : params.playlistId
+            }
+        });
+
+        return NextResponse.json({ success : true });
+
+    } catch (error) {
+        console.error("PLAYLIST DELETE API ERROR" ,error);
+        return new NextResponse("Internal server error", { status: 500 })
+    }
+}

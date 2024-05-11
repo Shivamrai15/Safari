@@ -51,8 +51,6 @@ export const Songs = ({
         ))
     }, [data, fetchNextPage]);
 
-    console.log(data);
-
     if ( status === "pending" ) {
         return (
             <div className="mt-16 md:mt-20 w-full flex items-center justify-center">

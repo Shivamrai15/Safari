@@ -1,17 +1,22 @@
 "use client";
 
-import { usePathname } from "next/navigation";
 import { useMemo } from "react";
+import { useSession } from "next-auth/react";
+import { usePathname, useRouter } from "next/navigation";
 
 import { GoHome, GoHomeFill } from "react-icons/go";
 import { RiSearchFill, RiSearchLine } from "react-icons/ri";
-import { FaRegCompass, FaCompass, FaRegUser, FaUser } from "react-icons/fa";
+import { FaRegCompass, FaCompass } from "react-icons/fa";
 import { BsCollection, BsFillCollectionFill } from "react-icons/bs";
 import { SidebarItem } from "./sidebar-item";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { AvatarImage } from "@radix-ui/react-avatar";
 
 export const MobileMenu = () => {
 
     const pathname = usePathname();
+    const router = useRouter();
+    const session = useSession();
 
     const routes = useMemo(()=>[
         {
@@ -37,13 +42,7 @@ export const MobileMenu = () => {
             href : "/playlists",
             Icon : pathname === "/playlists" ? BsFillCollectionFill : BsCollection,
             active : pathname === "/playlists"
-        },   
-        {
-            label : "Account",
-            href : "/account",
-            Icon : pathname === "/account" ? FaUser : FaRegUser,
-            active : pathname === "/account"
-        },   
+        },  
     ], [pathname]);
 
     return (
@@ -56,6 +55,14 @@ export const MobileMenu = () => {
                     </div>
                     ))
                 }
+                <div className="flex items-center justify-center h-full w-full">
+                    <Avatar className="h-7 w-7 ring-2 ring-neutral-900" onClick={()=>router.push("/account")} >
+                        <AvatarImage  src={session.data?.user?.image || ""} />
+                        <AvatarFallback className="text-xs bg-red-800" >
+                            { session.data?.user?.name?.charAt(0).toUpperCase() || "S" }
+                        </AvatarFallback>
+                    </Avatar>
+                </div>
             </div>  
         </div>
     )

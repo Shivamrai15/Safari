@@ -22,18 +22,22 @@ export async function GET () {
             }
         });
 
+        const likedSongIds = likedSongs.map((song)=> song.songId);
 
-        const songs = await Promise.all(likedSongs.map(async(item)=>{
-            return db.song.findUnique({
-                where : {
-                    id : item.songId
-                },
-                include : {
-                    artists : true,
-                    album : true
+
+        const songs = await db.song.findMany({
+            where : {
+                id : {
+                    in : likedSongIds
                 }
-            })
-        }));
+            },
+            include : {
+                artists : true,
+                album : true
+            }
+        });
+
+        songs.sort((a, b) => likedSongIds.indexOf(a.id) - likedSongIds.indexOf(b.id));
 
         return NextResponse.json(songs, { status:200 });
 

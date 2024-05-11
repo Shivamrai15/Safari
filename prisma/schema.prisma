@@ -99,7 +99,7 @@ model PlayList {
   name        String
   image       String?
   description String?
-  color String?
+  color       String?
   userId      String         @db.ObjectId
   private     Boolean        @default(true)
   user        User           @relation(fields: [userId], references: [id])
@@ -114,7 +114,7 @@ model PlaylistSong {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
   songId     String   @db.ObjectId
   playlistId String   @db.ObjectId
-  playlist   PlayList @relation(fields: [playlistId], references: [id], onDelete : Cascade)
+  playlist   PlayList @relation(fields: [playlistId], references: [id], onDelete: Cascade)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
@@ -123,8 +123,7 @@ model PlaylistSong {
 
 model History {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  contentId String   @db.ObjectId
-  isAlbum   Boolean  @default(false)
+  songId    String   @db.ObjectId
   userId    String   @db.ObjectId
   user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())

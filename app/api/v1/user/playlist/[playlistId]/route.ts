@@ -118,3 +118,45 @@ export async function DELETE (
         return new NextResponse("Internal server error", { status: 500 })
     }
 }
+
+
+
+export async function GET (
+    _req : Request,
+    { params } : { params : { playlistId : string } }
+) {
+    try {
+        
+        const session = await auth();
+        if ( !session || !session.user || !session.user.id ) {
+            return new NextResponse("Unauthorized", { status: 401 });
+        }
+
+        const playlistSongs = await db.playlistSong.findMany({
+            where : {
+                playlistId : params.playlistId
+            },
+            orderBy : {
+                createdAt : "desc"
+            }
+        });
+
+        const playlistSongIds = playlistSongs.map((item)=>item.songId);
+        const songs = await db.song.findMany({
+            where : {
+                id : { in : playlistSongIds }
+            },
+            include : {
+                album : true,
+            }
+        });
+
+        songs.sort((a, b)=>playlistSongIds.indexOf(a.id)-playlistSongIds.indexOf(b.id));
+
+        return NextResponse.json(songs, { status : 200 });
+
+    } catch (error) {
+        console.error(error);
+        return new NextResponse("Internal server error", { status: 500 })
+    }
+}

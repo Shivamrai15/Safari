@@ -59,7 +59,7 @@ export const login = async ( data : z.infer<typeof LoginSchema> ) => {
         const value = await signIn("credentials", {
             email,
             password,
-            redirectTo: DEFAULT_LOGIN_REDIRECT,
+            redirectTo: "/",
         });
 
         console.log(value);

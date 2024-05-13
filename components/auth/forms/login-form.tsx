@@ -21,10 +21,12 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { login } from "@/server/login";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export const LoginForm = () => {
 
     const [ loading, setLoading ] = useState(false);
+    const router = useRouter();
     
     const form = useForm<z.infer<typeof LoginSchema>>({
         resolver : zodResolver(LoginSchema),
@@ -46,7 +48,6 @@ export const LoginForm = () => {
             if (response.info) {
                 toast.info(response.info);
             }
-
         } catch (error) {
             
         } finally {

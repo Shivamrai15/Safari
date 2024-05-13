@@ -14,12 +14,15 @@ import { ListMusic, Pencil, Share, Trash2 } from "lucide-react";
 import { SlOptionsVertical } from "react-icons/sl";
 import { usePlaylist } from "@/hooks/use-playlist";
 import { useRouter } from "next/navigation";
+import { Album, Song } from "@prisma/client";
+import { useQueue } from "@/hooks/use-queue";
 
 interface PlaylistOptionsProps {
     id : string;
     isPrivate : boolean;
     handleEditModal : () => void;
     disabled : boolean;
+    isAuth : boolean;
 }
 
 export const PlaylistOptions = ({
@@ -27,10 +30,12 @@ export const PlaylistOptions = ({
     isPrivate,
     handleEditModal,
     disabled,
+    isAuth
 } : PlaylistOptionsProps ) => {
 
     const router = useRouter();
     const [loading, setLoading] = useState(false);
+    const { enQueue } = useQueue();
     const { mutate } = usePlaylist();
     
     const handleSharePlaylist = () => {
@@ -38,6 +43,20 @@ export const PlaylistOptions = ({
         const url = `${origin}/playlists/${id}`;
         navigator.clipboard.writeText(url);
         toast.info("Link copied to clipboard")
+    }
+
+    const addToQueue = async() => {
+        try {
+            setLoading(true);
+            const response = await axios.get(`/api/v1/user/playlist/${id}`);
+            const songs : (Song & { album : Album })[] = response.data;
+            enQueue(songs);
+        } catch (error) {
+            console.error(error);
+            toast.error("Something went wrong");
+        } finally {
+            setLoading(false);
+        }
     }
 
     const handleDelete = async () => {
@@ -71,7 +90,11 @@ export const PlaylistOptions = ({
                     <Pencil className="h-5 w-5 mr-3"/>
                     Edit details
                 </DropdownMenuItem>
-                <DropdownMenuItem className="py-2">
+                <DropdownMenuItem 
+                    className="py-2" 
+                    disabled = { disabled || !isAuth }
+                    onClick={addToQueue}
+                >
                     <ListMusic className="h-5 w-5 mr-3"/>
                     Add to queue
                 </DropdownMenuItem>

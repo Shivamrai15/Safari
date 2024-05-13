@@ -5,6 +5,7 @@ import { ShuffleButton } from "@/components/utils/shuffle-btn";
 import { PlaylistOptions } from "./options";
 import { useSession } from "next-auth/react";
 import { usePlaylistModal } from "@/hooks/use-playlist-modal";
+import { PlayButton } from "./play-button";
 
 interface HeaderProps {
     id : string;
@@ -77,12 +78,14 @@ export const Header = ({
                                 </span>
                             </div>
                             <div className="flex justify-center md:justify-start items-center gap-6 pt-2 md:pr-28" >
+                                <PlayButton id={id} />
                                 <ShuffleButton/>
                                 <PlaylistOptions 
                                     id={id}
                                     isPrivate={isPrivate}
                                     handleEditModal={handleEditModal} 
                                     disabled = { session.status==="unauthenticated" || session.data?.user?.id !== userId }
+                                    isAuth = { session.status === "authenticated" }
                                 />
                             </div>
                         </div>

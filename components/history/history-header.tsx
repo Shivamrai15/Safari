@@ -3,15 +3,19 @@
 import { History } from "lucide-react";
 
 interface HistoryHeader {
-    label : string;
+    label : string | null;
 }
 
 export const HistoryHeader = ({
     label
 } : HistoryHeader ) => {
     
+    if (!label) {
+        return null;
+    }
+
     return (
-        <div className="w-full flex items-center gap-x-5">
+        <div className="w-full flex items-center gap-x-5 pt-14 md:pt-16">
             <div className="shrink-0 h-12 w-12 flex items-center justify-center bg-neutral-800 rounded-full">
                 <History className="text-red-500"/>
             </div>

@@ -4,6 +4,8 @@ export const DEFAULT_LOGIN_REDIRECT = "/";
 
 export const protectedRoutes = [
     "/liked-music",
+    "/history",
+    "/playlists"
 ];
 
 export const authRoutes = [

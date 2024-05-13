@@ -29,7 +29,7 @@ const PlaylistPage = async ({
     }
 
     return (
-        <div className="min-h-full pb-10 md:pb-0" style={{background :  `linear-gradient(180deg, #111 70%,  ${playlist?.color || "#242424"}5a 100%)` }} >
+        <div className="min-h-full pb-10 md:pb-0 bg-[#111]">
             <Header
                 id={playlist.id}
                 color={playlist?.color||"#242424"}

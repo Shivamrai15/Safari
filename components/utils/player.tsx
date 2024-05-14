@@ -100,7 +100,7 @@ export const Player = () => {
         if (current) {
             setAlbumId( current.albumId );
             setSongId( current.id );
-            // updateHistory();
+            updateHistory();
         }
     }, [current]);
 

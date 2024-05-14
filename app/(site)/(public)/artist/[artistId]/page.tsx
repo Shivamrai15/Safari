@@ -1,8 +1,8 @@
 import { Albums } from "@/components/artist/albums";
-import { ListItem } from "@/components/song/list-item";
+import { Subscribe } from "@/components/artist/subscribe";
 import { SongItem } from "@/components/song/song-item";
 import { Button } from "@/components/ui/button";
-import { cn, subscriber } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { getArtist } from "@/server/artist";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -44,12 +44,7 @@ const ArtistPage = async({
                     <FaPlay className="h-6 w-6 text-white" />
                 </Button>
                 <PiShuffleBold className="h-12 w-12 text-zinc-300 hover:text-white md:cursor-pointer" />
-                <Button
-                    variant="outline"
-                    className="rounded-full hover:border-white font-semibold border-red-600 text-red-600"
-                >
-                    Subscribe { subscriber(artist._count.followers) }
-                </Button>
+                <Subscribe artistId={artist.id} followers={artist._count.followers} />
             </div>
             <div className="w-full px-4 md:px-20 mt-20 space-y-6 md:pr-32">
                 <h3 className="text-lg sm:text-xl md:text-2xl px-3 font-bold" >Popular</h3>

@@ -20,22 +20,22 @@ import {
 } from "@/components/ui/accordion";
 
 import { 
-    Copy,
     Disc3,
     EllipsisVertical,
     ListMusic,
     MicVocal,
-    Plus
+    Plus,
 } from "lucide-react";
 
+import { PiShareFat } from "react-icons/pi";
 import { Separator } from "@/components/ui/separator";
-import { useEffect, useState } from "react";
 import { useQueue } from "@/hooks/use-queue";
 import { useSession } from "next-auth/react";
 import { usePlaylistModal } from "@/hooks/use-playlist-modal";
 import { LikeButton } from "@/components/utils/like-button";
 import { usePlaylist } from "@/hooks/use-playlist";
 import { toast } from "sonner";
+import { useShareModal } from "@/hooks/use-share-modal";
 
 interface SmallDevicesSongOptionsProps {
     song : Song & {
@@ -50,16 +50,12 @@ export const SmallDevicesSongOptions = ({
 
     const router = useRouter();
     const session = useSession()
-    const [ origin, setOrigin ] = useState("");
     const { enQueue } = useQueue();
     const { onOpen } = usePlaylistModal();
     const { mutate } = usePlaylist();
+    const shareModal = useShareModal();
     const { data, error, isLoading } : { data : PlayList[], error : any, isLoading : boolean }  = usePlaylist();
 
-    
-    useEffect(()=>{
-        setOrigin(window.location.origin);
-    }, []);
 
     const handleAddSongInPlaylist = async( playlistId : string, name : string )=>{
         try {
@@ -149,9 +145,9 @@ export const SmallDevicesSongOptions = ({
                         <button className="flex items-center" disabled = { session.status === "unauthenticated" } >
                             <LikeButton id={song.id} className="h-5 w-5" label={true} />
                         </button>
-                        <button className="flex items-center" onClick={()=>navigator.clipboard.writeText(`${origin}/album/${song.albumId}`)} >
-                            <Copy className="mr-3 h-5 w-5" />
-                            <span className="font-medium" >Copy album link</span>
+                        <button className="flex items-center" onClick={()=>shareModal.onOpen(`/song/${song.id}`)} >
+                            <PiShareFat className="mr-3 h-5 w-5" />
+                            <span className="font-medium" >Share</span>
                         </button>
                         <button className="flex items-center" onClick={()=>router.push(`/album/${song.albumId}`)} >
                             <Disc3 className="mr-3 h-5 w-5" />

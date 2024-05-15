@@ -54,8 +54,9 @@ export const HistoryList = () => {
                         }), idx : number ) => (
                             <>
                                 {
-                                    idx===0 && i===0 && (new Date(song.history).getDate() === new Date().getDate()) && (
-                                        <HistoryHeader label="Today" />
+                                    idx===0 && i===0 && ((new Date(song.history).getDate() === new Date().getDate()) ? 
+                                        (<HistoryHeader label="Today" />):
+                                        (<HistoryHeader label={historyPartition(data?.pages, i, group.items, idx)} />)
                                     )
                                 }
                                 <div className="w-full flex items-center justify-start gap-x-6 md:gap-x-10" key={song.id} >

@@ -1,17 +1,59 @@
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { Metadata, ResolvingMetadata } from "next";
+
 import { Albums } from "@/components/artist/albums";
 import { Subscribe } from "@/components/artist/subscribe";
 import { SongItem } from "@/components/song/song-item";
-import { Button } from "@/components/ui/button";
+import { ShuffleButton } from "@/components/utils/shuffle-btn";
 import { cn } from "@/lib/utils";
 import { getArtist } from "@/server/artist";
-import Link from "next/link";
-import { redirect } from "next/navigation";
-import { FaPlay } from "react-icons/fa";
-import { PiShuffleBold } from "react-icons/pi";
+import { PlayButton } from "@/components/artist/play-button";
+import { ShareProfileButton } from "@/components/artist/share-profile";
+import { artistMetaData } from "@/server/meta";
 
 interface ArtistPageProps {
     params : { artistId: string }
 }
+
+
+export async function generateMetadata(
+    { params } : ArtistPageProps,
+    parent : ResolvingMetadata
+) : Promise<Metadata> {
+    
+    const data = await artistMetaData(params.artistId);
+    const previousImages = (await parent).openGraph?.images || [];
+    
+    if ( !data ) {
+        return {};
+    }
+
+    return {
+        title: `${data.name} | Safari`,
+        description : data.about.trim() === `Dive into ${data.name}'s music on Safari.` ? "Listen to " : data.about,
+        openGraph: {
+            images: [{
+                url : data.image,
+                height : 1200,
+                width : 1200
+            }, ...previousImages],
+            type : "website",
+        },
+        twitter : {
+            card: 'summary_large_image',
+            title: `${data.name} | Safari`,
+            description : data.about.trim() === `Dive into ${data.name}'s music on Safari.` ? "Listen to " : data.about,
+            images: [{
+                url : data.image,
+                height : 1200,
+                width : 900
+            }], 
+        },
+        category : "music streaming"
+    }
+}
+
 
 const ArtistPage = async({
     params
@@ -40,11 +82,10 @@ const ArtistPage = async({
                 </div>
             </div>
             <div className="px-4 md:px-20 mt-5 flex items-center gap-6 md:pr-32" >
-                <Button className="h-12 w-12 md:h-14 md:w-14 rounded-full bg-red-600 hover:bg-red-600/80">
-                    <FaPlay className="h-6 w-6 text-white" />
-                </Button>
-                <PiShuffleBold className="h-12 w-12 text-zinc-300 hover:text-white md:cursor-pointer" />
+                <PlayButton songs={artist.songs} artistId={artist.id} />
+                <ShuffleButton/>
                 <Subscribe artistId={artist.id} followers={artist._count.followers} />
+                <ShareProfileButton artistId={artist.id} />
             </div>
             <div className="w-full px-4 md:px-20 mt-20 space-y-6 md:pr-32">
                 <h3 className="text-lg sm:text-xl md:text-2xl px-3 font-bold" >Popular</h3>

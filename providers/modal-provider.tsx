@@ -1,7 +1,8 @@
 "use client"
 
+import { useEffect, useState } from "react";
 import { PlaylistModal } from "@/components/modals/playlist-modal";
-import { useEffect, useState } from "react"
+import { ShareModal } from "@/components/modals/share-modal";
 
 export const ModalProvider = () => {
     
@@ -18,6 +19,7 @@ export const ModalProvider = () => {
     return (
         <>
             <PlaylistModal/>
+            <ShareModal/>
         </>
     )
 }

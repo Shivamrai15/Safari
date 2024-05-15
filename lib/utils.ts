@@ -72,18 +72,11 @@ export const historyPartition = (
     idx : number
 ) => {
 
-    // console.log("Pages", pages);
-    // console.log("Group", group);
-    // console.log("PageIndex", i)
-    // console.log("Group Index", idx)
-    // console.log("Group Length", group.length-1)
-
     try {
         if ( i === 0 && idx < group.length-1 ) {
             const h1 = group[idx].history;
             const h2 = group[idx+1].history;
             const diff  = differnceBtwHistory(h1, h2);
-            // console.log("Difference 1",diff);
             return diff;
         }
     
@@ -91,7 +84,6 @@ export const historyPartition = (
             const h1 = group[idx].history;
             const h2 = pages[i+1]['items'][0]['history'];
             const diff  = differnceBtwHistory(h1, h2);
-            // console.log("Difference 2",diff);
             return diff;
         }
     
@@ -99,7 +91,6 @@ export const historyPartition = (
             const h1 = group[idx].history;
             const h2 = group[idx+1].history;
             const diff  = differnceBtwHistory(h1, h2);
-            // console.log("Difference 3",diff);
             return diff;
         }
     

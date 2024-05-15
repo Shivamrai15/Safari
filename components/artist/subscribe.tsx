@@ -5,6 +5,8 @@ import { Button } from "../ui/button";
 import { useMemo, useState } from "react";
 import { useSubscribers } from "@/hooks/use-subscribers";
 import axios from "axios";
+import { toast } from "sonner";
+import { useSession } from "next-auth/react";
 
 interface SubscribeProps {
     artistId : string;
@@ -16,17 +18,17 @@ export const Subscribe = ({
     followers
 } : SubscribeProps ) => {
 
-    console.log("followers", followers)
-
+    const session = useSession();
     const [ subscribers, setSubscribers ] = useState(followers)
     const [loading, setLoading] = useState(false);
 
     const  { data, isLoading, mutate } = useSubscribers();
     
     const isFollowing = useMemo(()=> {
+        if ( session.status === "unauthenticated" ) return false;
         if ( isLoading ) return false;
         return data.find((artist : { id : string; name : string; image : string })=>artist.id === artistId); 
-    }, [data, isLoading, mutate]);
+    }, [data, isLoading, mutate, session]);
     
 
     const handleSubscribe = async () => {
@@ -42,7 +44,8 @@ export const Subscribe = ({
                 setSubscribers((prev)=>prev+1);
             }
         } catch (error) {
-            
+            console.error(error);
+            toast.error("Something went wrong");
         } finally {
             setLoading(false);
         }
@@ -55,7 +58,7 @@ export const Subscribe = ({
                 "rounded-full hover:border-white font-semibold border-red-600 text-red-600 cursor-default md:cursor-pointer",
                 isFollowing && "text-zinc-100 border-zinc-100"
             )}
-            disabled = {loading}
+            disabled = { session.status === "unauthenticated" || loading || isLoading }
             onClick={handleSubscribe}
         >
             <span>{ isFollowing ? "Unsubscribe" : "Subscribe" }</span>

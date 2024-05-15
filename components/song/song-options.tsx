@@ -1,7 +1,6 @@
 "use client";
 
 import axios from "axios";
-import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Album, Artist, PlayList, Song } from "@prisma/client";
@@ -20,18 +19,19 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import {
-    Copy,
     Disc3,
     EllipsisVertical,
     ListMusic,
     MicVocal,
     Plus,
 } from "lucide-react";
+import { PiShareFat } from "react-icons/pi";
 import { useQueue } from "@/hooks/use-queue";
 import { usePlaylist } from "@/hooks/use-playlist";
 import { usePlaylistModal } from "@/hooks/use-playlist-modal";
 import { LikeButton } from "@/components/utils/like-button";
 import { toast } from "sonner";
+import { useShareModal } from "@/hooks/use-share-modal";
 
 interface SongOptionsProps {
     song : (Song & {
@@ -46,15 +46,11 @@ export const SongOptions = ({
 
     const router = useRouter();
     const session = useSession();
-    const [ origin, setOrigin ] = useState("");
     const { enQueue } = useQueue();
     const { data, error, isLoading } : { data : PlayList[], error : any, isLoading : boolean }  = usePlaylist();
     const { mutate } = usePlaylist();
     const { onOpen } = usePlaylistModal();
-
-    useEffect(()=>{
-        setOrigin(window.location.origin);
-    }, []);
+    const shareModal = useShareModal();
 
     const handleAddSongInPlaylist = async( playlistId : string, name: string )=>{
         try {
@@ -144,9 +140,9 @@ export const SongOptions = ({
                         <Disc3 className="mr-2 h-5 w-5" />
                         <span className="font-medium" >Go to Album</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={()=>navigator.clipboard.writeText(`${origin}/album/${song.albumId}`)} >
-                        <Copy className="mr-2 h-5 w-5"/>
-                        <span className="font-medium" >Copy album link</span>
+                    <DropdownMenuItem onClick={()=>shareModal.onOpen(`/song/${song.id}`)} >
+                        <PiShareFat className="mr-2 h-5 w-5"/>
+                        <span className="font-medium" >Share</span>
                     </DropdownMenuItem>
                 </DropdownMenuGroup>
             </DropdownMenuContent>

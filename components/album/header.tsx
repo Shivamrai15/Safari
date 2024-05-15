@@ -1,10 +1,10 @@
 import { albumLength } from "@/lib/utils";
 import { Dot } from "lucide-react";
 import Image from "next/image";
-import { SlOptionsVertical } from "react-icons/sl";
 import { SongPlayButton } from "@/components/utils/song-play-button";
 import { Album, Artist, Song } from "@prisma/client";
 import { ShuffleButton } from "@/components/utils/shuffle-btn";
+import { Options } from "./options";
 
 interface HeaderProps {
     id : string; 
@@ -71,7 +71,7 @@ export const Header = ({
                             <div className="flex justify-center md:justify-start items-center gap-6 pt-2 md:pr-28" >
                                 <SongPlayButton songs={data} id={id} />
                                 <ShuffleButton/>
-                                <SlOptionsVertical className="h-9 w-9 md:cursor-pointer" />
+                                <Options songs={data} id={id} />
                             </div>
                         </div>
                     </div>    

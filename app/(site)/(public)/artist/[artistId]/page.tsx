@@ -38,7 +38,7 @@ export async function generateMetadata(
                 height : 1200,
                 width : 1200
             }, ...previousImages],
-            type : "website",
+            type : "music.album",
         },
         twitter : {
             card: 'summary_large_image',
@@ -47,7 +47,7 @@ export async function generateMetadata(
             images: [{
                 url : data.image,
                 height : 1200,
-                width : 900
+                width : 1200
             }], 
         },
         category : "music streaming"

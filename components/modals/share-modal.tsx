@@ -64,8 +64,8 @@ export const ShareModal = () => {
             <DialogContent className="bg-neutral-800 max-w-96 w-full rounded-lg">
                 <div className="w-full space-y-4 my-4">
                     <h2 className="text-lg font-semibold">Share</h2>
-                    <div className="w-full flex items-center">
-                        <input disabled value={`${window.location.origin}${url}`} className="h-10 w-full px-2 border border-zinc-600 rounded-l-md truncate text-sm text-zinc-300" />
+                    <div className="w-full flex items-center select-none">
+                        <input disabled value={`${window.location.origin}${url}`} className="h-10 w-full px-2 border border-zinc-600 rounded-l-md text-sm text-zinc-300 bg-neutral-700 select-none" />
                         <Button 
                             className="h-10 w-16 rounded-l-none cursor-default md:cursor-pointer bg-neutral-900/80 text-white hover:bg-neutral-900/90 focus:outline-none"
                             onClick={handleShareLink}

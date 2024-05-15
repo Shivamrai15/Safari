@@ -1,11 +1,53 @@
+import { redirect } from "next/navigation";
+import { Metadata, ResolvingMetadata } from "next";
+
 import { Header } from "@/components/album/header";
 import { SongsList } from "@/components/song/songs-list";
 import { getAlbum } from "@/server/album";
-import { redirect } from "next/navigation";
+import { albumMetaData } from "@/server/meta";
 
 interface AlbumPageProps  {
     params : { albumId : string }
 }
+
+
+export async function generateMetadata(
+    { params } : AlbumPageProps,
+    parent : ResolvingMetadata
+) : Promise<Metadata> {
+
+    const data = await albumMetaData(params.albumId);
+    const previousImages = (await parent).openGraph?.images || [];
+    
+    if ( !data ) {
+        return {};
+    }
+
+    return {
+        title: data.name,
+        description: `${data._count.songs === 1 ? "Single" : "Album"} • ${data._count.songs} Songs • ${new Date(data.release).getFullYear()}`,
+        openGraph: {
+            images: [{
+                url : data.image,
+                height : 1200,
+                width : 1200
+            }, ...previousImages],
+            type : "music.album",
+        },
+        twitter : {
+            card: 'summary_large_image',
+            title: data.name,
+            description: `${data._count.songs === 1 ? "Single" : "Album"} • ${data._count.songs} Songs • ${new Date(data.release).getFullYear()}`,
+            images: [{
+                url : data.image,
+                height : 1200,
+                width : 1200
+            }], 
+        },
+        category : "music streaming"
+    }
+}
+
 
 const AlbumPage = async({
     params

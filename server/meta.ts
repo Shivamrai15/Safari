@@ -20,3 +20,31 @@ export const artistMetaData = async ( id : string ) => {
         return null; 
     }
 }
+
+
+export const albumMetaData = async ( id: string ) => {
+    try {
+        
+        const metadata = await db.album.findUnique({
+            where : {
+                id
+            },
+            select : {
+                image : true,
+                name : true,
+                release : true,
+                _count : {
+                    select : {
+                        songs : true
+                    }
+                }
+            }
+        });
+
+        return metadata;
+
+    } catch (error) {
+        console.error("ALBUM METADATA API ERROR", error);
+        return null;
+    }
+}

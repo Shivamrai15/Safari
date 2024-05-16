@@ -4,14 +4,26 @@ import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 
-import { FaUser } from "react-icons/fa";
+
 import { BellIcon } from "lucide-react";
+import { BsIncognito } from "react-icons/bs";
+import { AccountOptions } from "./account/account-options";
+import { Badge } from "@/components/ui/badge";
+import { useAccount } from "@/hooks/use-account";
 
 
 export const Header = () => {
     
     const router = useRouter();
     const session = useSession();
+    const { data , isLoading, } : { 
+        data : { 
+            name: string | null,
+            id: string,
+            privateSession: boolean
+        },
+        isLoading: boolean,
+    } = useAccount();
 
     if ( session.status === "unauthenticated" ) {
         return (
@@ -37,6 +49,13 @@ export const Header = () => {
         return (
             <div className="px-4 md:px-10 h-28 flex items-center justify-end">
                 <div className="flex items-center space-x-5">
+                    { 
+                        !isLoading && data.privateSession && (
+                            <Badge className="bg-green-600 hover:bg-green-600/90 text-white">
+                                <BsIncognito className="h-6 w-6"/>
+                            </Badge>
+                        )
+                    }
                     <BellIcon/>
                     <Button
                         onClick={()=>signOut()}
@@ -44,9 +63,7 @@ export const Header = () => {
                     >
                         Logout
                     </Button>
-                    <div className="bg-neutral-800 hover:bg-neutral-800/90 rounded-full h-11 w-11 flex items-center justify-center transition-colors md:cursor-pointer md:hover:scale-105">
-                        <FaUser className="text-white h-5 w-5" />
-                    </div>
+                    <AccountOptions/>
                 </div>
             </div>
         )

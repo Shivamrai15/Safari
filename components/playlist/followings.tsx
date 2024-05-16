@@ -11,7 +11,7 @@ export const Followings = () => {
         id: string;
     }[]) , isLoading : boolean } = useSubscribers();
 
-    if ( isLoading ) {
+    if ( isLoading || data.length === 0 ) {
         return null;
     }
 

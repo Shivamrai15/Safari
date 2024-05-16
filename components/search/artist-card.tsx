@@ -37,7 +37,7 @@ export const ArtistCard = ({
                     alt={artist.name}
                     className="object-cover rounded-full"
                 />
-                <div className="bottom-2 right-0 z-10 absolute hidden group-hover:block transition-all duration-150 -translate-y-2 group-hover:translate-y-0" onClick={(e)=>e.stopPropagation()} >
+                <div className="bottom-2 right-0 z-10 absolute opacity-0 group-hover:opacity-100 transition-transform duration-300 translate-y-3 group-hover:translate-y-0" onClick={(e)=>e.stopPropagation()} >
                     <PlayButton artistId={artist.id} songs={[]} className="h-12 w-12 md:h-12 md:w-12 p-3 hover:bg-red-600" />
                 </div>
             </div>

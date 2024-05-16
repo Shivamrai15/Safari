@@ -35,9 +35,9 @@ export const AlbumCard = ({
                     className="object-cover group-hover:brightness-50 transition-all duration-150"
                 />
                 <div className="absolute left-0 top-0 w-full h-full flex items-center justify-center">
-                    <div className="hidden group-hover:block">
+                    <div className="opacity-0 group-hover:opacity-100">
                         <SongPlayButton
-                            className="delay-75 transition opacity-0 duration-150 group-hover:opacity-100 translate-y-5 group-hover:translate-y-0 h-12 w-12"
+                            className="delay-75 transition opacity-0 duration-300 group-hover:opacity-100 translate-y-3 group-hover:translate-y-0 h-12 w-12"
                             id={album.id}
                         />
                     </div>

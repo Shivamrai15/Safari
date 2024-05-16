@@ -3,7 +3,7 @@ import Credentials from "next-auth/providers/credentials";
 import type { NextAuthConfig } from "next-auth";
 import Google from "next-auth/providers/google";
 import Facebook from "next-auth/providers/facebook";
-import Twitter from "next-auth/providers/twitter";
+import GitHub from "next-auth/providers/github";
 
 import { LoginSchema } from "@/schemas/login.schema";
 import { getUserByEmail } from "@/lib/user";
@@ -18,9 +18,9 @@ export default {
             clientId: process.env.FACEBOOK_CLIENT_ID,
             clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
         }),
-        Twitter({
-            clientId: process.env.TWITTER_CLIENT_ID,
-            clientSecret: process.env.TWITTER_CLIENT_SECRET,
+        GitHub({
+            clientId: process.env.GITHUB_CLIENT_ID,
+            clientSecret: process.env.GITHUB_CLIENT_SECRET,
         }),
         Credentials({
             async authorize(credentials){

@@ -12,9 +12,13 @@ model User {
   name            String?
   email           String       @unique
   password        String?
+  image           String?
   accountVerified DateTime?
+  emailVerified   DateTime?
   history         History[]
   accounts        Account[]
+  privateSession  Boolean @default(false)
+  sessions        Session[]
   playlists       PlayList[]
   likedSongs      LikedSongs[]
   followingIds    String[]     @db.ObjectId
@@ -29,17 +33,31 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.ObjectId
-  access_token      String? @db.ObjectId
+  refresh_token     String? @db.String
+  access_token      String? @db.String
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.ObjectId
+  id_token          String? @db.String
   session_state     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionToken String   @unique
+  userId       String   @db.ObjectId
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Album {
@@ -72,7 +90,7 @@ model LikedSongs {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   songId    String   @db.ObjectId
   userId    String   @db.ObjectId
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete : Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -102,7 +120,7 @@ model PlayList {
   color       String?
   userId      String         @db.ObjectId
   private     Boolean        @default(true)
-  user        User           @relation(fields: [userId], references: [id])
+  user        User           @relation(fields: [userId], references: [id], onDelete : Cascade)
   songs       PlaylistSong[]
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
@@ -125,7 +143,7 @@ model History {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   songId    String   @db.ObjectId
   userId    String   @db.ObjectId
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete : Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

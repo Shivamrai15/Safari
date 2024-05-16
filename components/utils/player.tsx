@@ -30,6 +30,7 @@ import { SongSheet } from "./song-sheet";
 import { useSheet } from "@/hooks/use-sheet";
 import { LikeButton } from "./like-button";
 import axios from "axios";
+import { useAccount } from "@/hooks/use-account";
 
 export const Player = () => {
 
@@ -40,6 +41,15 @@ export const Player = () => {
     const [ play, setPlay ] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
     const audioRef = useRef<HTMLAudioElement|null>(null);
+
+    const { data , isLoading, } : { 
+        data : { 
+            name: string | null,
+            id: string,
+            privateSession: boolean
+        },
+        isLoading: boolean,
+    } = useAccount();
 
     
     const Icon = play ? FaPause : FaPlay;
@@ -100,7 +110,9 @@ export const Player = () => {
         if (current) {
             setAlbumId( current.albumId );
             setSongId( current.id );
-            updateHistory();
+            if ( !isLoading && !data.privateSession ) {
+                updateHistory();
+            }
         }
     }, [current]);
 

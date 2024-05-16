@@ -62,8 +62,6 @@ export const login = async ( data : z.infer<typeof LoginSchema> ) => {
             redirectTo: "/",
         });
 
-        console.log(value);
-
         return {
             success : "Email verified"
         }

@@ -1,6 +1,9 @@
 import { cn } from "@/lib/utils";
-import { FaGoogle, FaFacebookSquare } from "react-icons/fa";
-import { FaXTwitter } from "react-icons/fa6";
+import { FaGoogle, FaFacebookSquare, FaGithub } from "react-icons/fa";
+import { toast } from "sonner";
+import { signIn } from "next-auth/react";
+import { useState } from "react";
+
 
 interface FromWrapperProps {
     label : string;
@@ -15,6 +18,24 @@ export const FormWrapper = ({
     disabled,
     children
 } : FromWrapperProps ) => {
+
+    const [ loading, setLoading ] = useState(false);
+
+    const handleLogIn = async( provider : "github" | "google" | "facebook" ) => {
+        try {
+            setLoading(true);
+            await signIn(provider, {
+                callbackUrl : "/"
+            });
+
+        } catch (error) {
+            console.error(error);
+            toast.error("Something went wrong");
+        } finally {
+            setLoading(false);
+        }
+    }
+
     return (
         <div className="max-w-sm w-full p-6 space-y-10 my-10">
             <h1 className="text-3xl md:text-4xl font-extrabold">
@@ -53,9 +74,10 @@ export const FormWrapper = ({
                                     "aspect-[5/3] h-full w-full bg-neutral-950/40 rounded-sm border flex items-center justify-center hover:bg-neutral-950/20 transition cursor-default md:cursor-pointer",
                                     disabled && "cursor-default opacity-70 hover:bg-neutral-950/20 md:cursor-default"
                                 )}
-                                disabled = {disabled}
+                                disabled = {disabled || loading}
+                                onClick={()=>handleLogIn("github")}
                             >
-                                <FaXTwitter className="h-7 w-7" />
+                                <FaGithub className="h-7 w-7" />
                             </button>
                         </div>
                     </>

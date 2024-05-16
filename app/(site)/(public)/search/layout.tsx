@@ -1,4 +1,5 @@
 import { SearchForm } from "@/components/forms/search-form";
+import { Header } from "@/components/header";
 
 interface SearchLayoutProps {
     children : React.ReactNode;

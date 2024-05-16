@@ -48,6 +48,13 @@ export async function GET () {
             },
             orderBy : {
                 createdAt : "desc"
+            },
+            include : {
+                _count : {
+                    select : {
+                        songs : true
+                    }
+                }
             }
         });
 

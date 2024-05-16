@@ -9,7 +9,7 @@ import { SyncLoader } from "react-spinners";
 import { Album, Artist, Song } from "@prisma/client";
 import { SongItem } from "../song/song-item";
 import { HistoryHeader } from "./history-header";
-import { historyPartition } from "@/lib/utils";
+import { differnceBtwHistory, historyPartition } from "@/lib/utils";
 
 export const HistoryList = () => {
     
@@ -56,7 +56,7 @@ export const HistoryList = () => {
                                 {
                                     idx===0 && i===0 && ((new Date(song.history).getDate() === new Date().getDate()) ? 
                                         (<HistoryHeader label="Today" />):
-                                        (<HistoryHeader label={historyPartition(data?.pages, i, group.items, idx)} />)
+                                        (<HistoryHeader label={differnceBtwHistory(new Date(), song.history)} />)
                                     )
                                 }
                                 <div className="w-full flex items-center justify-start gap-x-6 md:gap-x-10" key={song.id} >

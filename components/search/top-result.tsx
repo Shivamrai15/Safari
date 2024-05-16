@@ -7,6 +7,7 @@ import { Disc, Dot, MicVocalIcon } from "lucide-react"
 import { IoIosShareAlt } from "react-icons/io";
 import { SongPlayButton } from "@/components/utils/song-play-button";
 import { useRouter } from "next/navigation";
+import { PlayButton } from "../artist/play-button";
 
 interface TopResultProps {
     data : Album | (Song & { album : Album, artists : Artist[] }) | Artist
@@ -99,6 +100,7 @@ export const TopResult = ({
                         Artist
                     </div>
                     <div className="mt-5 flex items-center gap-x-4">
+                        <PlayButton artistId={data.id} songs={[]} className="h-12 w-12 md:h-12 md:w-12 p-3" />
                         <Button
                             className="px-6 rounded-full font-bold text-base"
                             onClick={()=>router.push(`/artist/${data.id}`)}

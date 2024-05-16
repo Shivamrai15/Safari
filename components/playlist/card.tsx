@@ -32,7 +32,7 @@ export const Card = ({
                     alt={label}
                 />
             </div>
-            <div className="w-full line-clamp-1 overflow-hidden">
+            <div className="w-full line-clamp-1 overflow-hidden select-none">
                 <h3 className="font-semibold" >{label}</h3>
             </div>
         </div>

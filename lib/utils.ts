@@ -32,7 +32,7 @@ export const subscriber = ( num : number ) => {
 }
 
 
-const differnceBtwHistory = ( h1 : Date, h2 : Date ) => {
+export const differnceBtwHistory = ( h1 : Date, h2 : Date ) => {
     try {
         const hist1 = new Date(h1);
         const hist2 = new Date(h2);

@@ -11,15 +11,18 @@ import { Button } from "@/components/ui/button";
 import { FaPause, FaPlay } from "react-icons/fa";
 import { useArtistStack } from "@/hooks/use-artist-stack";
 import { usePlayer } from "@/hooks/use-player";
+import { cn } from "@/lib/utils";
 
 interface PlayButtonProps {
     artistId : string,
     songs : ( Song & { album : Album } )[];
+    className? : string;
 }
 
 export const PlayButton = ({
     artistId,
-    songs
+    songs,
+    className
 } : PlayButtonProps ) => {
 
     const session = useSession();
@@ -47,7 +50,11 @@ export const PlayButton = ({
         try {
             const response = await axios.get(`/api/v1/artist?id=${artistId}`);
             const data : ( Song & { album : Album } )[] = response.data;
-            enQueue(data);
+            if (songs.length > 0 ) {
+                enQueue(data);
+            } else {
+                priorityEnqueue(data);
+            }
             setList(data);
         } catch (error) {
             console.error(error);
@@ -57,7 +64,10 @@ export const PlayButton = ({
 
     return (
         <Button 
-            className="h-12 w-12 md:h-14 md:w-14 rounded-full bg-red-600 hover:bg-red-600/80 text-white"
+            className={cn(
+                "h-12 w-12 md:h-14 md:w-14 rounded-full bg-red-600 hover:bg-red-600/80 text-white",
+                className
+            )}
             disabled = { session.status === "unauthenticated" || playing }
             onClick={handlePlayButton}
         >

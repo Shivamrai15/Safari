@@ -5,11 +5,17 @@ import { ListItem } from "./list-item";
 import { Clock3 } from "lucide-react";
 
 interface ListProps {
-    songs : ( Song & { album : Album, artists : Artist[] } )[]
+    songs : ( Song & { album : Album, artists : Artist[] } )[],
+    playlistId : string;
+    isAuth : boolean;
+    mutate : ( songId : string )=>void;
 }
 
 export const List = ({
-    songs
+    songs,
+    isAuth,
+    playlistId,
+    mutate
 } : ListProps ) => {
     return (
         <div className="w-full space-y-8 px-4 md:px-20 lg:pr-36">
@@ -22,7 +28,14 @@ export const List = ({
             <div className="space-y-1">
                 {
                     songs.map((song, index)=>(
-                        <ListItem key={song.id} song={song} index={index+1} />
+                        <ListItem 
+                            key={song.id}
+                            song={song} 
+                            index={index+1}
+                            playlistId={playlistId}
+                            isAuth={isAuth}
+                            playlistMutate={mutate}
+                        />
                     ))
                 }
             </div>

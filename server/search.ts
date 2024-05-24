@@ -66,6 +66,19 @@ export const getAlbumSearches = async( query: string ) => {
             }
         });
 
+        // const initialResults = await db.album.aggregateRaw({
+        //     pipeline: [
+        //         {  $match: {
+        //                 name : { $regex: '.*' + query + '.*', $options: 'iu' }
+        //             }
+        //         },          
+        //         { $project: { id: true, name: true } }
+        //     ],
+        // });
+
+
+        // console.log("Initial Values",initialResults);
+
         const fuse = new Fuse(albums, fuseOptions);
         const result = fuse.search(query);
         if ( result.length > 0 ) {

@@ -7,7 +7,7 @@ export async function POST ( req : Request ) {
     try {
         
         const body = await req.json();
-        const validatedData = PlaylistSchema.safeParse(body);
+        const validatedData = await PlaylistSchema.safeParseAsync(body);
 
         if (!validatedData.success){
             return new NextResponse("Playlist fields are required", { status: 401 });

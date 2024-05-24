@@ -7,6 +7,8 @@ import { Album, Artist, Song } from '@prisma/client';
 import { FaPause, FaPlay } from 'react-icons/fa';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
+import { toast } from 'sonner';
 
 interface SongPlayButton {
     songs? : (Song & {
@@ -35,9 +37,12 @@ export const SongPlayButton = ({
             if ( songs ){
                 priorityEnqueue(songs);
             } else {
-                const album = await getAlbum(id);
-                if (album) {
-                    priorityEnqueue(album.songs);
+                try {
+                    const songs : ( Song & { album : Album } )[] = (await axios.get(`/api/v1/album?id=${id}`)).data;
+                    priorityEnqueue(songs);
+                } catch (error) {
+                    console.error(error);
+                    toast.error("Something went wrong");
                 }
             }
         }

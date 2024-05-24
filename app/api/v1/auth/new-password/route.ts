@@ -9,7 +9,7 @@ export async function PATCH ( req : Request ) {
     try {
         
         const body = await req.json();
-        const validatedData = ResetPasswordSchema.safeParse(body);
+        const validatedData = await ResetPasswordSchema.safeParseAsync(body);
 
         if (!validatedData.success) {
             return new NextResponse("Your password is required");

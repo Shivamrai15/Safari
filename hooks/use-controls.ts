@@ -11,6 +11,7 @@ interface UseControlsProps {
 }
 
 
+
 export const useControls = create(persist<UseControlsProps>((set)=>({
         volume : 1,
         repeat : false,
@@ -21,6 +22,6 @@ export const useControls = create(persist<UseControlsProps>((set)=>({
     }),
     {
         name : "safari-controls",
-        storage : createJSONStorage(()=>localStorage)
+        storage : createJSONStorage(()=>localStorage),
     }
 ))

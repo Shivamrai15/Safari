@@ -11,6 +11,8 @@ import { SongItem } from "../song/song-item";
 import { HistoryHeader } from "./history-header";
 import { differnceBtwHistory, historyPartition } from "@/lib/utils";
 
+export const revalidate = 0;
+
 export const HistoryList = () => {
     
     

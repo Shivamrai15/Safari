@@ -13,7 +13,7 @@ import { sendVerificationEmail } from "@/lib/mail";
 export const login = async ( data : z.infer<typeof LoginSchema> ) => {
     try {
         
-        const validatedData = LoginSchema.safeParse(data);
+        const validatedData = await LoginSchema.safeParseAsync(data);
         if (!validatedData.success) {
             return {
                 error : "Invalid credentials!"

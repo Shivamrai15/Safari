@@ -8,7 +8,7 @@ export async function POST ( req : Request ) {
     try {
         
         const body = await req.json();
-        const validatedData = ForgetPasswordSchema.safeParse(body);
+        const validatedData = await ForgetPasswordSchema.safeParseAsync(body);
 
         if (!validatedData.success) {
             return new NextResponse("Your email is required", { status: 401 });

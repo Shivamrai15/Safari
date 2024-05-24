@@ -11,21 +11,40 @@ import { SmallDevicesSongOptions } from "@/components/song/small-devices-song-op
 import { usePlayer } from "@/hooks/use-player";
 import { Audio } from "react-loader-spinner";
 import { useSession } from "next-auth/react";
+import axios from "axios";
+import { usePlaylist } from "@/hooks/use-playlist";
 
 interface ListItemProps {
     song : Song & { album : Album , artists : Artist[] };
     index : number;
+    playlistId : string;
+    isAuth : boolean;
+    playlistMutate : ( songId : string )=>void;
 }
 
 export const ListItem = ({
     song,
-    index
+    index,
+    playlistId,
+    isAuth,
+    playlistMutate
 } : ListItemProps ) => {
     
     const router = useRouter();
     const { current ,priorityEnqueue } = useQueue();
     const session = useSession();
     const { isPlaying } = usePlayer();
+    const { mutate } = usePlaylist();
+
+    const handleRemoveSong = async()=>{
+        playlistMutate(song.id);
+        try {
+            await axios.delete(`/api/v1/user/playlist/songs?playlistId=${playlistId}&songId=${song.id}`);
+            mutate();
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     return (
         <div
@@ -75,8 +94,13 @@ export const ListItem = ({
                     <div className="grid grid-cols-2 gap-4">
                         <div className="text-zinc-200">{songLength(song.duration)}</div>
                         <div className="hidden md:block md:opacity-0 md:group-hover:opacity-100 transition relative">
-                            <SongOptions song={song} />
-                        </div>
+                            <SongOptions 
+                                song={song}
+                                playlistId={playlistId}
+                                isAuth={isAuth}
+                                onDelete={handleRemoveSong}
+                            />
+                        </div> 
                         <div className="md:hidden">
                             <SmallDevicesSongOptions song={song} />
                         </div>

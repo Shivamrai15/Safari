@@ -40,7 +40,10 @@ const PlaylistPage = async ({
                 isPrivate={playlist.private}
                 userId={playlist.userId}
             />
-            <Songs id={playlist.id} />
+            <Songs
+                id={playlist.id}
+                userId={playlist.userId}
+            />
         </div>
     )
 }

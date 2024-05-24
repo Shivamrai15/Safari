@@ -116,7 +116,87 @@ export async function GET (req : Request) {
         });
 
     } catch (error) {
-        console.error("PLAYLIST SONGS API ERROR", error);
+        console.error("PLAYLIST SONGS GET API ERROR", error);
         return new NextResponse("Internal server error", { status: 500 });
+    }
+}
+
+export async function DELETE ( req : Request ) {
+    try {
+        
+        const { searchParams } = new URL(req.url);
+        const playlistId = searchParams.get("playlistId");
+        const songId = searchParams.get("songId");
+
+        if ( !playlistId || !songId ) {
+            return new NextResponse("Invalid API call", { status: 400 });
+        } 
+
+        const firstPlaylistSong = await db.playlistSong.findMany({
+            where : {
+                playlistId : playlistId,
+            },
+            orderBy : {
+                createdAt : "asc"
+            },
+            take : 2
+        });
+
+        await db.playlistSong.delete({
+            where : {
+                songId_playlistId : {
+                    songId: songId,
+                    playlistId: playlistId,
+                }
+            }
+        });
+
+        if ( firstPlaylistSong[0]?.songId  === songId ) {
+            console.log("This is true");
+            if ( firstPlaylistSong.length === 2 ) {
+                const song = await db.song.findUnique({
+                    where : {
+                        id : firstPlaylistSong[1].songId
+                    },
+                    select : {
+                        image : true,
+                        album : {
+                            select : {
+                                color : true
+                            }
+                        }
+                    }
+                });
+    
+                if ( song ) {
+                    await db.playList.update({
+                        where : {
+                            id : playlistId
+                        }, 
+                        data : {
+                            image : song.image,
+                            color : song.album.color
+                        }
+                    });
+                }
+            } else {
+                await db.playList.update({
+                    where : {
+                        id : playlistId
+                    }, 
+                    data : {
+                        image : null,
+                        color : null
+                    }
+                })
+            }
+            
+        }
+
+        return NextResponse.json({ success : true });
+
+    } catch (error) {
+        console.error("PLAYLIST SONG DELETE API ERROR", error);
+        return new NextResponse("Internal server error");
     }
 }

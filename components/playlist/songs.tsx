@@ -6,16 +6,20 @@ import { useInView } from "react-intersection-observer";
 import { SyncLoader } from "react-spinners";
 import { List } from "./list";
 import { Album, Artist, Song } from "@prisma/client";
+import { useSession } from "next-auth/react";
 
 interface SongsProps {
     id : string;
+    userId : string;
 }
 
 export const Songs = ({
-    id
+    id,
+    userId
 } : SongsProps ) => {
 
     const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } = useQuery({ url : "/api/v1/user/playlist/songs", paramKey : "id" , paramValue : id, queryKey:id });
+    const session = useSession();
     const [playlistSongs, setPlaylistSongs ] = useState<(Song & {
         artists : Artist[],
         album : Album
@@ -51,6 +55,13 @@ export const Songs = ({
         ))
     }, [data, fetchNextPage]);
 
+    const mutate = ( songId : string ) => {
+        if ( playlistSongs ) {
+            const filteredSongs = playlistSongs.filter((song)=>song.id!==songId);
+            setPlaylistSongs(filteredSongs);
+        }
+    }
+
     if ( status === "pending" ) {
         return (
             <div className="mt-16 md:mt-20 w-full flex items-center justify-center">
@@ -69,7 +80,12 @@ export const Songs = ({
 
     return (
         <div className="mt-10 md:pb-10">
-            <List songs={ playlistSongs || []} />
+            <List
+                songs={ playlistSongs || []}
+                isAuth = { session.data?.user?.id === userId }
+                playlistId={id}
+                mutate={mutate} 
+            />
             {
                 isFetchingNextPage && (
                     <div className="flex items-center justify-center mt-8">

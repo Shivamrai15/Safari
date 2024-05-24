@@ -37,7 +37,7 @@ export const Header = ({
                         className="flex flex-col md:flex-row items-center gap-x-8"
                     >
                         <div
-                            className="relative aspect-square h-44 w-44 lg:h-60 lg:w-60 shadow-xl"
+                            className="relative shrink-0 aspect-square h-44 w-44 lg:h-60 lg:w-60 shadow-xl"
                         >
                             <Image
                                 fill

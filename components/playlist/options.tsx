@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import { Album, Song } from "@prisma/client";
 import { useQueue } from "@/hooks/use-queue";
 import { useShareModal } from "@/hooks/use-share-modal";
+import { AlertModal } from "../modals/alert-modal";
 
 interface PlaylistOptionsProps {
     id : string;
@@ -24,6 +25,7 @@ interface PlaylistOptionsProps {
     handleEditModal : () => void;
     disabled : boolean;
     isAuth : boolean;
+    name : string;
 }
 
 export const PlaylistOptions = ({
@@ -31,11 +33,13 @@ export const PlaylistOptions = ({
     isPrivate,
     handleEditModal,
     disabled,
-    isAuth
+    isAuth,
+    name
 } : PlaylistOptionsProps ) => {
 
     const router = useRouter();
     const [loading, setLoading] = useState(false);
+    const [ isOpen, setOpen ] = useState(false); 
     const { enQueue } = useQueue();
     const { mutate } = usePlaylist();
     const { onOpen } = useShareModal();
@@ -72,44 +76,55 @@ export const PlaylistOptions = ({
     }
 
     return (
-        <DropdownMenu>
-            <DropdownMenuTrigger className="focus:outline-none">
-                <SlOptionsVertical className="h-9 w-9 md:cursor-pointer" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-52 bg-neutral-900" align="start" side="bottom" >
-                <DropdownMenuItem
-                    className="py-2"
-                    disabled = { disabled }
-                    onClick = {handleEditModal}
-                >
-                    <Pencil className="h-5 w-5 mr-3"/>
-                    Edit details
-                </DropdownMenuItem>
-                <DropdownMenuItem 
-                    className="py-2" 
-                    disabled = { disabled || !isAuth }
-                    onClick={addToQueue}
-                >
-                    <ListMusic className="h-5 w-5 mr-3"/>
-                    Add to queue
-                </DropdownMenuItem>
-                <DropdownMenuItem 
-                    className="py-2"
-                    disabled = {disabled || loading}
-                    onClick={handleDelete}
-                >
-                    <Trash2 className="h-5 w-5 mr-3"/>
-                    Delete
-                </DropdownMenuItem>
-                <DropdownMenuItem 
-                    className="py-2"
-                    disabled = {isPrivate}
-                    onClick={()=>onOpen(`/playlists/${id}`)}
-                >
-                    <Share className="h-5 w-5 mr-3"/>
-                    Share
-                </DropdownMenuItem>
-            </DropdownMenuContent>
-        </DropdownMenu>
+        <>
+            <DropdownMenu>
+                <DropdownMenuTrigger className="focus:outline-none">
+                    <SlOptionsVertical className="h-9 w-9 md:cursor-pointer" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-52 p-1 rounded-sm shadow-lg bg-neutral-800 mt-2" align="start" side="bottom" >
+                    <DropdownMenuItem
+                        className="px-3 hover:bg-neutral-700 focus:bg-neutral-700 py-2 rounded-none md:cursor-pointer"
+                        disabled = { disabled }
+                        onClick = {handleEditModal}
+                    >
+                        <Pencil className="h-5 w-5 mr-3"/>
+                        Edit details
+                    </DropdownMenuItem>
+                    <DropdownMenuItem 
+                        className="px-3 hover:bg-neutral-700 focus:bg-neutral-700 py-2 rounded-none md:cursor-pointer" 
+                        disabled = { disabled || !isAuth }
+                        onClick={addToQueue}
+                    >
+                        <ListMusic className="h-5 w-5 mr-3"/>
+                        Add to queue
+                    </DropdownMenuItem>
+                    <DropdownMenuItem 
+                        className="px-3 hover:bg-neutral-700 focus:bg-neutral-700 py-2 rounded-none md:cursor-pointer"
+                        disabled = {disabled || loading}
+                        onClick={()=>setOpen(true)}
+                    >
+                        <Trash2 className="h-5 w-5 mr-3"/>
+                        Delete
+                    </DropdownMenuItem>
+                    <DropdownMenuItem 
+                        className="px-3 hover:bg-neutral-700 focus:bg-neutral-700 py-2 rounded-none md:cursor-pointer"
+                        disabled = {isPrivate}
+                        onClick={()=>onOpen(`/playlists/${id}`)}
+                    >
+                        <Share className="h-5 w-5 mr-3"/>
+                        Share
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
+            <AlertModal
+                action="Delete"
+                description={`Are you sure this will delete "${name}" from your library`}
+                title="Delete from your library?"
+                onConfirm={handleDelete}
+                disabled ={loading}
+                setOpen={setOpen}
+                isOpen={isOpen}
+            />
+        </>
     )
 }

@@ -9,7 +9,7 @@ export async function POST ( request : Request ) {
     try {
         
         const body = await request.json();
-        const data = RegistrationSchema.safeParse(body);
+        const data = await RegistrationSchema.safeParseAsync(body);
 
         if (!data.success) {
             return new NextResponse("Fields are required", { status : 401 });

@@ -6,6 +6,8 @@ import { PlaylistOptions } from "./options";
 import { useSession } from "next-auth/react";
 import { usePlaylistModal } from "@/hooks/use-playlist-modal";
 import { PlayButton } from "./play-button";
+import { usePlaylist } from "@/hooks/use-playlist";
+import { PlayList } from "@prisma/client";
 
 interface HeaderProps {
     id : string;
@@ -31,21 +33,25 @@ export const Header = ({
 
     const session = useSession();
     const { setData, onOpen } = usePlaylistModal();
+    const { data, isLoading } : { data : (PlayList & { _count: { songs: number} })[], isLoading: boolean } = usePlaylist();
+    
+    const playlist = isLoading ? null : data.find((item)=>item.id===id);
 
     const handleEditModal = () => {
         if ( session.status === "authenticated" && session.data.user?.id === userId ) {
             setData({
                 id,
-                description,
-                name,
-                private : isPrivate
+                name : playlist?.name || name,
+                private : playlist ? playlist.private : isPrivate,
+                description : playlist?.description || description
             });
             onOpen();
         }
     }
 
+
     return (
-        <div className="px-4 md:px-20" style={{background :  `linear-gradient(160deg, ${color} 40%, #111 30%)` }} >
+        <div className="px-4 md:px-20" style={{background :  `linear-gradient(160deg, ${playlist?.color || color} 40%, #111 30%)` }} >
             <div className="pt-14 md:pt-20 pb-10">
                     <div
                         className="flex flex-col md:flex-row items-center gap-x-8"
@@ -56,7 +62,7 @@ export const Header = ({
                             <Image
                                 fill
                                 alt={name}
-                                src={image}
+                                src={playlist?.image || image}
                                 className="object-cover rounded-md"
                             />
                         </div>
@@ -70,11 +76,11 @@ export const Header = ({
                                 className="text-white text-4xl sm:text-5xl lg:text-8xl font-extrabold line-clamp-1 py-2"
                                 onClick={handleEditModal}
                             >
-                                {name}
+                                {playlist?.name || name}
                             </h1>
                             <div className="font-semibold text-sm flex items-center justify-center md:justify-start">
                                 <span>
-                                    {`${songs} Songs`}
+                                    {`${playlist?._count.songs || songs} Songs`}
                                 </span>
                             </div>
                             <div className="flex justify-center md:justify-start items-center gap-6 pt-2 md:pr-28" >
@@ -82,10 +88,11 @@ export const Header = ({
                                 <ShuffleButton/>
                                 <PlaylistOptions 
                                     id={id}
-                                    isPrivate={isPrivate}
+                                    isPrivate={ playlist?.private ||isPrivate}
                                     handleEditModal={handleEditModal} 
                                     disabled = { session.status==="unauthenticated" || session.data?.user?.id !== userId }
                                     isAuth = { session.status === "authenticated" }
+                                    name = {name}
                                 />
                             </div>
                         </div>

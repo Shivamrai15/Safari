@@ -10,11 +10,12 @@ import { usePlaylistModal } from "@/hooks/use-playlist-modal";
 
 export const PlaylistModal = () => {
 
-    const { isOpen, onClose, loading } = usePlaylistModal();
+    const {setData, isOpen, onClose, loading } = usePlaylistModal();
 
     const handleOnClose = ( open : boolean ) => {
         if(!open && !loading) {
             onClose();
+            setData(undefined);
         }
     }
 

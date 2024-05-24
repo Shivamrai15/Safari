@@ -11,6 +11,7 @@ import { useAccount } from "@/hooks/use-account";
 import axios from "axios";
 import { Check } from "lucide-react";
 import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { FaUser } from "react-icons/fa6";
@@ -19,6 +20,7 @@ import { toast } from "sonner";
 
 export const AccountOptions = () => {
 
+    const router =  useRouter();
     const [ loading, setLoading ] = useState(false);
     const { data , isLoading, mutate } : { 
         data : { 
@@ -55,6 +57,7 @@ export const AccountOptions = () => {
             <DropdownMenuContent className="w-52 p-1 rounded-sm shadow-lg bg-neutral-800 mt-2" align="end" side="bottom" >
                 <DropdownMenuItem
                     className="px-3 hover:bg-neutral-700 focus:bg-neutral-700 py-2 rounded-none md:cursor-pointer"
+                    onClick={()=>router.push("/account")}
                 >
                     Account
                 </DropdownMenuItem>
@@ -73,6 +76,7 @@ export const AccountOptions = () => {
                 </DropdownMenuItem>
                 <DropdownMenuItem 
                     className="px-3 hover:bg-neutral-700 focus:bg-neutral-700 py-2 rounded-none md:cursor-pointer"
+                    onClick={()=>router.push("/account/subscription")}
                 >
                     Upgrade to Premium
                 </DropdownMenuItem>

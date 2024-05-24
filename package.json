@@ -29,6 +29,7 @@
     "bcryptjs": "^2.4.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
+    "crypto-js": "^4.2.0",
     "date-fns": "^3.6.0",
     "embla-carousel-react": "^8.0.1",
     "fuse.js": "^7.0.0",
@@ -58,6 +59,7 @@
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
+    "@types/crypto-js": "^4.2.2",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^20",
     "@types/nodemailer": "^6.4.14",

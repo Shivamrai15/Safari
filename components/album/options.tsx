@@ -33,9 +33,9 @@ export const Options = ({
             <DropdownMenuTrigger className="focus:outline-none">
                 <SlOptionsVertical className="h-9 w-9 md:cursor-pointer" />
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-52 bg-neutral-900" align="start" side="bottom" >
+            <DropdownMenuContent className="w-52 p-1 rounded-sm shadow-lg bg-neutral-800 mt-2" align="start" side="bottom" >
                 <DropdownMenuItem 
-                    className="py-2" 
+                    className="px-3 hover:bg-neutral-700 focus:bg-neutral-700 py-2 rounded-none md:cursor-pointer" 
                     disabled = { session.status === "unauthenticated" }
                     onClick={()=>enQueue(songs)}
                 >
@@ -43,7 +43,7 @@ export const Options = ({
                     Add to queue
                 </DropdownMenuItem>
                 <DropdownMenuItem 
-                    className="py-2"
+                    className="px-3 hover:bg-neutral-700 focus:bg-neutral-700 py-2 rounded-none md:cursor-pointer"
                     onClick={()=>onOpen(`/album/${id}`)}
                 >
                     <Share className="h-5 w-5 mr-3"/>

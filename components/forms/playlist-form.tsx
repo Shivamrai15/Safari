@@ -38,7 +38,7 @@ export const PlaylistForm = () => {
         resolver : zodResolver(PlaylistSchema),
         defaultValues : {
             name : data?.name || "",
-            private : data?.private || true,
+            private : (data ? data.private : true),
             description : data?.description
         }
     });

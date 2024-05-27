@@ -150,3 +150,26 @@ export async function GET ( req : Request ) {
         return new NextResponse("Internal server error", { status : 500 });
     }
 }
+
+
+export async function DELETE ( _req : Request ) {
+    try {
+        
+        const session = await auth();
+        if ( !session || !session.user || !session.user.id ) {
+            return new NextResponse("Unauthorized", { status : 401 });
+        }
+
+        await db.history.deleteMany({
+            where : {
+                userId : session.user.id
+            }
+        });
+
+        return NextResponse.json({success : true});
+
+    } catch (error) {
+        console.log("HISTORY DELETE API ERROR", error);
+        return new NextResponse("Internal server error", { status : 500 });
+    }
+}

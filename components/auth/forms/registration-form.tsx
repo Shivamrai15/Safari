@@ -70,7 +70,7 @@ export const RegistrationForm = () => {
                             name="name"
                             render={({field})=>(
                                 <FormItem>
-                                    <FormLabel className="text-zinc-300" >Your Name</FormLabel>
+                                    <FormLabel className="text-zinc-300 select-none" >Your Name</FormLabel>
                                     <FormControl>
                                         <Input
                                             {...field}
@@ -86,7 +86,7 @@ export const RegistrationForm = () => {
                             name="email"
                             render={({field})=>(
                                 <FormItem>
-                                    <FormLabel className="text-zinc-300" >Your Email</FormLabel>
+                                    <FormLabel className="text-zinc-300 select-none" >Your Email</FormLabel>
                                     <FormControl>
                                         <Input
                                             type="email"
@@ -103,7 +103,7 @@ export const RegistrationForm = () => {
                             name="password"
                             render={({field})=>(
                                 <FormItem>
-                                    <FormLabel className="text-zinc-300" >Your Password</FormLabel>
+                                    <FormLabel className="text-zinc-300 select-none" >Your Password</FormLabel>
                                     <FormControl>
                                         <Input
                                             type="password"
@@ -124,7 +124,7 @@ export const RegistrationForm = () => {
                         Create Account
                     </Button>
                     <div>
-                        <Link href="/login" className="text-zinc-200 text-sm" aria-disabled = {loading} >
+                        <Link href="/login" className="text-zinc-200 text-sm select-none" aria-disabled = {loading} >
                             Have an account? Log in now
                         </Link>
                     </div>

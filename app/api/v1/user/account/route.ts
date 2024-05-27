@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
+import { getUserSubscription } from "@/server/queries";
 import { NextResponse } from "next/server";
 
 export async function GET ( req : Request ) {
@@ -21,7 +22,13 @@ export async function GET ( req : Request ) {
             }
         });
 
-        return NextResponse.json(user, { status : 200 });
+        if ( !user ) {
+            return new NextResponse("User not found", { status : 404 });
+        }
+
+        const subscription = await getUserSubscription();
+
+        return NextResponse.json({...user, isActive : !!subscription?.isActive }, { status : 200 });
 
     } catch (error) {
         console.error("ACCOUNT GET API ERROR");

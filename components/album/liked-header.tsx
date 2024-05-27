@@ -31,17 +31,17 @@ export const Header = () => {
                     <div
                         className="flex flex-col gap-y-2 mt-4 md:mt-0 text-center md:text-left md:pr-28"
                     >
-                        <p className="hidden md:block font-semibold text-sm">
+                        <p className="hidden md:block font-semibold text-sm select-none">
                             Playlist
                         </p>
-                        <h1 className="text-white text-4xl sm:text-5xl lg:text-8xl font-extrabold line-clamp-1 py-2">
+                        <h1 className="text-white text-4xl sm:text-5xl lg:text-8xl font-extrabold line-clamp-1 py-2 select-none">
                             Liked Songs
                         </h1>
                         <div className="font-semibold text-sm flex items-center justify-center md:justify-start">
                             { isLoading ? (
                                 <Skeleton  className="h-5 w-16 rounded-lg bg-neutral-800" />
                             ) : (
-                                <span>
+                                <span className="select-none">
                                     { data.length } Songs
                                 </span>
                             ) }

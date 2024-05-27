@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["fullTextSearch"]
 }
 
@@ -18,7 +18,7 @@ model User {
   emailVerified   DateTime?
   history         History[]
   accounts        Account[]
-  privateSession  Boolean @default(false)
+  privateSession  Boolean      @default(false)
   sessions        Session[]
   playlists       PlayList[]
   likedSongs      LikedSongs[]
@@ -91,7 +91,7 @@ model LikedSongs {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   songId    String   @db.ObjectId
   userId    String   @db.ObjectId
-  user      User     @relation(fields: [userId], references: [id], onDelete : Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -121,7 +121,7 @@ model PlayList {
   color       String?
   userId      String         @db.ObjectId
   private     Boolean        @default(true)
-  user        User           @relation(fields: [userId], references: [id], onDelete : Cascade)
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   songs       PlaylistSong[]
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
@@ -144,7 +144,7 @@ model History {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   songId    String   @db.ObjectId
   userId    String   @db.ObjectId
-  user      User     @relation(fields: [userId], references: [id], onDelete : Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -220,3 +220,14 @@ model ForgetPasswordToken {
 
   @@index([email])
 }
+
+model Subscription {
+  id                     String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId                 String   @db.ObjectId @unique
+  stripeCustomerId       String   @unique
+  stripeSubscriptionId   String   @unique
+  stripePriceId          String
+  stripeCurrentPeriodEnd DateTime
+}
+
+

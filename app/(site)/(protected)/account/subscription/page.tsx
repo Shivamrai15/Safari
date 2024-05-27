@@ -12,16 +12,16 @@ const SubscriptionPage = () => {
                 <div className="max-w-3xl w-full">
                     <div className="max-w-sm md:max-w-2xl w-full space-y-8">
                         <div className="w-full space-y-4">
-                            <p className="w-full text-2xl md:text-5xl font-bold">
+                            <p className="w-full text-2xl md:text-5xl font-bold select-none">
                                 Skip the ads, unlock everything. Try 2 months of Premium for ₹189.
                             </p>
-                            <span className="font-semibold md:text-lg text-zinc-400 block">Cancel anytime*</span>
+                            <span className="font-semibold md:text-lg text-zinc-400 block select-none">Cancel anytime*</span>
                         </div>
                         <div className="w-full flex items-center gap-x-6 md:gap-x-10">
                             <SubscribeBtn label="Get Premium" className="max-w-64 w-full bg-[#ff9e95] hover:bg-[#ffccc7]" />
                             <Link 
                                 href="/account/subscription#plans" 
-                                className="text-base font-semibold hover:underline duration-300 transition-all"
+                                className="text-base font-semibold hover:underline duration-300 transition-all select-none"
                             >
                                 View All Plans
                             </Link>
@@ -32,7 +32,7 @@ const SubscriptionPage = () => {
             <main className="px-6 flex justify-center md:pr-32">
                 <article className="max-w-xl w-full space-y-12">
                     <header>
-                        <h2 className="text-2xl md:text-4xl font-bold text-center">Feel the Premium</h2>
+                        <h2 className="text-2xl md:text-4xl font-bold text-center select-none">Feel the Premium</h2>
                     </header>
                     <table className="w-full space-y-4">
                         <thead>
@@ -76,7 +76,7 @@ const SubscriptionPage = () => {
                         </tbody>
                     </table>
                     <section id="plans" className="pt-10">
-                        <p className="text-2xl md:text-4xl font-bold text-center">
+                        <p className="text-2xl md:text-4xl font-bold text-center select-none">
                             Choose a plan that fits you
                         </p>
                     </section>

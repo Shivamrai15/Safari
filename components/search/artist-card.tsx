@@ -42,8 +42,8 @@ export const ArtistCard = ({
                 </div>
             </div>
             <div>
-                <h3 className="font-medium" >{artist.name}</h3>
-                <span className="text-sm text-zinc-300" >Artist</span>
+                <h3 className="font-medium select-none" >{artist.name}</h3>
+                <span className="text-sm text-zinc-300 select-none" >Artist</span>
             </div>
         </div>
     )

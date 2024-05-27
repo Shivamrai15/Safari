@@ -31,6 +31,7 @@ import { useSheet } from "@/hooks/use-sheet";
 import { LikeButton } from "./like-button";
 import axios from "axios";
 import { useAccount } from "@/hooks/use-account";
+import { PlayerShortCutProvider } from "@/providers/player-shortcut-provider";
 
 export const Player = () => {
 
@@ -256,6 +257,7 @@ export const Player = () => {
                 RepeatIcon={RepeatIcon}
                 toggleRepeat={toggleRepeat}
             />
+            <PlayerShortCutProvider onClick = {togglePlay} />
         </>
     )
 }

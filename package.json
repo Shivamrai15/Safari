@@ -50,6 +50,7 @@
     "react-loader-spinner": "^6.1.6",
     "react-spinners": "^0.13.8",
     "sonner": "^1.4.41",
+    "stripe": "^15.8.0",
     "swr": "^2.2.5",
     "tailwind-merge": "^2.2.2",
     "tailwindcss-animate": "^1.0.7",

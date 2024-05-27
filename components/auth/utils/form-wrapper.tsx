@@ -38,7 +38,7 @@ export const FormWrapper = ({
 
     return (
         <div className="max-w-sm w-full p-6 space-y-10 my-10">
-            <h1 className="text-3xl md:text-4xl font-extrabold">
+            <h1 className="text-3xl md:text-4xl font-extrabold select-none">
                 {label} <br /> Safari Account
             </h1>
             {children}

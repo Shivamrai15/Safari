@@ -11,7 +11,7 @@ export const FormError = ({
     return (
         <div className="bg-destructive p-4 flex items-center gap-x-5 px-6 text-sm text-white cursor-default">
             <AlertTriangle className="h-6 w-6"/>
-            <p className="font-medium">{message}</p>
+            <p className="font-medium select-none">{message}</p>
         </div>
     )
 }

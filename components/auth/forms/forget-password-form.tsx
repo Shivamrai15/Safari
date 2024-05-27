@@ -54,8 +54,8 @@ export const ForgetPasswordForm = () => {
     return (
         <div className="max-w-96 w-full space-y-8">
             <div className="space-y-3 text-base font-medium">
-                <h1 className="text-2xl md:text-3xl font-extrabold">Reset your password</h1>
-                <p>Can&apos;t remember your login details? Enter your email address. We&apos;ll send you a link to reset your password</p>
+                <h1 className="text-2xl md:text-3xl font-extrabold select-none">Reset your password</h1>
+                <p className="select-none">Can&apos;t remember your login details? Enter your email address. We&apos;ll send you a link to reset your password</p>
             </div>
             <Form {...form}>
                 <form
@@ -68,7 +68,7 @@ export const ForgetPasswordForm = () => {
                             name="email"
                             render={({field})=>(
                                 <FormItem>
-                                    <FormLabel className="text-zinc-300" >Your email address</FormLabel>
+                                    <FormLabel className="text-zinc-300 select-none" >Your email address</FormLabel>
                                     <FormControl>
                                         <Input
                                             type="email"
@@ -91,7 +91,7 @@ export const ForgetPasswordForm = () => {
                     </Button>
                     <Link
                         href="/login"
-                        className="text-zinc-400 text-sm font-semibold underline block hover:text-zinc-200 transition"
+                        className="text-zinc-400 text-sm font-semibold underline block hover:text-zinc-200 transition select-none"
                     >
                         Back to login
                     </Link>

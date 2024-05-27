@@ -63,8 +63,8 @@ export const ResetPasswordForm = ({
     return (
         <div className="max-w-80 h-full w-full space-y-8">
             <div className="space-y-3 text-base font-medium">
-                <h1 className="text-2xl md:text-3xl font-extrabold">Change your password</h1>
-                <p>Please enter your new password below!</p>
+                <h1 className="text-2xl md:text-3xl font-extrabold select-none">Change your password</h1>
+                <p className="select-none">Please enter your new password below!</p>
             </div>
             <Form {...form}>
                 <form
@@ -77,7 +77,7 @@ export const ResetPasswordForm = ({
                             name="password"
                             render={({field})=>(
                                 <FormItem>
-                                    <FormLabel className="text-zinc-300" >Your new password</FormLabel>
+                                    <FormLabel className="text-zinc-300 select-none" >Your new password</FormLabel>
                                     <FormControl>
                                         <Input
                                             type="password"

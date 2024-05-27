@@ -50,7 +50,7 @@ export const TopResultWrapper = ({
                 <div>
                     <div className="h-full w-full flex justify-center items-center md:justify-start">
                         <div className="flex flex-col items-center md:items-start">
-                            <h2 className="text-xl md:text-2xl font-bold" >{name}</h2>
+                            <h2 className="text-xl md:text-2xl font-bold select-none" >{name}</h2>
                             <>
                                 {children}
                             </>

@@ -17,9 +17,9 @@ import { usePlaylist } from "@/hooks/use-playlist";
 interface ListItemProps {
     song : Song & { album : Album , artists : Artist[] };
     index : number;
-    playlistId : string;
-    isAuth : boolean;
-    playlistMutate : ( songId : string )=>void;
+    playlistId? : string;
+    isAuth? : boolean;
+    playlistMutate? : ( songId : string )=>void;
 }
 
 export const ListItem = ({
@@ -37,12 +37,14 @@ export const ListItem = ({
     const { mutate } = usePlaylist();
 
     const handleRemoveSong = async()=>{
-        playlistMutate(song.id);
-        try {
-            await axios.delete(`/api/v1/user/playlist/songs?playlistId=${playlistId}&songId=${song.id}`);
-            mutate();
-        } catch (error) {
-            console.error(error);
+        if ( playlistMutate ) {
+            playlistMutate(song.id);
+            try {
+                await axios.delete(`/api/v1/user/playlist/songs?playlistId=${playlistId}&songId=${song.id}`);
+                mutate();
+            } catch (error) {
+                console.error(error);
+            }
         }
     }
 
@@ -66,7 +68,7 @@ export const ListItem = ({
                         />
                     </div>
                     <div className="w-full">
-                        <h3 className="text-base line-clamp-1 font-medium" >{song.name}</h3>
+                        <h3 className="text-base line-clamp-1 font-medium select-none" >{song.name}</h3>
                         <div className="text-sm text-zinc-300 line-clamp-1 font-normal overflow-hidden space-x-2" >
                         {
                             song.artists.map((artist, idx)=>(
@@ -76,7 +78,7 @@ export const ListItem = ({
                                         e.stopPropagation();
                                         router.push(`/artist/${artist.id}`);
                                     }}
-                                    className="hover:underline"
+                                    className="hover:underline select-none"
                                 >
                                     {artist.name}{ (idx !== song.artists.length-1)&&"," }
                                 </span>
@@ -86,13 +88,13 @@ export const ListItem = ({
                     </div>
                 </div>
                 <div className="hidden md:block col-span-4 w-full">
-                    <Link href={`/album/${song.albumId}`} className="line-clamp-1 text-sm text-zinc-300 font-medium hover:text-white hover:underline w-fit ">
+                    <Link href={`/album/${song.albumId}`} className="line-clamp-1 text-sm text-zinc-300 font-medium hover:text-white hover:underline w-fit select-none">
                         {song.album.name}
                     </Link>
                 </div>
                 <div className="relative col-span-2 md:col-span-1">
                     <div className="grid grid-cols-2 gap-4">
-                        <div className="text-zinc-200">{songLength(song.duration)}</div>
+                        <div className="text-zinc-200 select-none">{songLength(song.duration)}</div>
                         <div className="hidden md:block md:opacity-0 md:group-hover:opacity-100 transition relative">
                             <SongOptions 
                                 song={song}

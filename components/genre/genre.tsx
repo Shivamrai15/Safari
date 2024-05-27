@@ -29,7 +29,7 @@ export const Genre = ({
                     className="object-fill"
                 />
             </div>
-            <div className="text-base font-medium">
+            <div className="text-base font-medium select-none">
                 {name}
             </div>
         </div>

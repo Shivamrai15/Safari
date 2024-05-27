@@ -21,7 +21,7 @@ export const Albums = async({
 
     return (
         <div className="w-full px-4 md:px-20 mt-20" >
-            <h3 className="text-lg sm:text-xl md:text-2xl font-bold" >Albums</h3>
+            <h3 className="text-lg sm:text-xl md:text-2xl font-bold select-none" >Albums</h3>
             <Carousel 
                 className="w-full space-y-3 mt-10"
                 opts = {{

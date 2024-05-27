@@ -24,14 +24,14 @@ export const LikedSongsList = () => {
                 <div className="flex items-center justify-center">
                     <LuMusic3 className="h-10 w-10 md:h-12 md:w-12 text-white" />
                 </div>
-                <p className="text-xl md:text-3xl font-bold" >Your liked tracks await in this spot!</p>
+                <p className="text-xl md:text-3xl font-bold select-none" >Your liked tracks await in this spot!</p>
             </div>
         )
     }
 
     return (
         <div className="pt-14 pb-10">
-            <List songs={data} />
+            <List  songs={data} />
         </div>
     )
 }

@@ -22,7 +22,7 @@ const SearchPage = async({
     if ( !responses?.bestResult ) {
         return (
             <div className="w-full h-full flex items-center justify-center pt-32">
-                <h4 className="font-semibold md:text-lg text-center text-zinc-300">No results found for &quot;{searchParams.query}&quot;</h4>
+                <h4 className="font-semibold md:text-lg text-center text-zinc-300 select-none">No results found for &quot;{searchParams.query}&quot;</h4>
             </div>
         )
     }
@@ -33,7 +33,7 @@ const SearchPage = async({
     return (
         <div className="pt-10 space-y-12">
             <div className="space-y-8">
-                <h1 className="text-2xl md:text-3xl font-bold" >Top Result</h1>
+                <h1 className="text-2xl md:text-3xl font-bold select-none" >Top Result</h1>
                 <div>
                     <TopResult data={responses.bestResult.item} />
                 </div>
@@ -41,7 +41,7 @@ const SearchPage = async({
             <div>
                 { responses.songResults.length > 0 && (
                     <div className="space-y-8">
-                        <h1 className="text-2xl md:text-3xl font-bold" >Songs</h1>
+                        <h1 className="text-2xl md:text-3xl font-bold select-none" >Songs</h1>
                         <div>
                             {
                                 responses.songResults.map((song)=>(
@@ -55,7 +55,7 @@ const SearchPage = async({
             <div>
                 { albums.length > 0 && (
                     <div className="space-y-8">
-                        <h1 className="text-2xl md:text-3xl font-bold" >Albums</h1>
+                        <h1 className="text-2xl md:text-3xl font-bold select-none" >Albums</h1>
                         <Albums albums={albums} />
                     </div>
                 ) }
@@ -63,7 +63,7 @@ const SearchPage = async({
             <div>
                 { artists.length > 0 && (
                     <div className="space-y-8">
-                        <h1 className="text-2xl md:text-3xl font-bold" >Artists</h1>
+                        <h1 className="text-2xl md:text-3xl font-bold select-none" >Artists</h1>
                         <ArtistCarousel artists={artists} />
                     </div>
                 ) }

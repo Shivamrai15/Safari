@@ -25,17 +25,17 @@ export const ArtistHeader = async({
                         src={artist.image}
                         alt={artist.name}
                         fill
-                        className="object-cover"
+                        className="object-cover select-none"
                     />
                 </div>
                 <div className="col-span-2 w-full space-y-3">
-                    <h2 className="text-xl md:text-3xl lg:text-4xl font-bold line-clamp-1" >{artist.name}</h2>
+                    <h2 className="text-xl md:text-3xl lg:text-4xl font-bold line-clamp-1 select-none" >{artist.name}</h2>
                     <div className="flex items-center gap-1 text-zinc-300 font-medium">
-                        <span>
+                        <span className="select-none">
                             { artist._count.songs } Songs
                         </span>
                         <Dot/>
-                        <span>
+                        <span className="select-none">
                             { artist._count.followers } followers
                         </span>
                     </div>

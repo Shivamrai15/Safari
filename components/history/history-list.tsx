@@ -43,6 +43,14 @@ export const HistoryList = () => {
             </div>
         )
     }
+
+    if ( data?.pages[0]?.items.length === 0 ) {
+        return (
+            <div className="pt-16 md:pt-20 w-full flex items-center justify-center text-base font-medium text-zinc-400 select-none">
+                No history available to show
+            </div>
+        )
+    }
     
     return (
         <div className="flex flex-col items-center mb-8">

@@ -60,9 +60,9 @@ export const SongItem = ({
                     }
                 </div>
                 <div className="w-full flex-1 shrink overflow-hidden">
-                    <p className="text-base line-clamp-1" >{song.name.trim()}</p>
+                    <p className="text-base line-clamp-1 select-none" >{song.name.trim()}</p>
                     <div
-                        className="text-sm w-fit text-zinc-300 line-clamp-1 font-normal overflow-hidden space-x-2 hover:underline"
+                        className="text-sm w-fit text-zinc-300 line-clamp-1 font-normal overflow-hidden space-x-2 hover:underline select-none"
                         onClick={(e)=>{
                             e.stopPropagation();
                             router.push(`/album/${song.albumId}`)
@@ -72,7 +72,7 @@ export const SongItem = ({
                     </div>
                 </div>
                 <div className="flex items-center">
-                    <div className="flex items-center w-14 justify-center text-sm md:text-base font-medium">
+                    <div className="flex items-center w-14 justify-center text-sm md:text-base font-medium select-none">
                         { songLength(song.duration) }
                     </div>
                     <div className="w-12 flex items-center justify-center">

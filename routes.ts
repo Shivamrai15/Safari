@@ -5,7 +5,11 @@ export const DEFAULT_LOGIN_REDIRECT = "/";
 export const protectedRoutes = [
     "/liked-music",
     "/history",
-    "/playlists"
+    "/playlists",
+    "/account",
+    "/account/history",
+    "/account/subscription",
+    "/account/subscription#plans"
 ];
 
 export const authRoutes = [
@@ -13,5 +17,5 @@ export const authRoutes = [
     "/get-started",
     "/forget-password",
     "/sign-up",
-]
+];
 

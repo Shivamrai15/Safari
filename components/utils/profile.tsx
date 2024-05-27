@@ -17,12 +17,12 @@ export const Profile = () => {
                     src={session.data?.user?.image||"/assets/user.png"}
                     alt={session.data?.user?.name || "Profile Image"}
                     fill
-                    className="object-cover group-hover:scale-110 duration-500 transition-transform"
+                    className="object-cover group-hover:scale-110 duration-500 transition-transform select-none"
                 />
             </div>
             <div className="max-w-sm w-full md:space-y-2">
-                <h3 className="text-xl md:text-2xl font-bold text-zinc-400">{session.data?.user?.name}</h3>
-                <p className="text-3xl md:text-5xl font-extrabold">Listen Again</p>
+                <h3 className="text-xl md:text-2xl font-bold text-zinc-400 select-none">{session.data?.user?.name}</h3>
+                <p className="text-3xl md:text-5xl font-extrabold select-none">Listen Again</p>
             </div>
         </div>
     )

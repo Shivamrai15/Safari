@@ -68,7 +68,7 @@ export const LoginForm = () => {
                             name="email"
                             render={({field})=>(
                                 <FormItem>
-                                    <FormLabel className="text-zinc-300" >Your Email</FormLabel>
+                                    <FormLabel className="text-zinc-300 select-none" >Your Email</FormLabel>
                                     <FormControl>
                                         <Input
                                             type="email"
@@ -86,7 +86,7 @@ export const LoginForm = () => {
                             name="password"
                             render={({field})=>(
                                 <FormItem>
-                                    <FormLabel className="text-zinc-300" >Your Password</FormLabel>
+                                    <FormLabel className="text-zinc-300 select-none" >Your Password</FormLabel>
                                     <FormControl>
                                         <Input
                                             type="password"
@@ -98,7 +98,7 @@ export const LoginForm = () => {
                                     <FormMessage/>
                                     <Link
                                         href="/forget-password"
-                                        className="text-sm pt-1 block text-zinc-400 hover:text-red-500"
+                                        className="text-sm pt-1 block text-zinc-400 hover:text-red-500 select-none"
                                     >
                                         Forget your password?
                                     </Link>
@@ -114,7 +114,7 @@ export const LoginForm = () => {
                         Log In
                     </Button>
                     <div>
-                        <Link href="/sign-up" className="text-zinc-200 text-sm" aria-disabled = {loading} >
+                        <Link href="/sign-up" className="text-zinc-200 text-sm select-none" aria-disabled = {loading} >
                             Don&apos;t have an account? Sign Up
                         </Link>
                     </div>

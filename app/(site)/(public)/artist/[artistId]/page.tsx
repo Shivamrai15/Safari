@@ -75,7 +75,7 @@ const ArtistPage = async({
             >
                 <div className="h-full bg-gradient-to-b from-transparent to-neutral-950 relative md:pr-32">
                     <div className="bottom-0 absolute px-4 md:px-20 md:pr-32">
-                        <h1 className="text-white text-4xl sm:text-5xl lg:text-8xl font-extrabold line-clamp-1 py-2">
+                        <h1 className="text-white text-4xl sm:text-5xl lg:text-8xl font-extrabold line-clamp-1 py-2 select-none">
                             {artist.name}
                         </h1>
                     </div>
@@ -88,7 +88,7 @@ const ArtistPage = async({
                 <ShareProfileButton artistId={artist.id} />
             </div>
             <div className="w-full px-4 md:px-20 mt-20 space-y-6 md:pr-32">
-                <h3 className="text-lg sm:text-xl md:text-2xl px-3 font-bold" >Popular</h3>
+                <h3 className="text-lg sm:text-xl md:text-2xl px-3 font-bold select-none" >Popular</h3>
                 <div className="space-y-1">
                     {
                         artist.songs.map((song)=>(
@@ -98,7 +98,7 @@ const ArtistPage = async({
                 </div>
                 <div>
                     <Link
-                        className="px-4 my-4 rounded-full py-3 flex items-center justify-center border hover:bg-neutral-900"
+                        className="px-4 my-4 rounded-full py-3 flex items-center justify-center border hover:bg-neutral-900 select-none"
                         href={`/artist/${artist.id}/songs`}
                     >
                         Show All

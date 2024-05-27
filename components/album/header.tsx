@@ -49,22 +49,22 @@ export const Header = ({
                         <div
                             className="flex flex-col gap-y-2 mt-4 md:mt-0 text-center md:text-left md:pr-28"
                         >
-                            <p className="hidden md:block font-semibold text-sm">
+                            <p className="hidden md:block font-semibold text-sm select-none">
                                 { songs === 1 ? "Single" : "Playlist" }
                             </p>
-                            <h1 className="text-white text-4xl sm:text-5xl lg:text-8xl font-extrabold line-clamp-1 md:py-2 overflow-hidden">
+                            <h1 className="text-white text-4xl sm:text-5xl lg:text-8xl font-extrabold line-clamp-1 md:py-2 overflow-hidden select-none">
                                 {name}
                             </h1>
                             <div className="font-semibold text-sm flex items-center justify-center md:justify-start">
-                                <span>
+                                <span className="select-none">
                                     {`${songs} Songs`}
                                 </span>
                                 <Dot/>
-                                <span>
+                                <span className="select-none">
                                     { release.getFullYear() }
                                 </span>
                                 <Dot/>
-                                <span>
+                                <span className="select-none">
                                     { albumLength(length) }
                                 </span>
                             </div>

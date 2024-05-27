@@ -26,7 +26,7 @@ export const AlbumCarousel = ({
 
     return (
         <div className="space-y-6 md:space-y-10 w-full">
-            <h3 className="text-2xl md:text-3xl font-bold" >{label}</h3>
+            <h3 className="text-2xl md:text-3xl font-bold select-none" >{label}</h3>
             <Carousel 
                 className="w-full space-y-3"
                 opts = {{

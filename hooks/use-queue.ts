@@ -1,7 +1,5 @@
 import { create } from 'zustand';
 import { Album, Song } from '@prisma/client';
-import { persist } from 'zustand/middleware';
-import { customQueueStorage } from '@/lib/custom-storage';
 
 interface UseQueueProps {
     
@@ -20,7 +18,7 @@ interface UseQueueProps {
     shuffle : () => void;
 }
 
-export const useQueue = create(persist<UseQueueProps>((set, get)=>({
+export const useQueue = create<UseQueueProps>((set, get)=>({
    
         queue : [],
         stack : [],
@@ -113,9 +111,5 @@ export const useQueue = create(persist<UseQueueProps>((set, get)=>({
                 }
             }
         }
-    }), 
-    {
-        name : "queue",
-        storage : customQueueStorage,
-    }
-));
+    })
+);

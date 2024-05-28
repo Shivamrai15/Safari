@@ -57,6 +57,7 @@ export const FormWrapper = ({
                                     disabled && "cursor-default opacity-70 hover:bg-neutral-950/20 md:cursor-default"
                                 )}
                                 disabled = {disabled}
+                                onClick={() => handleLogIn("google")}
                             >
                                 <FaGoogle className="h-7 w-7" />
                             </button>

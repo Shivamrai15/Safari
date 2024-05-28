@@ -223,11 +223,38 @@ model ForgetPasswordToken {
 
 model Subscription {
   id                     String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId                 String   @db.ObjectId @unique
+  userId                 String   @unique @db.ObjectId
   stripeCustomerId       String   @unique
   stripeSubscriptionId   String   @unique
   stripePriceId          String
   stripeCurrentPeriodEnd DateTime
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
 }
 
+model Price {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  priceId           String  @unique @db.String
+  productId         String  @unique @db.String
+  product           Product @relation(fields: [productId], references: [productId], onDelete: Cascade)
+  active            Boolean
+  description       String?
+  unit_amount       Int
+  currency          String
+  pricing_type      String
+  interval          String
+  interval_count    Int
+  trial_period_days Int?
+  metadeta          Json
+}
 
+model Product {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  productId   String  @unique @db.String
+  active      Boolean
+  name        String
+  description String?
+  image       String?
+  metadeta    Json
+  price       Price?
+}

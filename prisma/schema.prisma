@@ -24,6 +24,8 @@ model User {
   likedSongs      LikedSongs[]
   followingIds    String[]     @db.ObjectId
   following       Artist[]     @relation(fields: [followingIds], references: [id])
+  customer        Customer?
+
   createdAt       DateTime     @default(now())
   updatedAt       DateTime     @updatedAt
 }
@@ -239,11 +241,11 @@ model Price {
   product           Product @relation(fields: [productId], references: [productId], onDelete: Cascade)
   active            Boolean
   description       String?
-  unit_amount       Int
+  unit_amount       Int?
   currency          String
   pricing_type      String
   interval          String
-  interval_count    Int
+  interval_count    Int?
   trial_period_days Int?
   metadeta          Json
 }
@@ -257,4 +259,10 @@ model Product {
   image       String?
   metadeta    Json
   price       Price?
+}
+
+model Customer {
+  id               String @id @default(auto()) @map("_id") @db.ObjectId
+  user             User   @relation(fields: [id], references: [id], onDelete: Cascade)
+  stripeCustomerId String @unique
 }

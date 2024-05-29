@@ -8,13 +8,15 @@ interface SubscribeBtnProps {
     color? : string;
     label : string;
     disabled? : boolean; 
+    onClick : () => void;
 }
 
 export const SubscribeBtn = ({
     className,
     label,
     disabled = false,
-    color
+    color,
+    onClick
 } : SubscribeBtnProps ) => {
     
     return (
@@ -24,6 +26,7 @@ export const SubscribeBtn = ({
             )}
             disabled={disabled}
             style={{ backgroundColor : color || "" }}
+            onClick={onClick}
         >
             {label}
         </Button>

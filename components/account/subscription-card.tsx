@@ -1,22 +1,56 @@
-"use client"
+"use client";
 
-import { Separator } from "@/components/ui/separator"
-import { cn } from "@/lib/utils";
+import { useSession } from "next-auth/react";
+import { toast } from "sonner";
+
+import { Separator } from "@/components/ui/separator";
 import { SubscribeBtn } from "./subscribe-btn";
+import { postData } from "@/lib/helpers";
+import { getStripe } from "@/lib/stripe-client";
 
 interface SubscriptionCardProps {
     color : string;
     title : string;
-    href : string;
+    priceId : string;
     price : string;
 }
 
 export const SubscriptionCard = ({
     color,
-    href,
+    priceId,
     title,
     price
 } : SubscriptionCardProps ) => {
+
+    const session = useSession();
+
+    const handleCheckout = async () => {
+        try {
+            
+            if ( session.status === "unauthenticated" ) {
+                toast.error("Login is required");
+                return;
+            }
+
+            const { sessionId } = await postData({
+                url : "/api/create-checkout-session",
+                data : {
+                    price : priceId
+                }
+            });
+
+            console.log("sessionId", sessionId)
+
+            const stripe = await getStripe();
+            stripe?.redirectToCheckout({ sessionId })
+
+
+        } catch (error) {
+            console.error(error);
+            toast.error("Error occurred while creating checkout session");
+        }
+    }
+
     return (
         <div className="w-full rounded-2xl bg-neutral-800 overflow-hidden py-10 space-y-12 hover:-translate-y-3 transition-all hover:shadow-[0_10px_30px_rgba(0,0,0,0.3)] duration-300" >
             <div className="w-full flex flex-col space-y-4">
@@ -49,6 +83,7 @@ export const SubscriptionCard = ({
                     label={`Get ${title}`}
                     className={`bg-[${color}] hover:bg-[${color}7a] text-base`}
                     color={color}
+                    onClick={handleCheckout}
                 />
             </div>
         </div>

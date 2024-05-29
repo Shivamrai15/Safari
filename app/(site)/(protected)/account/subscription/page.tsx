@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { SubscribeBtn } from "@/components/account/subscribe-btn";
 import { SubscriptionCard } from "@/components/account/subscription-card"
@@ -18,7 +20,7 @@ const SubscriptionPage = () => {
                             <span className="font-semibold md:text-lg text-zinc-400 block select-none">Cancel anytime*</span>
                         </div>
                         <div className="w-full flex items-center gap-x-6 md:gap-x-10">
-                            <SubscribeBtn label="Get Premium" className="max-w-64 w-full bg-[#ff9e95] hover:bg-[#ffccc7]" />
+                            <SubscribeBtn onClick={()=>{}} label="Get Premium" className="max-w-64 w-full bg-[#ff9e95] hover:bg-[#ffccc7]" />
                             <Link 
                                 href="/account/subscription#plans" 
                                 className="text-base font-semibold hover:underline duration-300 transition-all select-none"
@@ -85,10 +87,10 @@ const SubscriptionPage = () => {
             <div className="flex justify-center w-full px-6 pb-20 md:pr-32">
                 <div className="max-w-2xl w-full space-y-12">
                     <div className="grid sm:grid-cols-2 gap-10">
-                        <SubscriptionCard color="#ff9e95" href="" title="Basic" price= "₹99 for 1 month " />
-                        <SubscriptionCard color="#8bf76a" href="" title="Lite" price= "₹189 for 1 month " />
-                        <SubscriptionCard color="#ffa875" href="" title="Elite" price= "₹499 for 6 month " />
-                        <SubscriptionCard color="#a96af7" href="" title="Prime" price= "₹899 for 12 month " />
+                        <SubscriptionCard color="#ff9e95" priceId="price_1PLVQoSF9kH75ipG3YQe4k4Y" title="Basic" price= "₹99 for 1 month " />
+                        <SubscriptionCard color="#8bf76a" priceId="price_1PLVX8SF9kH75ipGU9rTB5HC" title="Lite" price= "₹189 for 2 month " />
+                        <SubscriptionCard color="#ffa875" priceId="price_1PLVZkSF9kH75ipG33UoFPOx" title="Elite" price= "₹499 for 6 month " />
+                        <SubscriptionCard color="#a96af7" priceId="price_1PLVcJSF9kH75ipGigh23CQ9" title="Prime" price= "₹899 for 12 month " />
                     </div>
                 </div>
             </div>

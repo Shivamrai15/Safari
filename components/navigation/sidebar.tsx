@@ -13,6 +13,8 @@ import { TbSquareRoundedPlus } from "react-icons/tb";
 import { SidebarItem } from "./sidebar-item";
 import { usePlaylistModal } from "@/hooks/use-playlist-modal";
 import { PlaylistNav } from "./playlist-nav";
+import { usePlaylist } from "@/hooks/use-playlist";
+import { useAccount } from "@/hooks/use-account";
 
 export const Sidebar = () => {
 
@@ -20,6 +22,22 @@ export const Sidebar = () => {
     const router = useRouter();
     const session = useSession();
     const { onOpen } = usePlaylistModal();
+    const { data } : { data : { isActive : boolean } } = useAccount();
+    const playlist = usePlaylist();
+
+    const handlePlaylistModal = () => {
+        if ( session.status === "authenticated") {
+            if (  data &&  data.isActive ) {
+                onOpen();
+            } else {
+                if ( playlist.data && playlist.data.length < 5 ) {
+                    onOpen();
+                } else {
+                    alert("Your are not allowed");
+                }
+            }
+        }
+    }
 
     const routes = useMemo(()=>[
         {
@@ -49,7 +67,7 @@ export const Sidebar = () => {
     ], [pathname]);
 
     return (
-        <aside className="w-full flex flex-col items-center p-1 py-8 gap-y-6">
+        <aside className="w-full flex flex-col items-center p-1 py-8 gap-y-6 h-full overflow-y-hidden">
             <div className="flex flex-col items-center gap-y-6">
                 {
                     routes.map((route)=>(
@@ -61,11 +79,7 @@ export const Sidebar = () => {
                 <div className="flex items-center justify-center">
                     <TbSquareRoundedPlus
                         className="h-8 w-8 md:cursor-pointer"
-                        onClick={()=>{
-                            if ( session.status === "authenticated" ) {
-                                onOpen();
-                            }
-                        }}
+                        onClick={handlePlaylistModal}
                     />
                 </div>
                 <div

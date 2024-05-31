@@ -28,7 +28,7 @@ export const useQuery = ({
             skipNull: true
         });
 
-        const res = await fetch(fetch_url);
+        const res = await fetch(fetch_url, {cache : "no-store"});
         return res.json();
     }
 

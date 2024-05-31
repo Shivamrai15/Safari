@@ -12,9 +12,12 @@ export const getUserSubscription = cache(async()=>{
     if ( !session || !session.user || !session.user.id )
         return null;
 
-    const data = await db.subscription.findUnique({
+    const data = await db.subscription.findFirst({
         where : {
             userId : session.user.id
+        },
+        orderBy : {
+            createdAt : 'desc'
         }
     });
 

@@ -16,8 +16,6 @@ const upsertProductRecord = async ( product : Stripe.Product ) => {
                 metadeta : product.metadata
             }
         });
-
-        console.log("Product inserted", product.id);
     } catch (error) {
         throw error;
     }
@@ -41,7 +39,6 @@ const upsertPriceRecord = async( price : Stripe.Price ) => {
                 metadeta : price.metadata
             }
         });
-        console.log("Product inserted", price.id);
     } catch (error) {
         throw error
     }
@@ -77,7 +74,6 @@ const createOrRetrieveCustomer = async ( {
                 stripeCustomerId : customer.id,
             }
         });
-        console.log("New customer created and inserted", customer.id);
         return customer.id;
     }
 
@@ -125,7 +121,6 @@ const manageSubscriptionStatusChange = async (
             stripeCurrentPeriodEnd : toDateTime(subscriptions.current_period_end),
         }
     });
-    console.log("Created Subscription", subscriptions.id);
 
     if ( createAction && subscriptions.default_payment_method && data.id ) {
         await copyBillingDetailsToCustomer(subscriptions.default_payment_method as Stripe.PaymentMethod);

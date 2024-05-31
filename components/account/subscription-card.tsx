@@ -7,6 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { SubscribeBtn } from "./subscribe-btn";
 import { postData } from "@/lib/helpers";
 import { getStripe } from "@/lib/stripe-client";
+import { useState } from "react";
 
 interface SubscriptionCardProps {
     color : string;
@@ -23,10 +24,11 @@ export const SubscriptionCard = ({
 } : SubscriptionCardProps ) => {
 
     const session = useSession();
+    const [ loading, setLoading ] = useState(false);
 
     const handleCheckout = async () => {
         try {
-            
+            setLoading(true)
             if ( session.status === "unauthenticated" ) {
                 toast.error("Login is required");
                 return;
@@ -48,6 +50,8 @@ export const SubscriptionCard = ({
         } catch (error) {
             console.error(error);
             toast.error("Error occurred while creating checkout session");
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -84,6 +88,7 @@ export const SubscriptionCard = ({
                     className={`bg-[${color}] hover:bg-[${color}7a] text-base`}
                     color={color}
                     onClick={handleCheckout}
+                    disabled = {loading}
                 />
             </div>
         </div>

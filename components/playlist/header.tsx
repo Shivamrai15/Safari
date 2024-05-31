@@ -51,7 +51,7 @@ export const Header = ({
 
 
     return (
-        <div className="px-4 md:px-20" style={{background :  `linear-gradient(160deg, ${playlist?.color || color} 40%, #111 30%)` }} >
+        <div className="px-4 md:px-20" style={{background :  `linear-gradient(160deg, ${playlist? (playlist?.color || "#242424") : color} 40%, #111 30%)` }} >
             <div className="pt-14 md:pt-20 pb-10">
                     <div
                         className="flex flex-col md:flex-row items-center gap-x-8"
@@ -62,7 +62,7 @@ export const Header = ({
                             <Image
                                 fill
                                 alt={name}
-                                src={playlist?.image || image}
+                                src={playlist ? ( playlist?.image || "/assets/playlist.png" ) : image}
                                 className="object-cover rounded-md"
                             />
                         </div>

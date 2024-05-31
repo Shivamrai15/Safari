@@ -10,6 +10,7 @@ import {
     DrawerContent,
     DrawerHeader,
     DrawerTrigger,
+    DrawerClose
 } from "@/components/ui/drawer";
 
 import {
@@ -105,14 +106,16 @@ export const SmallDevicesSongOptions = ({
                 <Separator/>
                 <div className="h-80 overflow-y-auto" onClick={(e)=>e.stopPropagation()}>
                     <div className="flex flex-col space-y-5 p-4 px-8">
-                        <button 
-                            className="flex items-center"
-                            disabled = { session.status === "unauthenticated" }
-                            onClick={()=>enQueue([song])}
-                        >
-                            <ListMusic className="mr-3 h-5 w-5" />
-                            <span className="font-medium text-base" >Add to queue</span>
-                        </button>
+                        <DrawerClose>
+                            <button 
+                                className="flex items-center"
+                                disabled = { session.status === "unauthenticated" }
+                                onClick={()=>enQueue([song])}
+                            >
+                                <ListMusic className="mr-3 h-5 w-5" />
+                                <span className="font-medium text-base" >Add to queue</span>
+                            </button>
+                        </DrawerClose>
                         <Accordion type="single" collapsible className="w-full"  >
                             <AccordionItem value={song.id} >
                                 <AccordionTrigger className="justify-start no-underline pt-0 pb-4 hover:no-underline" disabled = {session.status === "unauthenticated"} >
@@ -120,39 +123,49 @@ export const SmallDevicesSongOptions = ({
                                     <span className="font-medium text-base" >Add to playlist</span>
                                 </AccordionTrigger>
                                 <AccordionContent className="flex flex-col items-start space-y-2">
-                                    <button
-                                        disabled={ session.status === "unauthenticated" }
-                                        onClick={()=>onOpen()}
-                                    >
-                                        <span className="font-medium text-base ml-8" >New playlist</span>
-                                    </button>
-                                    {  (!isLoading && !error )&& data.map((playlist)=>(
+                                    <DrawerClose>
                                         <button
-                                            key={playlist.id}
-                                            onClick={(e)=>{ 
-                                                e.stopPropagation();
-                                                handleAddSongInPlaylist(playlist.id, playlist.name)
-                                            }}
+                                            disabled={ session.status === "unauthenticated" }
+                                            onClick={()=>onOpen()}
                                         >
-                                            <div className="line-clamp-1 font-medium text-base ml-8">
-                                                {playlist.name}
-                                            </div>
+                                            <span className="font-medium text-base ml-8" >New playlist</span>
                                         </button>
+                                    </DrawerClose>
+                                    {  (!isLoading && !error )&& data.map((playlist)=>(
+                                        <DrawerClose>
+                                            <button
+                                                key={playlist.id}
+                                                onClick={(e)=>{ 
+                                                    e.stopPropagation();
+                                                    handleAddSongInPlaylist(playlist.id, playlist.name)
+                                                }}
+                                            >
+                                                <div className="line-clamp-1 font-medium text-base ml-8">
+                                                    {playlist.name}
+                                                </div>
+                                            </button>
+                                        </DrawerClose>
                                     )) }
                                 </AccordionContent>
                             </AccordionItem>
                         </Accordion>
-                        <button className="flex items-center" disabled = { session.status === "unauthenticated" } >
-                            <LikeButton id={song.id} className="h-5 w-5" label={true} />
-                        </button>
-                        <button className="flex items-center" onClick={()=>shareModal.onOpen(`/song/${song.id}`)} >
-                            <PiShareFat className="mr-3 h-5 w-5" />
-                            <span className="font-medium" >Share</span>
-                        </button>
-                        <button className="flex items-center" onClick={()=>router.push(`/album/${song.albumId}`)} >
-                            <Disc3 className="mr-3 h-5 w-5" />
-                            <span className="font-medium" >Go to Album</span>
-                        </button>
+                        <DrawerClose>
+                            <button className="flex items-center" disabled = { session.status === "unauthenticated" } >
+                                <LikeButton id={song.id} className="h-5 w-5" label={true} />
+                            </button>
+                        </DrawerClose>
+                        <DrawerClose>
+                            <button className="flex items-center" onClick={()=>shareModal.onOpen(`/song/${song.id}`)} >
+                                <PiShareFat className="mr-3 h-5 w-5" />
+                                <span className="font-medium" >Share</span>
+                            </button>
+                        </DrawerClose>
+                        <DrawerClose>
+                            <button className="flex items-center" onClick={()=>router.push(`/album/${song.albumId}`)} >
+                                <Disc3 className="mr-3 h-5 w-5" />
+                                <span className="font-medium" >Go to Album</span>
+                            </button>
+                        </DrawerClose>
                     </div>
                     <Separator/>
                     <div className="flex flex-col space-y-5 p-4 px-8">

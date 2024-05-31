@@ -1,8 +1,9 @@
 "use client";
 
-import { usePlaylist } from "@/hooks/use-playlist";
-import { PlayList } from "@prisma/client";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { PlayList } from "@prisma/client";
+import { usePlaylist } from "@/hooks/use-playlist";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
     Tooltip,
@@ -10,7 +11,6 @@ import {
     TooltipTrigger,
     TooltipProvider,
 } from "@/components/ui/tooltip";
-import { useRouter } from "next/navigation";
 
 
 export const PlaylistNav = () => {
@@ -34,29 +34,31 @@ export const PlaylistNav = () => {
 
     return (
         <TooltipProvider>
-            <div className="flex flex-col space-y-4 overflow-y-auto">
+            <div className="space-y-4 overflow-y-auto flex-1">
                 {
                     data.map((playlist)=>(
-                        <Tooltip key={playlist.id}>
-                            <TooltipTrigger className="w-full" asChild >
-                                <div 
-                                    className="w-full aspect-square relative rounded-md overflow-hidden bg-neutral-800 md:cursor-pointer"
-                                    onClick={()=>router.push(`/playlists/${playlist.id}`)}
-                                >
-                                    <Image
-                                        src={playlist?.image || "/assets/playlist.png"}
-                                        alt="Playlist"
-                                        fill
-                                        className="object-cover"
-                                    />
-                                </div>
-                            </TooltipTrigger>
-                            <TooltipContent side="right" className="bg-neutral-800">
-                                <div>
-                                    {playlist.name}
-                                </div>
-                            </TooltipContent>
-                        </Tooltip>
+                        <div  key={playlist.id}>
+                            <Tooltip>
+                                <TooltipTrigger className="h-10 w-10 py-2" asChild >
+                                    <div 
+                                        className="h-10 w-10 relative rounded-md overflow-hidden bg-neutral-800 md:cursor-pointer"
+                                        onClick={()=>router.push(`/playlists/${playlist.id}`)}
+                                    >
+                                        <Image
+                                            src={playlist?.image || "/assets/playlist.png"}
+                                            alt="Playlist"
+                                            fill
+                                            className="object-cover"
+                                        />
+                                    </div>
+                                </TooltipTrigger>
+                                <TooltipContent side="right"  align="center" className="bg-neutral-800 rounded-sm border-none" style={{ background : playlist.color || "#262626" }}>
+                                    <div>
+                                        {playlist.name}
+                                    </div>
+                                </TooltipContent>
+                            </Tooltip>
+                        </div>
                     ))
                 }
             </div>

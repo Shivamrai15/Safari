@@ -21,7 +21,7 @@ import { Slider } from "@/components/ui/slider";
 import { useControls } from "@/hooks/use-controls";
 import { usePlayer } from "@/hooks/use-player";
 import { useQueue } from "@/hooks/use-queue";
-import { songLength } from "@/lib/utils";
+import { cn, songLength } from "@/lib/utils";
 import { FaPlay, FaPause } from "react-icons/fa";
 import { FaForwardStep, FaBackwardStep } from "react-icons/fa6";
 import { PlayerSongInfo } from "./player-song-info";
@@ -43,13 +43,15 @@ export const Player = () => {
     const [currentTime, setCurrentTime] = useState(0);
     const audioRef = useRef<HTMLAudioElement|null>(null);
 
-    const { data , isLoading, } : { 
+    const { data , isLoading, mutate } : { 
         data : { 
             name: string | null,
             id: string,
-            privateSession: boolean
+            privateSession: boolean,
+            isActive : boolean
         },
         isLoading: boolean,
+        mutate : ()=>void
     } = useAccount();
 
     
@@ -155,6 +157,7 @@ export const Player = () => {
                         step={1}
                         max={current?.duration||1}
                         onValueChange={(e)=>seekTime(e[0])}
+                        disabled = {data?.isActive === false}
                     />
                 </div>
                 <div className="w-full h-full flex items-center justify-center px-6 lg:px-10">
@@ -164,10 +167,17 @@ export const Player = () => {
                         </div>
                         <div className="w-full flex items-center justify-center gap-x-5 lg:gap-x-6">
                             <span className="w-8 text-sm text-zinc-300">{songLength(Math.floor(currentTime))}</span>
-                            <FaBackwardStep
-                                className="h-5 w-5 text-zinc-300 hover:text-white cursor-pointer"
+                            <button
                                 onClick={pop}
-                            />
+                                disabled = {data?.isActive === false}
+                            >
+                                <FaBackwardStep
+                                    className={cn(
+                                        "h-5 w-5 text-zinc-300 hover:text-white cursor-pointer",
+                                        data?.isActive === false && "text-zinc-400 hover:text-zinc-400 cursor-not-allowed"
+                                    )}
+                                />
+                            </button>
                             <Icon
                                 className="h-8 w-8 cursor-pointer"
                                 onClick={togglePlay}
@@ -256,6 +266,7 @@ export const Player = () => {
                 Icon={Icon}
                 RepeatIcon={RepeatIcon}
                 toggleRepeat={toggleRepeat}
+                active = { data?.isActive }
             />
             <PlayerShortCutProvider onClick = {togglePlay} />
         </>

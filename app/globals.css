@@ -21,6 +21,34 @@ body,
   background-clip: content-box;
 }
 
+@media screen  and (min-width: 720px) {
+  .sheet-scroll::-webkit-scrollbar{
+    background: #00000000;
+  }
+  
+  .sheet-scroll::-webkit-scrollbar-thumb {
+    background: #ffffff5b;
+    transition: all 200ms;
+  }
+  
+  .sheet-scroll::-webkit-scrollbar-thumb:hover{
+    background: #ffffff91;
+  }
+}
+
+@media screen and (min-width: 720px) {
+  ::-webkit-scrollbar{
+    background: #00000000;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #ffffff53;
+    transition: all 200ms;
+  } 
+  ::-webkit-scrollbar-thumb:hover{
+    background: #ffffff91;
+  }
+}
+
 
 @layer base {
   :root {

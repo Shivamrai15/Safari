@@ -99,3 +99,12 @@ export const historyPartition = (
         return null;
     }
 }
+
+
+export const getSubArrays = ( data : (Song & { album : Album, artists : Artist[] })[] ) => {
+    let subarrays = [];
+    for (let i = 0; i < data.length; i += 4) {
+        subarrays.push(data.slice(i, i + 4));
+    }
+    return subarrays;
+} 

@@ -26,13 +26,12 @@ export const AccountOptions = () => {
         data : { 
             name: string | null,
             id: string,
-            privateSession: boolean
+            privateSession: boolean,
+            isActive : boolean
         },
         isLoading: boolean,
         mutate : ()=>void
     } = useAccount();
-
-
 
     const togglePrivateSession = async () => {
         try {
@@ -63,12 +62,13 @@ export const AccountOptions = () => {
                 </DropdownMenuItem>
                 <DropdownMenuItem
                     className="px-3 hover:bg-neutral-700 focus:bg-neutral-700 py-2 rounded-none md:cursor-pointer"
+                    onClick={()=>router.push("/account/profile")}
                 >
                     Profile
                 </DropdownMenuItem>
                 <DropdownMenuItem 
                     className="px-3 hover:bg-neutral-700 focus:bg-neutral-700 py-2 rounded-none md:cursor-pointer"
-                    disabled = { loading }
+                    disabled = { loading || !data?.isActive }
                     onClick={togglePrivateSession}
                 >
                     <span>Private Session</span>
@@ -77,6 +77,7 @@ export const AccountOptions = () => {
                 <DropdownMenuItem 
                     className="px-3 hover:bg-neutral-700 focus:bg-neutral-700 py-2 rounded-none md:cursor-pointer"
                     onClick={()=>router.push("/account/subscription")}
+                    disabled = {data?.isActive}
                 >
                     Upgrade to Premium
                 </DropdownMenuItem>

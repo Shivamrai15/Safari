@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/sheet";
 import { useQueue } from "@/hooks/use-queue";
 import { useSheet } from "@/hooks/use-sheet";
-import { songLength } from "@/lib/utils";
+import { cn, songLength } from "@/lib/utils";
 import Image from "next/image";
 import { Slider } from "@/components/ui/slider";
 import { FaBackwardStep, FaForwardStep } from "react-icons/fa6";
@@ -21,6 +21,7 @@ interface SongSheet {
     Icon : IconType;
     RepeatIcon : LucideIcon,
     toggleRepeat : () => void;
+    active : boolean | undefined
 }
 
 export const SongSheet = ({
@@ -29,7 +30,8 @@ export const SongSheet = ({
     togglePlay,
     Icon,
     RepeatIcon,
-    toggleRepeat
+    toggleRepeat,
+    active,
 } : SongSheet ) => {
 
     const { isOpen, onClose } = useSheet();
@@ -44,8 +46,8 @@ export const SongSheet = ({
     return (
 
         <Sheet open = { isOpen } onOpenChange={handleClose} >
-            <SheetContent side="bottom" className="h-full w-full bg-neutral-900 p-0 transition-colors duration-1000" style={{background : `linear-gradient(200deg, ${current?.album.color}, #121212 )`  }} >
-                <div className="md:p-6 w-full h-full md:px-20 lg:px-28 md:grid md:grid-cols-3 md:gap-10 lg:gap-12 xl:gap-32">
+            <SheetContent side="bottom" className="h-full w-full bg-neutral-900 p-0 transition-colors duration-1000 sheet-scroll overflow-y-auto" style={{background : `linear-gradient(200deg, ${current?.album.color}, #121212 )`  }} >
+                <div className="md:p-6 w-full h-screen md:px-20 lg:px-28 md:grid md:grid-cols-3 md:gap-10 lg:gap-12 xl:gap-32">
                     <div className="w-full flex flex-col gap-y-4 items-center justify-center h-2/3 md:h-full">
                         <div className="hidden md:block aspect-square w-full h-fit rounded-sm overflow-hidden shadow-2xl relative">
                             <Image
@@ -82,6 +84,7 @@ export const SongSheet = ({
                                     max={current?.duration||1}
                                     onValueChange={(e)=>seekTime(e[0])}
                                     className="w-full h-5 md:cursor-pointer"
+                                    disabled = { active===false }
                                 />
                                 <span className="w-10 text-sm hidden md:block font-semibold text-center select-none" >{songLength(current?.duration || 0)}</span>
                                 <div className="md:hidden flex items-center justify-between mt-2">
@@ -91,10 +94,17 @@ export const SongSheet = ({
                             </div>
                             <div className="hidden md:flex items-center w-full gap-x-6 md:justify-start">
                                 <ShuffleIcon className="md:h-8 md:w-8" onClick={shuffle} />
-                                <FaBackwardStep
-                                    className="h-8 w-8 md:h-10 md:w-10 md:text-zinc-300 hover:text-white cursor-pointer"
+                                <button
                                     onClick={pop}
-                                />
+                                    disabled = { active===false }
+                                >
+                                    <FaBackwardStep
+                                        className={cn(
+                                            "h-8 w-8 md:h-10 md:w-10 text-zinc-300 hover:text-white cursor-pointer",
+                                            active === false && "text-zinc-400 hover:text-zinc-400 cursor-not-allowed"
+                                        )}
+                                    />
+                                </button>
                                 <Icon
                                     className="h-10 md:h-14 w-10 md:w-14 cursor-pointer"
                                     onClick={togglePlay}
@@ -108,10 +118,14 @@ export const SongSheet = ({
                             </div>
                             <div className="flex items-center w-full justify-center gap-x-5 md:hidden">
                                 <ShuffleIcon className="md:h-8 md:w-8" onClick={shuffle} />
-                                <FaBackwardStep
-                                    className="h-8 w-8 md:h-10 md:w-10 md:text-zinc-300 hover:text-white"
+                                <button 
+                                    disabled ={active===false}
                                     onClick={pop}
-                                />
+                                >
+                                    <FaBackwardStep
+                                        className="h-8 w-8 md:h-10 md:w-10 md:text-zinc-300 hover:text-white"
+                                    />
+                                </button>
                                 <Icon
                                     className="h-10 md:h-14 w-10 md:w-14"
                                     onClick={togglePlay}
@@ -124,6 +138,9 @@ export const SongSheet = ({
                             </div>
                         </div>
                     </div>
+                </div>
+                <div className="h-screen w-full">
+
                 </div>
             </SheetContent>
         </Sheet>

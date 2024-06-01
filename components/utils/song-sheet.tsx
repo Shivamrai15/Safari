@@ -1,5 +1,9 @@
 "use client"
 
+import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
+import axios from "axios";
+
 import {
     Sheet,
     SheetContent,
@@ -7,12 +11,17 @@ import {
 import { useQueue } from "@/hooks/use-queue";
 import { useSheet } from "@/hooks/use-sheet";
 import { cn, songLength } from "@/lib/utils";
-import Image from "next/image";
 import { Slider } from "@/components/ui/slider";
 import { FaBackwardStep, FaForwardStep } from "react-icons/fa6";
 import { IconType } from "react-icons";
 import { LucideIcon, ShuffleIcon } from "lucide-react";
 import { LikeButton } from "./like-button";
+import { SyncLoader } from "react-spinners";
+
+interface LyricLine {
+    time: number;
+    text: string;
+}
 
 interface SongSheet {
     seekTime : ( num:number ) => void;
@@ -36,12 +45,66 @@ export const SongSheet = ({
 
     const { isOpen, onClose } = useSheet();
     const { current, deQueue, pop, shuffle } = useQueue();
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [lyrics, setLyrics] = useState<LyricLine[]>([]);
+    const [currentLineIndex, setCurrentLineIndex] = useState<number>(-1);
+    const lyricsContainerRef = useRef<HTMLDivElement | null>(null);
+
 
     const handleClose = ( open : boolean ) => {
         if (!open) {
             onClose();
         }
     }
+
+    const fetchLyrics = async( songId : string ) => {
+        try {
+            setLoading(true);
+            setLyrics([]);
+            setError("");
+            const response = await axios.get(`/api/v1/lyrics?songId=${songId}`);
+            setLyrics(response.data.lyrics.lyrics);
+        } catch (error) {
+            console.log(error);
+            setError("Lyrics Not Found");
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    useEffect(()=>{
+        if (current) {
+            fetchLyrics(current.id);
+        }
+    }, [current]);
+
+
+    useEffect(()=>{
+        if ( (lyrics.length > 0) && currentTime ) {
+            const nextLineIndex = lyrics.findIndex(line => line.time > currentTime) - 1;
+
+                if (nextLineIndex !== currentLineIndex) {
+                    setCurrentLineIndex(nextLineIndex);
+                    const element = document.getElementById(`lry${nextLineIndex}`);
+                    if (element && lyricsContainerRef.current && nextLineIndex>2) {
+
+                        const containerHeight = lyricsContainerRef.current.clientHeight;
+                        const elementOffset = element.offsetTop;
+                        const elementHeight = element.offsetHeight;
+
+                        const scrollTo = elementOffset - (containerHeight - elementHeight) / 2;
+
+                        lyricsContainerRef.current.scrollTo({
+                            top:  scrollTo,
+                            behavior: 'smooth'
+                        })
+                    }
+                }
+            
+        }
+        console.log(lyrics.length)
+    }, [lyrics, currentTime]);
 
     return (
 
@@ -139,8 +202,50 @@ export const SongSheet = ({
                         </div>
                     </div>
                 </div>
-                <div className="h-screen w-full">
-
+                <div className="bg-neutral-950 md:bg-inherit h-screen w-full flex items-center md:items-start justify-center px-6">
+                    {
+                        loading ? (
+                            <div className="h-1/2 flex items-center justify-center">
+                                <SyncLoader color="#252525" />
+                            </div>
+                        ) : error ? (
+                            <div className="h-1/2 flex items-center justify-center">
+                                <div className="text-xl md:text-3xl font-bold text-white">
+                                    {error}
+                                </div>
+                            </div>
+                        ) : (
+                            <div
+                                className="w-full max-w-4xl h-[80vh] overflow-hidden relative"
+                            >
+                                <div 
+                                    ref={lyricsContainerRef}
+                                    className="absolute inset-0 overflow-y-auto lryics_container py-4"
+                                >
+                                    <div className="flex flex-col items-center gap-y-4 md:gap-y-8">
+                                        {lyrics.map((line, index) => (
+                                        <p
+                                            id={`lry${index}`}
+                                            key={index}
+                                            className={cn(
+                                                "my-2 transition-all duration-500 select-none text-center",
+                                                index === currentLineIndex ? 'text-3xl md:text-5xl lg:text-7xl font-extrabold text-white'
+                                                : index < currentLineIndex
+                                                ? 'text-2xl md:text-4xl lg:text-5xl font-bold text-gray-300'
+                                                : 'text-2xl md:text-4xl lg:text-5xl font-bold  text-gray-300'
+                                            )}
+                                            style={{
+                                                opacity: index === currentLineIndex ? 1 : 0.5,
+                                            }}
+                                        >
+                                            {line.text}
+                                        </p>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        )
+                    }
                 </div>
             </SheetContent>
         </Sheet>

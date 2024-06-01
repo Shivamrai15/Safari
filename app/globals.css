@@ -50,6 +50,11 @@ body,
 }
 
 
+.lryics_container::-webkit-scrollbar{
+  width: 0;
+  display: none;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -111,6 +116,7 @@ body,
     --border: 0 0% 14.9%;
     --input: 0 0% 14.9%;
     --ring: 0 0% 83.1%;
+    --lry : white
   }
 }
 

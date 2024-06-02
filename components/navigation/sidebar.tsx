@@ -15,6 +15,7 @@ import { usePlaylistModal } from "@/hooks/use-playlist-modal";
 import { PlaylistNav } from "./playlist-nav";
 import { usePlaylist } from "@/hooks/use-playlist";
 import { useAccount } from "@/hooks/use-account";
+import { usePremiumModal } from "@/hooks/use-premium-modal";
 
 export const Sidebar = () => {
 
@@ -24,6 +25,7 @@ export const Sidebar = () => {
     const { onOpen } = usePlaylistModal();
     const { data } : { data : { isActive : boolean } } = useAccount();
     const playlist = usePlaylist();
+    const { onOpenPremiumModal } = usePremiumModal();
 
     const handlePlaylistModal = () => {
         if ( session.status === "authenticated") {
@@ -33,7 +35,7 @@ export const Sidebar = () => {
                 if ( playlist.data && playlist.data.length < 5 ) {
                     onOpen();
                 } else {
-                    alert("Your are not allowed");
+                    onOpenPremiumModal();
                 }
             }
         }

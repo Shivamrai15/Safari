@@ -37,6 +37,8 @@ import { LikeButton } from "@/components/utils/like-button";
 import { usePlaylist } from "@/hooks/use-playlist";
 import { toast } from "sonner";
 import { useShareModal } from "@/hooks/use-share-modal";
+import { useAccount } from "@/hooks/use-account";
+import { usePremiumModal } from "@/hooks/use-premium-modal";
 
 interface SmallDevicesSongOptionsProps {
     song : Song & {
@@ -56,6 +58,8 @@ export const SmallDevicesSongOptions = ({
     const { mutate } = usePlaylist();
     const shareModal = useShareModal();
     const { data, error, isLoading } : { data : PlayList[], error : any, isLoading : boolean }  = usePlaylist();
+    const { onOpenPremiumModal } = usePremiumModal();
+    const account = useAccount();
 
 
     const handleAddSongInPlaylist = async( playlistId : string, name : string )=>{
@@ -65,6 +69,21 @@ export const SmallDevicesSongOptions = ({
             mutate();
         } catch (error) {
             console.log(error);
+        }
+    }
+
+    const handleOpenPlaylistModal = () => {
+        if ( session.status === "authenticated") {
+            // @ts-ignore
+            if (  account &&  account.isActive ) {
+                onOpen();
+            } else {
+                if ( data && data.length < 5 ) {
+                    onOpen();
+                } else {
+                    onOpenPremiumModal();
+                }
+            }
         }
     }
 
@@ -126,15 +145,16 @@ export const SmallDevicesSongOptions = ({
                                     <DrawerClose>
                                         <button
                                             disabled={ session.status === "unauthenticated" }
-                                            onClick={()=>onOpen()}
+                                            onClick={()=>handleOpenPlaylistModal()}
                                         >
                                             <span className="font-medium text-base ml-8" >New playlist</span>
                                         </button>
                                     </DrawerClose>
                                     {  (!isLoading && !error )&& data.map((playlist)=>(
-                                        <DrawerClose>
+                                        <DrawerClose
+                                            key={playlist.id}
+                                        >
                                             <button
-                                                key={playlist.id}
                                                 onClick={(e)=>{ 
                                                     e.stopPropagation();
                                                     handleAddSongInPlaylist(playlist.id, playlist.name)

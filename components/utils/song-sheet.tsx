@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
@@ -8,6 +8,7 @@ import {
     Sheet,
     SheetContent,
 } from "@/components/ui/sheet";
+
 import { useQueue } from "@/hooks/use-queue";
 import { useSheet } from "@/hooks/use-sheet";
 import { cn, songLength } from "@/lib/utils";
@@ -17,6 +18,8 @@ import { IconType } from "react-icons";
 import { LucideIcon, ShuffleIcon } from "lucide-react";
 import { LikeButton } from "./like-button";
 import { SyncLoader } from "react-spinners";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 interface LyricLine {
     time: number;
@@ -50,6 +53,7 @@ export const SongSheet = ({
     const [lyrics, setLyrics] = useState<LyricLine[]>([]);
     const [currentLineIndex, setCurrentLineIndex] = useState<number>(-1);
     const lyricsContainerRef = useRef<HTMLDivElement | null>(null);
+    const router = useRouter();
 
 
     const handleClose = ( open : boolean ) => {
@@ -81,7 +85,7 @@ export const SongSheet = ({
 
 
     useEffect(()=>{
-        if ( (lyrics.length > 0) && currentTime ) {
+        if ( (lyrics.length > 0) && currentTime && active ) {
             const nextLineIndex = lyrics.findIndex(line => line.time > currentTime) - 1;
 
                 if (nextLineIndex !== currentLineIndex) {
@@ -103,14 +107,16 @@ export const SongSheet = ({
                 }
             
         }
-        console.log(lyrics.length)
     }, [lyrics, currentTime]);
 
     return (
 
         <Sheet open = { isOpen } onOpenChange={handleClose} >
-            <SheetContent side="bottom" className="h-full w-full bg-neutral-900 p-0 transition-colors duration-1000 sheet-scroll overflow-y-auto" style={{background : `linear-gradient(200deg, ${current?.album.color}, #121212 )`  }} >
-                <div className="md:p-6 w-full h-screen md:px-20 lg:px-28 md:grid md:grid-cols-3 md:gap-10 lg:gap-12 xl:gap-32">
+            <SheetContent side="bottom" className="h-full w-full bg-neutral-900 p-0 sheet-scroll overflow-y-auto" style={{background : `${current?.album.color}` }} >
+                <div 
+                    className="md:p-6 w-full h-screen md:px-20 lg:px-28 md:grid md:grid-cols-3 md:gap-10 lg:gap-12 xl:gap-32"
+                    style={{ background : `linear-gradient(-20deg, ${current?.album.color}, ${current?.album.color}, #121212)` }}    
+                >
                     <div className="w-full flex flex-col gap-y-4 items-center justify-center h-2/3 md:h-full">
                         <div className="hidden md:block aspect-square w-full h-fit rounded-sm overflow-hidden shadow-2xl relative">
                             <Image
@@ -135,7 +141,7 @@ export const SongSheet = ({
                             <div className="w-full text-left pb-4">
                                 <h3 className="hidden md:block text-lg font-semibold select-none">{current?.album.name}</h3>
                                 <div className="flex items-center justify-between gap-x-4">
-                                    <h2 className="text-3xl md:text-5xl lg:text-8xl font-bold md:font-extrabold line-clamp-1 drop-shadow-2xl md:py-2 flex-1 select-none" >{current?.name}</h2>
+                                    <h2 className="text-3xl md:text-5xl lg:text-8xl font-bold md:font-extrabold line-clamp-1 drop-shadow-2xl flex-1 select-none" >{current?.name}</h2>
                                     <LikeButton id={current?.id} className="h-8 w-8 md:hidden"/>
                                 </div>
                             </div>
@@ -146,7 +152,10 @@ export const SongSheet = ({
                                     step={1}
                                     max={current?.duration||1}
                                     onValueChange={(e)=>seekTime(e[0])}
-                                    className="w-full h-5 md:cursor-pointer"
+                                    className={cn(
+                                        "w-full h-5 md:cursor-pointer",
+                                        active === false && "md:cursor-not-allowed" 
+                                    )}
                                     disabled = { active===false }
                                 />
                                 <span className="w-10 text-sm hidden md:block font-semibold text-center select-none" >{songLength(current?.duration || 0)}</span>
@@ -223,26 +232,61 @@ export const SongSheet = ({
                                     className="absolute inset-0 overflow-y-auto lryics_container py-4"
                                 >
                                     <div className="flex flex-col items-center gap-y-4 md:gap-y-8">
+                                        <div className="h-28 w-full" />
                                         {lyrics.map((line, index) => (
-                                        <p
-                                            id={`lry${index}`}
-                                            key={index}
-                                            className={cn(
-                                                "my-2 transition-all duration-500 select-none text-center",
-                                                index === currentLineIndex ? 'text-3xl md:text-5xl lg:text-7xl font-extrabold text-white'
-                                                : index < currentLineIndex
-                                                ? 'text-2xl md:text-4xl lg:text-5xl font-bold text-gray-300'
-                                                : 'text-2xl md:text-4xl lg:text-5xl font-bold  text-gray-300'
-                                            )}
-                                            style={{
-                                                opacity: index === currentLineIndex ? 1 : 0.5,
-                                            }}
-                                        >
-                                            {line.text}
-                                        </p>
+                                            <p
+                                                id={`lry${index}`}
+                                                key={index}
+                                                className={cn(
+                                                    "my-2 transition-all duration-500 select-none text-center",
+                                                    index === currentLineIndex ? 'text-3xl md:text-5xl lg:text-6xl font-extrabold text-white'
+                                                    : index < currentLineIndex
+                                                    ? 'text-2xl md:text-4xl lg:text-5xl font-bold text-gray-300'
+                                                    : 'text-2xl md:text-4xl lg:text-5xl font-bold  text-gray-300'
+                                                )}
+                                                style={{
+                                                    opacity: index === currentLineIndex ? 1 : 0.6,
+                                                }}
+                                            >
+                                                {line.text}
+                                            </p>
                                         ))}
+                                        <div className="h-28 w-full" />
                                     </div>
                                 </div>
+                                <div 
+                                    className="hidden md:block h-full absolute top-0 w-full z-10 "
+                                    style={{ background: `linear-gradient(to bottom, ${current?.album.color} 0 20%, transparent 35% 80%, ${current?.album.color}) 80% 100%` }}
+                                />
+                                <div className="md:hidden h-full absolute top-0 w-full z-10 bg-gradient-to-b from-neutral-950 via-transparent to-neutral-950"/>
+                                {
+                                    active === false && (
+                                        <div className="w-full h-full absolute flex items-center justify-center z-20">
+                                            <div 
+                                                className="max-w-xl w-full rounded-xl bg-neutral-800 shadow-2xl overflow-hidden"
+                                            >
+                                                <div 
+                                                    className="w-full h-full p-6 flex flex-col items-center py-10 space-y-10"
+                                                    style={{background : `${current?.album.color}5e`}}
+                                                > 
+                                                    <p className="text-center text-3xl md:text-4xl lg:text-5xl font-extrabold md:leading-snug lg:leading-snug">
+                                                        Enjoy Lyrics only<br />on Safari Premium
+                                                    </p>
+                                                    <Button
+                                                        className="rounded-full font-bold hover:scale-105 transition-transform duration-300"
+                                                        onClick={() => {
+                                                                router.push('/account/subscription');
+                                                                onClose();
+                                                            }
+                                                        }
+                                                    >
+                                                        Explore Premium
+                                                    </Button> 
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )
+                                }
                             </div>
                         )
                     }

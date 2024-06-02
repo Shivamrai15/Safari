@@ -33,6 +33,8 @@ import { usePlaylistModal } from "@/hooks/use-playlist-modal";
 import { LikeButton } from "@/components/utils/like-button";
 import { toast } from "sonner";
 import { useShareModal } from "@/hooks/use-share-modal";
+import { usePremiumModal } from "@/hooks/use-premium-modal";
+import { useAccount } from "@/hooks/use-account";
 
 interface SongOptionsProps {
     song : (Song & {
@@ -58,6 +60,8 @@ export const SongOptions = ({
     const { mutate } = usePlaylist();
     const { onOpen } = usePlaylistModal();
     const shareModal = useShareModal();
+    const { onOpenPremiumModal } = usePremiumModal();
+    const account = useAccount();
 
     const handleAddSongInPlaylist = async( playlistId : string, name: string )=>{
         try {
@@ -66,6 +70,21 @@ export const SongOptions = ({
             mutate();
         } catch (error) {
             console.log(error);
+        }
+    }
+
+    const handleOpenPlaylistModal = () => {
+        if ( session.status === "authenticated") {
+            // @ts-ignore
+            if (  account &&  account.isActive ) {
+                onOpen();
+            } else {
+                if ( data && data.length < 5 ) {
+                    onOpen();
+                } else {
+                    onOpenPremiumModal();
+                }
+            }
         }
     }
 
@@ -109,8 +128,9 @@ export const SongOptions = ({
                                 <DropdownMenuItem 
                                     disabled = { session.status === "unauthenticated" }
                                     onClick={(e)=>{
-                                        e.stopPropagation();
-                                        onOpen()}
+                                            e.stopPropagation();
+                                            handleOpenPlaylistModal();
+                                        }
                                     } 
                                     className="px-3 hover:bg-neutral-700 focus:bg-neutral-700 py-2 rounded-none md:cursor-pointer"
                                 >

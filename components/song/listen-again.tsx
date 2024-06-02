@@ -8,16 +8,17 @@ import { ListenAgainCarousel } from "./listen-again-carousel";
 export const ListenAgain = () => {
 
     const session = useSession();
-    if ( session.status === "unauthenticated" ) {
-        return null;
-    }
-
+    
     const { data, isLoading, error } : {
         data : (Song & { album : Album, artists : Artist[] })[],
         isLoading : boolean,
         error : any
     } = useListenAgain()
-
+    
+    if ( session.status === "unauthenticated" ) {
+        return null;
+    }
+    
     if (error) {
         return null;
     }

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { PlaylistModal } from "@/components/modals/playlist-modal";
 import { ShareModal } from "@/components/modals/share-modal";
+import { JoinPremiumModal } from "@/components/modals/join-premium-modal";
 
 export const ModalProvider = () => {
     
@@ -20,6 +21,7 @@ export const ModalProvider = () => {
         <>
             <PlaylistModal/>
             <ShareModal/>
+            <JoinPremiumModal/>
         </>
     )
 }

@@ -9,7 +9,9 @@ export const protectedRoutes = [
     "/account",
     "/account/history",
     "/account/subscription",
-    "/account/subscription#plans"
+    "/account/subscription#plans",
+    "/account/profile",
+    "/account/following"
 ];
 
 export const authRoutes = [

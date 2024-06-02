@@ -114,7 +114,7 @@ export const SongSheet = ({
         <Sheet open = { isOpen } onOpenChange={handleClose} >
             <SheetContent side="bottom" className="h-full w-full bg-neutral-900 p-0 sheet-scroll overflow-y-auto" style={{background : `${current?.album.color}` }} >
                 <div 
-                    className="md:p-6 w-full h-screen md:px-20 lg:px-28 md:grid md:grid-cols-3 md:gap-10 lg:gap-12 xl:gap-32"
+                    className="md:p-6 w-full h-full md:px-20 lg:px-28 md:grid md:grid-cols-3 md:gap-10 lg:gap-12 xl:gap-32"
                     style={{ background : `linear-gradient(-20deg, ${current?.album.color}, ${current?.album.color}, #121212)` }}    
                 >
                     <div className="w-full flex flex-col gap-y-4 items-center justify-center h-2/3 md:h-full">
@@ -211,7 +211,7 @@ export const SongSheet = ({
                         </div>
                     </div>
                 </div>
-                <div className="bg-neutral-950 md:bg-inherit h-screen w-full flex items-center md:items-start justify-center px-6">
+                <div className="bg-neutral-950 md:bg-inherit h-full w-full flex items-center md:items-start justify-center px-6">
                     {
                         loading ? (
                             <div className="h-1/2 flex items-center justify-center">

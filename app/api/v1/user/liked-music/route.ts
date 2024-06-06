@@ -32,7 +32,12 @@ export async function GET () {
                 }
             },
             include : {
-                artists : true,
+                artists : {
+                    select : {
+                        id : true,
+                        name : true
+                    }
+                },
                 album : true
             }
         });

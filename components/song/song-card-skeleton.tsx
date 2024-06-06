@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { Skeleton } from "@/components/ui/skeleton"
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const SongCardSkeleton = () => {
     return (
@@ -8,8 +8,8 @@ export const SongCardSkeleton = () => {
             <div className="flex items-center gap-x-4">
                 <Skeleton className="h-12 w-12 shrink-0 text-zinc-600"/>
                 <div className="w-full relative space-y-1">
-                    <Skeleton className="h-5 w-40 text-zinc-600"/>
-                    <Skeleton className="h-3 w-56 text-zinc-600"/>
+                    <Skeleton className="h-5 w-28 md:w-40 text-zinc-600"/>
+                    <Skeleton className="h-3 w-40 md:w-56 text-zinc-600"/>
                 </div>
             </div>
         </div>

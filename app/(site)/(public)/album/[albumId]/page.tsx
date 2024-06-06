@@ -3,13 +3,17 @@ import { Metadata, ResolvingMetadata } from "next";
 
 import { Header } from "@/components/album/header";
 import { SongsList } from "@/components/song/songs-list";
-import { getAlbum } from "@/server/album";
+import { getAlbum, getAlbums } from "@/server/album";
 import { albumMetaData } from "@/server/meta";
 
 interface AlbumPageProps  {
     params : { albumId : string }
 }
 
+export async function generateStaticParams(){
+    const albums = await getAlbums();
+    return albums.map(album => ({ albumId: album.id }));
+}
 
 export async function generateMetadata(
     { params } : AlbumPageProps,

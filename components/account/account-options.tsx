@@ -16,6 +16,7 @@ import { useState } from "react";
 
 import { FaUser } from "react-icons/fa6";
 import { toast } from "sonner";
+import { KeyedMutator } from "swr";
 
 
 export const AccountOptions = () => {
@@ -30,14 +31,14 @@ export const AccountOptions = () => {
             isActive : boolean
         },
         isLoading: boolean,
-        mutate : ()=>void
+        mutate : KeyedMutator<any>
     } = useAccount();
 
     const togglePrivateSession = async () => {
         try {
             setLoading(true);
             await axios.patch("/api/v1/user/account", { privateSession : !data.privateSession });
-            mutate();
+            mutate({ ...data, privateSession : !data.privateSession  });
         } catch (error) {
             console.error(error);
             toast.error("Something went wrong");

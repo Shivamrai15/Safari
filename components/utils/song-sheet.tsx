@@ -13,7 +13,8 @@ import { useQueue } from "@/hooks/use-queue";
 import { useSheet } from "@/hooks/use-sheet";
 import { cn, songLength } from "@/lib/utils";
 import { Slider } from "@/components/ui/slider";
-import { FaBackwardStep, FaForwardStep } from "react-icons/fa6";
+import { FaBackwardStep, FaForwardStep, FaCirclePlay } from "react-icons/fa6";
+import { BsFillPauseCircleFill } from "react-icons/bs";
 import { IconType } from "react-icons";
 import { LucideIcon, ShuffleIcon } from "lucide-react";
 import { LikeButton } from "./like-button";
@@ -33,7 +34,8 @@ interface SongSheet {
     Icon : IconType;
     RepeatIcon : LucideIcon,
     toggleRepeat : () => void;
-    active : boolean | undefined
+    active : boolean | undefined;
+    play : boolean
 }
 
 export const SongSheet = ({
@@ -44,6 +46,7 @@ export const SongSheet = ({
     RepeatIcon,
     toggleRepeat,
     active,
+    play
 } : SongSheet ) => {
 
     const { isOpen, onClose } = useSheet();
@@ -55,6 +58,7 @@ export const SongSheet = ({
     const lyricsContainerRef = useRef<HTMLDivElement | null>(null);
     const router = useRouter();
 
+    const PlayIcon = play ? BsFillPauseCircleFill : FaCirclePlay;
 
     const handleClose = ( open : boolean ) => {
         if (!open) {
@@ -117,7 +121,7 @@ export const SongSheet = ({
                     className="md:p-6 w-full h-full md:px-20 lg:px-28 md:grid md:grid-cols-3 md:gap-10 lg:gap-12 xl:gap-32"
                     style={{ background : `linear-gradient(-20deg, ${current?.album.color}, ${current?.album.color}, #121212)` }}    
                 >
-                    <div className="w-full flex flex-col gap-y-4 items-center justify-center h-2/3 md:h-full">
+                    <div className="w-full flex flex-col gap-y-4 items-center justify-center h-3/5 md:h-full">
                         <div className="hidden md:block aspect-square w-full h-fit rounded-sm overflow-hidden shadow-2xl relative">
                             <Image
                                 src={current?.image || ""}
@@ -136,7 +140,7 @@ export const SongSheet = ({
                             <div className="h-full bg-gradient-to-b from-transparent to-neutral-950"/>
                         </div>
                     </div>
-                    <div className="md:col-span-2 w-full h-1/3 bg-neutral-950 md:bg-transparent md:h-full px-6">
+                    <div className="md:col-span-2 w-full h-2/5 bg-neutral-950 md:bg-transparent md:h-full px-6">
                         <div className="flex flex-col items-center justify-center h-full w-full space-y-4 md:space-y-10">
                             <div className="w-full text-left pb-4">
                                 <h3 className="hidden md:block text-lg font-semibold select-none">{current?.album.name}</h3>
@@ -188,22 +192,22 @@ export const SongSheet = ({
                                 <RepeatIcon onClick={toggleRepeat}  className="h-6 w-6 md:h-8 md:w-8 text-white cursor-pointer" />
                                 <LikeButton id={current?.id} className="h-8 w-8 hidden md:block"/>
                             </div>
-                            <div className="flex items-center w-full justify-center gap-x-5 md:hidden">
-                                <ShuffleIcon className="md:h-8 md:w-8" onClick={shuffle} />
+                            <div className="grid grid-cols-5 w-full items-center justify-items-center md:hidden">
+                                <ShuffleIcon onClick={shuffle} />
                                 <button 
                                     disabled ={active===false}
                                     onClick={pop}
                                 >
                                     <FaBackwardStep
-                                        className="h-8 w-8 md:h-10 md:w-10 md:text-zinc-300 hover:text-white"
+                                        className="h-8 w-8 md:text-zinc-300 hover:text-white"
                                     />
                                 </button>
-                                <Icon
-                                    className="h-10 md:h-14 w-10 md:w-14"
+                                <PlayIcon
+                                    className="h-16 w-16"
                                     onClick={togglePlay}
                                 />
                                 <FaForwardStep
-                                    className="h-8 w-8 md:h-10 md:w-10 md:text-zinc-300 hover:text-white"
+                                    className="h-8 w-8 md:text-zinc-300 hover:text-white"
                                     onClick={deQueue}
                                 />
                                 <RepeatIcon onClick={toggleRepeat}  className="h-6 w-6 md:h-8 md:w-8 text-white" />

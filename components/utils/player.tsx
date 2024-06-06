@@ -152,7 +152,10 @@ export const Player = () => {
             <div className="w-full h-full bg-neutral-900 hidden md:block relative">
                 <div className="w-full absolute -top-5 py-2">
                     <Slider 
-                        className="cursor-pointer h-5"
+                        className={cn(
+                            "cursor-pointer h-5",
+                            data?.isActive === false && "md:cursor-not-allowed" 
+                        )}
                         value={[currentTime]}
                         step={1}
                         max={current?.duration||1}
@@ -267,6 +270,7 @@ export const Player = () => {
                 RepeatIcon={RepeatIcon}
                 toggleRepeat={toggleRepeat}
                 active = { data?.isActive }
+                play = { play }
             />
             <PlayerShortCutProvider onClick = {togglePlay} />
         </>

@@ -91,3 +91,20 @@ export const getArtistProfileById = async( id : string ) => {
         return null;
     }
 }
+
+export const getArtists = async () => {
+    try {
+        
+        const artists = await db.artist.findMany({
+            select : {
+                id : true
+            }
+        });
+
+        return artists;
+
+    } catch (error) {
+        console.log("ARTISTS GET SERVER ERROR", error);
+        return [];
+    }
+}

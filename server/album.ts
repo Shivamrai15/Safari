@@ -23,3 +23,21 @@ export const getAlbum =  async ( id : string ) => {
         return null;
     }
 }
+
+
+export const getAlbums = async () => {
+    try {
+        
+        const albums = await db.album.findMany({
+            select : {
+                id :true
+            }
+        });
+
+        return albums;
+
+    } catch (error) {
+        console.error("GET ALBUMS SERVER ERROR");
+        return [];
+    }
+}

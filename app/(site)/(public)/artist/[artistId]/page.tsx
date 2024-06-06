@@ -7,7 +7,7 @@ import { Subscribe } from "@/components/artist/subscribe";
 import { SongItem } from "@/components/song/song-item";
 import { ShuffleButton } from "@/components/utils/shuffle-btn";
 import { cn } from "@/lib/utils";
-import { getArtist } from "@/server/artist";
+import { getArtist, getArtists } from "@/server/artist";
 import { PlayButton } from "@/components/artist/play-button";
 import { ShareProfileButton } from "@/components/artist/share-profile";
 import { artistMetaData } from "@/server/meta";
@@ -16,6 +16,11 @@ interface ArtistPageProps {
     params : { artistId: string }
 }
 
+
+export async function generateStaticParams () {
+    const artists = await getArtists();
+    return artists.map(artist => ({ artistId: artist.id }));
+}
 
 export async function generateMetadata(
     { params } : ArtistPageProps,

@@ -3,6 +3,9 @@
 import { useRouter } from "next/navigation";
 import { IconType } from "react-icons";
 import { ChevronRight } from "lucide-react";
+import { useState } from "react";
+import { postData } from "@/lib/helpers";
+import { toast } from "sonner";
 
 interface SectionItemProps {
     title : string;
@@ -17,11 +20,32 @@ export const SectionItem = ( {
 } : SectionItemProps ) => {
     
     const router = useRouter();
+    const [ loading, setLoading ] = useState(false);
+
+    const handleRoutes = async() => {
+        if ( route === "/account/order-history" ) {
+            router.push(route);
+        } else {
+            try {
+                setLoading(true);
+                const  { url } = await postData({
+                    url : "/api/create-portal-link",
+                });
+                window.location.assign(url);
+            } catch (error) {
+                console.log(error);
+                toast.error("Something went wrong");
+            } finally {
+                setLoading(false);
+            }
+        }
+    }
 
     return (
         <li 
             className="flex group items-center justify-between p-2 rounded-md hover:bg-neutral-950 md:cursor-pointer select-none"
-            onClick={()=>router.push(route)}
+            onClick={handleRoutes}
+            aria-disabled = { loading }
         >
             <div className="flex items-center gap-x-4 text-zinc-400 group-hover:text-zinc-100 transition-all">
                 <div className="h-9 w-9 flex-shrink-0 rounded-full flex items-center justify-center bg-neutral-800">

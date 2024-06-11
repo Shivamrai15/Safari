@@ -55,7 +55,7 @@ export const Queue = () => {
     }
 
     return (
-        <div className="hidden group md:block w-20 h-96 right-0 fixed top-1/2 -translate-y-1/2 bg-neutral-800 z-40 rounded-l-md hover:w-96 transition-all duration-300 shadow-md">
+        <div className="hidden group md:block w-20 h-96 right-0 fixed top-[calc(50%-12rem)]  bg-neutral-800 z-40 rounded-l-md hover:w-96 transition-all duration-300 shadow-md">
             <div className="flex items-center justify-between h-16 p-4">
                 <div className="w-20 group-hover:w-fit flex items-center justify-center">
                     <LibraryBig className="h-10 w-10 text-red-500"/>
@@ -79,7 +79,7 @@ export const Queue = () => {
                             >
                                 {
                                     queue.map(( song, index )=>(
-                                        <Draggable draggableId={song.id}  key={song.id} index={index} isDragDisabled = {index===0} >
+                                        <Draggable draggableId={song.id}  key={song.id} index={index} isDragDisabled = {index===0}  >
                                             {(provided)=>(
                                                 <li
                                                     {...provided.draggableProps}
@@ -88,8 +88,10 @@ export const Queue = () => {
                                                     role="button"
                                                     onClick={()=>shiftToTopOfQueue(song.id)}
                                                     className={cn(
-                                                        "flex z-[9999] items-center space-x-4 bg-neutral-800 hover:bg-neutral-900 px-4 py-2 transition-all cursor-default md:cursor-pointer select-none group/song",
-                                                        index === 0 && "bg-neutral-900/80"
+                                                        "flex z-[9999] items-center space-x-4 bg-neutral-800 hover:bg-neutral-900 focus:bg-neutral-900 px-4 py-2 transition-all cursor-default md:cursor-pointer select-none group/song",
+                                                        index === 0 && "bg-neutral-900/80",
+                                                        
+                                                        
                                                     )}
                                                 >
                                                     <div className="w-12 aspect-square shrink-0 rounded-md relative overflow-hidden" >

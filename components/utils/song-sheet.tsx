@@ -35,7 +35,9 @@ interface SongSheet {
     RepeatIcon : LucideIcon,
     toggleRepeat : () => void;
     active : boolean | undefined;
-    play : boolean
+    play : boolean;
+    handleOnEnd : ()=>void;
+    isAdPlaying : boolean;
 }
 
 export const SongSheet = ({
@@ -46,7 +48,9 @@ export const SongSheet = ({
     RepeatIcon,
     toggleRepeat,
     active,
-    play
+    play,
+    isAdPlaying,
+    handleOnEnd
 } : SongSheet ) => {
 
     const { isOpen, onClose } = useSheet();
@@ -154,7 +158,7 @@ export const SongSheet = ({
                                 <Slider
                                     value={[currentTime]}
                                     step={1}
-                                    max={current?.duration||1}
+                                    max={isAdPlaying ? 16 : (current?.duration||1)}
                                     onValueChange={(e)=>seekTime(e[0])}
                                     className={cn(
                                         "w-full h-5 md:cursor-pointer",
@@ -162,10 +166,10 @@ export const SongSheet = ({
                                     )}
                                     disabled = { active===false }
                                 />
-                                <span className="w-10 text-sm hidden md:block font-semibold text-center select-none" >{songLength(current?.duration || 0)}</span>
+                                <span className="w-10 text-sm hidden md:block font-semibold text-center select-none" >{songLength(isAdPlaying ? 16 : (current?.duration||1))}</span>
                                 <div className="md:hidden flex items-center justify-between mt-2">
                                     <span className="text-sm text-zinc-200 select-none ">{songLength(Math.floor(currentTime))}</span>
-                                    <span className="text-sm text-zinc-200 select-none">{songLength(current?.duration || 0)}</span>
+                                    <span className="text-sm text-zinc-200 select-none">{songLength(isAdPlaying ? 16 : (current?.duration||1))}</span>
                                 </div>
                             </div>
                             <div className="hidden md:flex items-center w-full gap-x-6 md:justify-start">
@@ -185,10 +189,14 @@ export const SongSheet = ({
                                     className="h-10 md:h-14 w-10 md:w-14 cursor-pointer"
                                     onClick={togglePlay}
                                 />
-                                <FaForwardStep
-                                    className="h-8 w-8 md:h-10 md:w-10 md:text-zinc-300 hover:text-white cursor-pointer"
-                                    onClick={deQueue}
-                                />
+                                <button
+                                    onClick={handleOnEnd}
+                                    disabled = {isAdPlaying}
+                                >
+                                    <FaForwardStep
+                                        className="h-8 w-8 md:h-10 md:w-10 md:text-zinc-300 hover:text-white cursor-pointer"
+                                    /> 
+                                </button>
                                 <RepeatIcon onClick={toggleRepeat}  className="h-6 w-6 md:h-8 md:w-8 text-white cursor-pointer" />
                                 <LikeButton id={current?.id} className="h-8 w-8 hidden md:block"/>
                             </div>
@@ -206,10 +214,14 @@ export const SongSheet = ({
                                     className="h-16 w-16"
                                     onClick={togglePlay}
                                 />
-                                <FaForwardStep
-                                    className="h-8 w-8 md:text-zinc-300 hover:text-white"
-                                    onClick={deQueue}
-                                />
+                                <button
+                                    onClick={handleOnEnd}
+                                    disabled = { isAdPlaying }
+                                >
+                                    <FaForwardStep
+                                        className="h-8 w-8 md:text-zinc-300 hover:text-white"
+                                    />
+                                </button>
                                 <RepeatIcon onClick={toggleRepeat}  className="h-6 w-6 md:h-8 md:w-8 text-white" />
                             </div>
                         </div>

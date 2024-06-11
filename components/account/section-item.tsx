@@ -23,9 +23,7 @@ export const SectionItem = ( {
     const [ loading, setLoading ] = useState(false);
 
     const handleRoutes = async() => {
-        if ( route === "/account/order-history" ) {
-            router.push(route);
-        } else {
+        if ( route === "account::manage" ) {
             try {
                 setLoading(true);
                 const  { url } = await postData({
@@ -38,6 +36,8 @@ export const SectionItem = ( {
             } finally {
                 setLoading(false);
             }
+        } else {
+            router.push(route);
         }
     }
 

@@ -32,8 +32,11 @@ import { LikeButton } from "./like-button";
 import axios from "axios";
 import { useAccount } from "@/hooks/use-account";
 import { PlayerShortCutProvider } from "@/providers/player-shortcut-provider";
+import { useAds } from "@/hooks/use-ads";
 
 export const Player = () => {
+
+    // https://res.cloudinary.com/dkaj1swfy/video/upload/Shivam_Rai_s_Video_-_Jun_11_2024_1_mndvk3.mp3
 
     const { onOpen } = useSheet();
     const { current, deQueue, pop, shuffle } = useQueue();
@@ -42,6 +45,9 @@ export const Player = () => {
     const [ play, setPlay ] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
     const audioRef = useRef<HTMLAudioElement|null>(null);
+    const { prevAdTimeStamp, setPrevAdTimeStamp } = useAds();
+    const [isAdPlaying, setIsAdPlaying] = useState(false);
+
 
     const { data , isLoading, mutate } : { 
         data : { 
@@ -147,6 +153,24 @@ export const Player = () => {
         }
     }
 
+    const handleOnEnd = () => {
+        setIsAdPlaying(false)
+        if ( data?.isActive ) {
+            deQueue();
+            return;
+        } 
+        if ( prevAdTimeStamp && ( (Date.now() - prevAdTimeStamp)/60000 < 30 ) ) {
+            deQueue();
+            return;
+        }
+        if ( audioRef.current ) {
+            setIsAdPlaying(true);
+            audioRef.current.src = "https://res.cloudinary.com/dkaj1swfy/video/upload/Shivam_Rai_s_Video_-_Jun_11_2024_1_mndvk3.mp3"
+            setPrevAdTimeStamp();
+            setSongId("");
+        }
+    }
+
     return (
         <>
             <div className="w-full h-full bg-neutral-900 hidden md:block relative">
@@ -158,7 +182,7 @@ export const Player = () => {
                         )}
                         value={[currentTime]}
                         step={1}
-                        max={current?.duration||1}
+                        max={isAdPlaying ? 16 : (current?.duration||1)}
                         onValueChange={(e)=>seekTime(e[0])}
                         disabled = {data?.isActive === false}
                     />
@@ -185,11 +209,15 @@ export const Player = () => {
                                 className="h-8 w-8 cursor-pointer"
                                 onClick={togglePlay}
                             />
-                            <FaForwardStep
-                                className="h-5 w-5 text-zinc-300 hover:text-white cursor-pointer"
-                                onClick={deQueue}
-                            />
-                            <span className="text-sm text-zinc-300" >{ songLength(current?.duration || 0)}</span>
+                            <button
+                                onClick={handleOnEnd}
+                                disabled = {isAdPlaying}
+                            >
+                                <FaForwardStep
+                                    className="h-5 w-5 text-zinc-300 hover:text-white cursor-pointer"
+                                />
+                            </button>
+                            <span className="text-sm text-zinc-300" >{ songLength(isAdPlaying ? 16 : (current?.duration||1))}</span>
                         </div>
                         <div className="w-full flex items-center justify-end gap-x-3 lg:gap-x-6">
                             <LikeButton id = { current?.id } className="h-6 w-6"/>
@@ -222,7 +250,7 @@ export const Player = () => {
                     <Slider
                         value={[currentTime]}
                         step={1}
-                        max={current?.duration||1}
+                        max={isAdPlaying ? 16 : (current?.duration||1)}
                     />
                     <div className="flex items-center h-full px-4">
                         <div className="w-[calc(100%-3.5rem)] h-8">
@@ -250,17 +278,16 @@ export const Player = () => {
                         setPlay(false);
                         setIsPlaying(false);
                     }}
-                    onEnded={()=>{
-                        deQueue();
-                    }}
+                    onEnded={handleOnEnd}
                     onLoadedMetadata={()=>handleUpdateMetadata()}
                     onTimeUpdate={handleTimeUpdate}
                     loop = {repeat}
                     muted = {mute}
                     title={current?.name}
                     className="h-0 w-0 sr-only"
-                    autoPlay src={current?.url}
-                    >   
+                    autoPlay
+                    src={current?.url}
+            >   
             </audio>
             <SongSheet
                 currentTime={currentTime}
@@ -271,6 +298,8 @@ export const Player = () => {
                 toggleRepeat={toggleRepeat}
                 active = { data?.isActive }
                 play = { play }
+                handleOnEnd = { handleOnEnd }
+                isAdPlaying = { isAdPlaying }
             />
             <PlayerShortCutProvider onClick = {togglePlay} />
         </>

@@ -8,7 +8,7 @@ export const PaymentSection = () => {
 
     const routes = [
         { title: "Order History", Icon: PiNewspaperClippingFill, route: "/account/order-history" },
-        { title : "Manage your subscriptions", Icon : IoDiamond, route : "account/plans"},
+        { title : "Manage your subscriptions", Icon : IoDiamond, route : "account::manage"},
     ]
 
     return (

@@ -82,11 +82,6 @@ export const AccountOptions = () => {
                 >
                     Upgrade to Premium
                 </DropdownMenuItem>
-                <DropdownMenuItem 
-                    className="px-3 hover:bg-neutral-700 focus:bg-neutral-700 py-2 rounded-none md:cursor-pointer"
-                >
-                    Settings
-                </DropdownMenuItem>
                 <DropdownMenuSeparator className="bg-zinc-600"/>
                 <DropdownMenuItem 
                     className="px-3 hover:bg-neutral-700 focus:bg-neutral-700 py-2 rounded-none md:cursor-pointer"

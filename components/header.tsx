@@ -56,7 +56,6 @@ export const Header = () => {
                             </Badge>
                         )
                     }
-                    <BellIcon/>
                     <Button
                         onClick={()=>signOut()}
                         className="rounded-full font-bold text-base px-6 hover:bg-red-500/80 hover:text-white"

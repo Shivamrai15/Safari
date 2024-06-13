@@ -22,7 +22,9 @@ export const LayoutWrapper = ({
     return (
         <main className={cn(
             "h-full w-full flex flex-col bg-neutral-950 overflow-x-hidden",     
-        )}>
+        )}
+            
+        >
             <div className={cn(
                 "h-[calc(100%-4rem)] md:h-full flex w-full",
                 current && "h-[calc(100%-4rem)] md:h-[calc(100%-5rem)] "

@@ -2,6 +2,7 @@ import { AlbumCarousel } from "@/components/album/album-carousel";
 import { Header } from "@/components/header";
 import PlaylistCards from "@/components/playlist/playlist-cards";
 import { ListenAgain } from "@/components/song/listen-again";
+import { TopSongsCarousel } from "@/components/song/top-songs-carousel";
 import { Profile } from "@/components/utils/profile";
 
 const HomePage = () => {
@@ -12,6 +13,7 @@ const HomePage = () => {
                 <Profile/>
                 <PlaylistCards/>
                 <ListenAgain/>
+                <TopSongsCarousel/>
                 <AlbumCarousel label="New Releases" href="/api/v1/new-releases" />
                 <AlbumCarousel label="Recommended Albums" href="/api/v1/recommended" />
             </div>

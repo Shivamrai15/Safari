@@ -51,7 +51,7 @@ export default async function RootLayout({
 
     return (
         <html lang="en">
-            <body className={inter.className}>
+            <body className={inter.className} >
                 <SessionProvider session={session} >
                     <ThemeProvider
                         attribute="class"

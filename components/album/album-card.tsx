@@ -43,9 +43,7 @@ export const AlbumCard = ({
                     </div>
                 </div>
             </div>
-            <div className="font-medium line-clamp-1 select-none">
-                {album.name}
-            </div>
+            
         </div>
     )
 }

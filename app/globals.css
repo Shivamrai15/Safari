@@ -55,6 +55,12 @@ body,
   display: none;
 }
 
+.text-border {
+  
+  text-shadow: 2px 0 #b4b4b4, -2px 0 #b4b4b4, 0 2px #b4b4b4, 0 -2px #b4b4b4,
+               1px 1px #b4b4b4, -1px -1px #b4b4b4, 1px -1px #b4b4b4, -1px 1px #b4b4b4;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

@@ -36,8 +36,6 @@ import { useAds } from "@/hooks/use-ads";
 
 export const Player = () => {
 
-    // https://res.cloudinary.com/dkaj1swfy/video/upload/Shivam_Rai_s_Video_-_Jun_11_2024_1_mndvk3.mp3
-
     const { onOpen } = useSheet();
     const { current, deQueue, pop, shuffle } = useQueue();
     const { repeat, setRepeat, mute, setMute, volume, setVolume } = useControls();
@@ -111,7 +109,12 @@ export const Player = () => {
 
     const updateHistory = async() => {
         if (current) {
-            await axios.post("/api/v1/user/history", { songId : current.id });
+            try {
+                await axios.post("/api/v1/user/history", { songId : current.id });
+                await axios.post("/api/v1/views", { songId : current.id });
+            } catch (error) {
+                console.log(error);
+            }
         }
     }
 

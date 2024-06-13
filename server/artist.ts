@@ -13,6 +13,8 @@ export const getArtist = async(id :string) => {
                 id : true,
                 name : true,
                 thumbnail : true,
+                image : true,
+                about : true,
                 songs : {
                     include : {
                         artists : true,

@@ -9,7 +9,6 @@ export const AccountSection = () => {
 
     const routes = [
         { title: "Your profile", Icon: FaUser, route: "/account/profile" },
-        { title : "Edit profile", Icon : MdEdit, route : "/account/profile?edit=true" },
         { title: "Delete history", Icon: FaHistory, route: "/account/history" },
     ];
 

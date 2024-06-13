@@ -11,6 +11,7 @@ import { getArtist, getArtists } from "@/server/artist";
 import { PlayButton } from "@/components/artist/play-button";
 import { ShareProfileButton } from "@/components/artist/share-profile";
 import { artistMetaData } from "@/server/meta";
+import { Profile } from "@/components/artist/profile";
 
 interface ArtistPageProps {
     params : { artistId: string }
@@ -112,6 +113,12 @@ const ArtistPage = async({
             </div>
             <div className="pr-12">
                 <Albums id={artist.id} />
+            </div>
+            <div className="w-full px-4 md:px-20 mt-20 space-y-6 md:pr-32">
+                <Profile
+                    image={artist.image}
+                    about={artist.about}
+                />
             </div>
         </div>
     );

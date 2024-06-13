@@ -11,7 +11,6 @@ import {
 import {
     GripVertical,
     LibraryBig,
-    ThumbsUp,
     X
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -22,6 +21,7 @@ import { Separator } from "@/components/ui/separator";
 import { Audio } from "react-loader-spinner";
 import { usePlayer } from "@/hooks/use-player";
 import { LikeButton } from "../utils/like-button";
+import { useAccount } from "@/hooks/use-account";
 
 export const Queue = () => {
 
@@ -32,6 +32,15 @@ export const Queue = () => {
             remove,
             shiftToTopOfQueue,
     } = useQueue();
+
+    const { data } : { 
+        data : { 
+            name: string | null,
+            id: string,
+            privateSession: boolean,
+            isActive : boolean
+        },
+    } = useAccount();
 
     const { isPlaying } = usePlayer();
 
@@ -79,7 +88,7 @@ export const Queue = () => {
                             >
                                 {
                                     queue.map(( song, index )=>(
-                                        <Draggable draggableId={song.id}  key={song.id} index={index} isDragDisabled = {index===0}  >
+                                        <Draggable draggableId={song.id}  key={song.id} index={index} isDragDisabled = {index===0 || data?.isActive ===false}  >
                                             {(provided)=>(
                                                 <li
                                                     {...provided.draggableProps}

@@ -1,36 +1,28 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+# **Music Streaming Webapp**
 
-First, run the development server:
+For our music streaming app, we used Next.js and React.js with TailwindCSS for the frontend. The backend was built with Next.js, using Prisma ORM to work with MongoDB for data operations. Data fetching was handled using React Query and SWR to optimize performance and Zustand for managing app state. Stripe was integrated for handling payments.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+* **Account Creation:** Users can create an account using their email ID or through Google or GitHub.
+* **Ad-Free Listening:**
+  * Subscribed users can play songs without ads.
+  * Unsubscribed users can play songs without ads for 30 minutes.
+* **Playlists:**
+  * Subscribed users can create unlimited playlists.
+  * Unsubscribed users can create up to 5 playlists.
+  * Users can create public or private playlists based on their preference.
+* **Artist Following:** Users can follow their favorite artists.
+* **Song Liking:** Users can like songs to save them.
+* **Playback Restrictions for Unsubscribed Users:**
+  * Cannot seek songs.
+  * Cannot play previously played songs.
+* **Synced Lyrics:** Subscribed users can view synced lyrics while listening.
+* **Queue Management:** Subscribed users can manage and organize their playback queue.
+* **History Management:** User can manage their listening history.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Queue Working
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+![Untitled-2024-04-09-1926](https://github.com/Shivamrai15/Safari/assets/111892135/924720fe-69c0-4faf-8279-b9dea3aa34ba)

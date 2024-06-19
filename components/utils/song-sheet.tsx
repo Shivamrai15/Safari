@@ -1,8 +1,10 @@
 "use client";
 
+import axios from "axios";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import axios from "axios";
+import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 import {
     Sheet,
@@ -20,7 +22,7 @@ import { LucideIcon, ShuffleIcon } from "lucide-react";
 import { LikeButton } from "./like-button";
 import { SyncLoader } from "react-spinners";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
+import { thumbnailVariants } from "@/lib/variants";
 
 interface LyricLine {
     time: number;
@@ -126,13 +128,20 @@ export const SongSheet = ({
                     style={{ background : `linear-gradient(-20deg, ${current?.album.color}, ${current?.album.color}, #121212)` }}    
                 >
                     <div className="w-full flex flex-col gap-y-4 items-center justify-center h-3/5 md:h-full">
-                        <div className="hidden md:block aspect-square w-full h-fit rounded-sm overflow-hidden shadow-2xl relative">
-                            <Image
-                                src={current?.image || ""}
-                                alt={current?.name || "Image"}
-                                fill
-                                className="object-cover select-none"
-                            />
+                        <div className="hidden md:flex aspect-square w-full h-fit rounded-sm overflow-hidden relative items-end justify-end">
+                            <motion.div
+                                className="h-full w-full relative shadow-2xl"
+                                variants={thumbnailVariants}
+                                initial="closed"
+                                animate={isOpen ? "open" : "closed"}
+                            >
+                                <Image
+                                    src={current?.image || ""}
+                                    alt={current?.name || "Image"}
+                                    fill
+                                    className="object-cover select-none"
+                                />
+                            </motion.div>
                         </div>
                         <div className="h-full w-full md:hidden" style={{
                             background : `url(${current?.image})`,

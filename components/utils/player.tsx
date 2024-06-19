@@ -33,9 +33,11 @@ import axios from "axios";
 import { useAccount } from "@/hooks/use-account";
 import { PlayerShortCutProvider } from "@/providers/player-shortcut-provider";
 import { useAds } from "@/hooks/use-ads";
+import { usePathname } from "next/navigation";
 
 export const Player = () => {
 
+    const pathname = usePathname();
     const { onOpen } = useSheet();
     const { current, deQueue, pop, shuffle } = useQueue();
     const { repeat, setRepeat, mute, setMute, volume, setVolume } = useControls();
@@ -44,10 +46,12 @@ export const Player = () => {
     const [currentTime, setCurrentTime] = useState(0);
     const audioRef = useRef<HTMLAudioElement|null>(null);
     const { prevAdTimeStamp, setPrevAdTimeStamp } = useAds();
+    const originalTitle = useRef(document.title);
     const [isAdPlaying, setIsAdPlaying] = useState(false);
 
 
-    const { data , isLoading, mutate } : { 
+
+    const { data , isLoading } : { 
         data : { 
             name: string | null,
             id: string,
@@ -55,12 +59,12 @@ export const Player = () => {
             isActive : boolean
         },
         isLoading: boolean,
-        mutate : ()=>void
     } = useAccount();
 
     
     const Icon = play ? FaPause : FaPlay;
     const RepeatIcon = repeat ? Repeat1 : Repeat;
+
 
     const VolumeIcon = useMemo(()=>{
         if (mute) {
@@ -79,8 +83,10 @@ export const Player = () => {
         if ( audioRef.current ) {
             if ( play ) {
                 audioRef.current.pause();
+                document.title = originalTitle.current
             } else {
                 audioRef.current.play();
+                document.title = `${current?.name}`;
             }
         }
     }
@@ -125,6 +131,7 @@ export const Player = () => {
             if ( !isLoading && !data.privateSession ) {
                 updateHistory();
             }
+            document.title = `${current.name}`;   
         }
     }, [current]);
 
@@ -132,7 +139,14 @@ export const Player = () => {
         if (audioRef.current) {
             audioRef.current.volume = volume
         }
-    }, [volume, current])
+    }, [volume, current]);
+
+    useEffect(()=>{
+        originalTitle.current = document.title;
+        if (play){
+            document.title = `${current?.name}`;
+        }
+    }, [pathname])
 
     const seekTime = ( num : number ) => {
         if (audioRef.current) {
@@ -151,8 +165,11 @@ export const Player = () => {
                     { src: `${current?.image}`, sizes: '96x96', type: 'image/webp' },
                     { src: current?.image||"", sizes: '96x96', type: 'image/jpeg' },
                 ],
-
             });
+            const query = document.querySelector('meta[property="og:image"]')
+            if (query) {
+                query.setAttribute('content', current?.image || "");
+            }
         }
     }
 

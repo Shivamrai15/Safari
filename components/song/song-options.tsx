@@ -38,7 +38,7 @@ import { useAccount } from "@/hooks/use-account";
 
 interface SongOptionsProps {
     song : (Song & {
-        artists : Artist[],
+        artists : {id : string, name : string, image: string}[],
         album : Album
     });
     playlistId? : string;

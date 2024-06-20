@@ -1,6 +1,5 @@
 import { ArtistCard } from "@/components/search/artist-card";
 import { getArtistSearches } from "@/server/search";
-import { Artist } from "@prisma/client";
 
 interface ArtistsSearchPageProps { 
     searchParams : {
@@ -30,7 +29,7 @@ const ArtistsSearchPage = async({
     return (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-4 gap-y-8 md:gap-10 md:gap-y-8 lg:gap-y-16 py-10">
             {
-                artists.map((artist : Artist)=>(
+                artists.map((artist : {id : string, name : string, image: string})=>(
                     <ArtistCard key={artist.id} artist={artist} />
                 ))
             }

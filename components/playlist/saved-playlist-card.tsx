@@ -7,7 +7,7 @@ interface SavedPlaylistCardProps {
     url : string;
     image : string;
     name : string;
-    tracks : number;
+    tracks? : number;
 }
 
 export const SavedPlaylistCard = ({
@@ -33,7 +33,11 @@ export const SavedPlaylistCard = ({
             </div>
             <div>
                 <h3 className='text-white text-base font-semibold w-full line-clamp-1'>{name}</h3>
-                <span className="text-sm font-medium text-zinc-300" >{tracks} tracks</span>
+                {
+                    tracks && (
+                        <span className="text-sm font-medium text-zinc-300" >{tracks} tracks</span>
+                    )
+                }
             </div>
         </div>
     )

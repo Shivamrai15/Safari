@@ -42,7 +42,7 @@ import { usePremiumModal } from "@/hooks/use-premium-modal";
 
 interface SmallDevicesSongOptionsProps {
     song : Song & {
-        artists : Artist[],
+        artists : {id : string, name : string, image: string}[],
         album : Album
     }
 }

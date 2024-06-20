@@ -1,16 +1,16 @@
 "use client";
 
-import { Album, Artist, Song } from "@prisma/client"
-import { TopResultWrapper } from "./top-result-wrapper"
-import { Button } from "@/components/ui/button"
-import { Disc, Dot, MicVocalIcon } from "lucide-react"
+import { Album, Artist, Song } from "@prisma/client";
+import { TopResultWrapper } from "./top-result-wrapper";
+import { Button } from "@/components/ui/button";
+import { Disc, Dot, MicVocalIcon } from "lucide-react";
 import { IoIosShareAlt } from "react-icons/io";
 import { SongPlayButton } from "@/components/utils/song-play-button";
 import { useRouter } from "next/navigation";
 import { PlayButton } from "../artist/play-button";
 
 interface TopResultProps {
-    data : Album | (Song & { album : Album, artists : Artist[] }) | Artist
+    data : Album | (Song & { album : Album, artists : {id : string, name : string, image: string} [] }) | {id : string, name : string, image: string}
 }
 
 export const TopResult = ({
@@ -88,7 +88,7 @@ export const TopResult = ({
         )
     }
 
-    if ( 'about' in data ) {
+    if ( !('release' in data) && (!('album' in data)) ) {
         return (
             <TopResultWrapper
                 image={data.image}

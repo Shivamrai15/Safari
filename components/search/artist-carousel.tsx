@@ -11,7 +11,7 @@ import {
 import { ArtistCard } from "./artist-card";
 
 interface ArtistCarouselProps {
-    artists : Artist[]
+    artists : {id : string, name : string, image: string}[]
 }
 
 export const ArtistCarousel = ({

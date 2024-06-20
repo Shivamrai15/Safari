@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { Audio } from "react-loader-spinner";
 
 import { songLength } from "@/lib/utils";
-import { Album, Artist, Song } from "@prisma/client"
+import { Album, Song } from "@prisma/client"
 import { SongOptions } from "./song-options";
 import { SmallDevicesSongOptions } from "./small-devices-song-options";
 import { useQueue } from "@/hooks/use-queue";
@@ -12,7 +12,7 @@ import { usePlayer } from "@/hooks/use-player";
 
 interface ListItemProps {
     song : Song & {
-        artists : Artist[],
+        artists : {id : string, name : string, image: string}[],
         album : Album
     };
     index : number

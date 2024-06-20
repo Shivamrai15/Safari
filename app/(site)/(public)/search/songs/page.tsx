@@ -1,6 +1,6 @@
 import { SongItem } from "@/components/song/song-item";
 import { getSongSearches } from "@/server/search";
-import { Album, Artist, Song } from "@prisma/client";
+import { Album, Song } from "@prisma/client";
 
 interface SongSearchPageProps {
     searchParams : { 
@@ -30,7 +30,7 @@ const SongSearchPage = async({
     return (
         <div className="w-full py-10 flex flex-col gap-y-1">
             {
-                songs.map((song : Song & { album : Album, artists  : Artist[] })=>(
+                songs.map((song : Song & { album : Album, artists  : {id : string, name : string, image: string}[] })=>(
                     <SongItem song={song} key={song.id} />
                 ))
             }

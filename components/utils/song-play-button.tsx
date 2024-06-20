@@ -13,7 +13,7 @@ import { toast } from 'sonner';
 interface SongPlayButton {
     songs? : (Song & {
         album : Album,
-        artists : Artist[]
+        artists : {id : string, name : string, image: string}[]
     })[];
     id : string;
     className? : string

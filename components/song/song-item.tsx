@@ -13,7 +13,7 @@ import { useSession } from "next-auth/react";
 
 interface SongItemProps {
     song : (Song & {
-        artists : Artist[],
+        artists : {id : string, name : string, image: string}[],
         album : Album
     })   
     

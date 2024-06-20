@@ -20,6 +20,11 @@ export const getTopSearches =  async( query: string ) => {
             db.artist.findMany({
                 where : {
                     name : { contains: query, mode : "insensitive" }
+                },
+                select : {
+                    id : true,
+                    name : true,
+                    image : true
                 }
             }),
             db.song.findMany({
@@ -28,7 +33,13 @@ export const getTopSearches =  async( query: string ) => {
                 },
                 include : {
                     album : true,
-                    artists : true
+                    artists : {
+                        select : {
+                            id : true,
+                            image : true,
+                            name : true
+                        }
+                    }
                 }
             }),
         ]);
@@ -45,6 +56,7 @@ export const getTopSearches =  async( query: string ) => {
         const artistResults = artistFuse.search(query).slice(0, 5);
 
         const bestResult = bestSearch.length > 0 ? bestSearch[0] : null;
+        console.log(bestResult)
 
         return { bestResult, albumResults, songResults, artistResults }
         
@@ -105,7 +117,13 @@ export const getSongSearches = async( query: string ) => {
             },
             include : {
                 album : true,
-                artists : true
+                artists : {
+                    select : {
+                        id : true,
+                        name : true,
+                        image : true
+                    }
+                }
             }
         });
 
@@ -132,6 +150,11 @@ export const getArtistSearches = async( query: string ) => {
                     contains : query,
                     mode : "insensitive"
                 }
+            },
+            select : {
+                id : true,
+                name : true,
+                image : true
             }
         });
 
@@ -145,6 +168,33 @@ export const getArtistSearches = async( query: string ) => {
 
     } catch (error) {
         console.error("SONGS SEARCH API ERROR", error);
+        return null;
+    }
+}
+
+
+export const getPlaylistSearches = async ( query : string ) => {
+    try {
+        
+        const playlists = await db.playList.findMany({
+            where : {
+                private : false,
+                name : {
+                    contains : query,
+                    mode : "insensitive"
+                }
+            }
+        });
+        
+        const fuse = new Fuse(playlists, fuseOptions);
+        const result = fuse.search(query);
+        if ( result.length > 0 ) {
+            return result;
+        }
+        return null;
+
+    } catch (error) {
+        console.error("PLAYLIST SEARCH API ERROR", error);
         return null;
     }
 }

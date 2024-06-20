@@ -1,10 +1,10 @@
-import { Album, Artist, Song } from "@prisma/client";
+import { Album, Song } from "@prisma/client";
 import { FaRegClock } from "react-icons/fa6";
 import { ListItem } from "./list-item";
 
 interface SongsListProps {
     songs : (Song & {
-        artists : Artist[],
+        artists : {id : string, name : string, image: string}[],
         album : Album
     })[],
 }

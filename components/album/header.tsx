@@ -16,7 +16,7 @@ interface HeaderProps {
     length : number;
     data : (Song & {
         album : Album,
-        artists : Artist[]
+        artists : {id : string, name : string, image: string}[]
     })[];
 }
 

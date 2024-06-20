@@ -29,20 +29,20 @@ export const ArtistCard = ({
         )}>
             <div 
                 onClick={()=>router.push(`/artist/${artist.id}`)}
-                className="aspect-[15/16] relative overflow-hidden shrink-0"
+                className="aspect-[15/16] relative shrink-0"
             >
                 <Image
                     src={artist.image}
                     fill
                     alt={artist.name}
-                    className="object-cover rounded-full"
+                    className="object-cover rounded-full overflow-hidden"
                 />
                 <div className="bottom-2 right-0 z-10 absolute opacity-0 group-hover:opacity-100 transition-transform duration-300 translate-y-3 group-hover:translate-y-0" onClick={(e)=>e.stopPropagation()} >
                     <PlayButton artistId={artist.id} songs={[]} className="h-12 w-12 md:h-12 md:w-12 p-3 hover:bg-red-600" />
                 </div>
             </div>
             <div>
-                <h3 className="font-medium select-none" >{artist.name}</h3>
+                <h3 className="font-medium select-none line-clamp-1" >{artist.name}</h3>
                 <span className="text-sm text-zinc-300 select-none" >Artist</span>
             </div>
         </div>

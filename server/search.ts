@@ -56,8 +56,7 @@ export const getTopSearches =  async( query: string ) => {
         const artistResults = artistFuse.search(query).slice(0, 5);
 
         const bestResult = bestSearch.length > 0 ? bestSearch[0] : null;
-        console.log(bestResult)
-
+        
         return { bestResult, albumResults, songResults, artistResults }
         
     } catch (error) {

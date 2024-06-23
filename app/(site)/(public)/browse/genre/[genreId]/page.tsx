@@ -1,10 +1,33 @@
+import { redirect } from "next/navigation";
+import { getGenreById } from "@/server/genre";
+import { Header } from "@/components/genre/header";
+import { Songs } from "@/components/genre/songs";
 
+interface GenrePageProps {
+    params : { genreId : string }
+}
 
-const GenrePage = () => {
+const GenrePage = async({
+    params
+} : GenrePageProps ) => {
+
+    const genre = await getGenreById(params.genreId);
+
+    if ( !genre ) {
+        redirect("/");
+    }
+
     return (
-        <div className="h-full w-full p-4 flex items-center justify-center">
-            <h3 className="font-medium text-zinc-300 select-none">We&apos;re currently working on this page.</h3>
-        </div>
+        <main className="min-h-full pb-20 bg-[#111]" >
+            <Header
+                id={genre.id}
+                name={genre.name}
+                color={genre.color}
+                count={genre._count.songs}
+                image={genre.image}
+            />
+            <Songs genreId={params.genreId} />
+        </main>
     )
 }
 

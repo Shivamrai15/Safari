@@ -54,7 +54,7 @@ export async function GET ( req : Request ) {
         const cursor = searchParams.get("cursor");
 
         let songs : (Song & {
-            artists : Artist[],
+            artists : {id:string, name:string}[],
             album : Album
         })[] = [] ;
 
@@ -84,7 +84,12 @@ export async function GET ( req : Request ) {
                     }
                 },
                 include : {
-                    artists : true,
+                    artists : {
+                        select : {
+                            id : true,
+                            name : true
+                        }
+                    },
                     album : true
                 }
             });
@@ -107,7 +112,6 @@ export async function GET ( req : Request ) {
                     createdAt : "desc"
                 },
                 take : SONGS_BATCH,
-                skip : 1,
             });
 
             const historySongIds = history.map((item)=> item.songId);
@@ -119,7 +123,12 @@ export async function GET ( req : Request ) {
                     }
                 },
                 include : {
-                    artists : true,
+                    artists : {
+                        select : {
+                            id : true,
+                            name : true
+                        }
+                    },
                     album : true
                 }
             });

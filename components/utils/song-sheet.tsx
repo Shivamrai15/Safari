@@ -16,6 +16,7 @@ import { useSheet } from "@/hooks/use-sheet";
 import { cn, songLength } from "@/lib/utils";
 import { Slider } from "@/components/ui/slider";
 import { FaBackwardStep, FaForwardStep, FaCirclePlay } from "react-icons/fa6";
+import { GiMusicalNotes } from "react-icons/gi";
 import { BsFillPauseCircleFill } from "react-icons/bs";
 import { IconType } from "react-icons";
 import { LucideIcon, ShuffleIcon } from "lucide-react";
@@ -263,17 +264,15 @@ export const SongSheet = ({
                                                 id={`lry${index}`}
                                                 key={index}
                                                 className={cn(
-                                                    "my-2 transition-all duration-500 select-none text-center",
+                                                    "my-2 transition-all text-2xl md:text-4xl lg:text-5xl font-bold duration-500 select-none text-center z-50",
                                                     index === currentLineIndex ? 'text-3xl md:text-5xl lg:text-6xl font-extrabold text-white'
-                                                    : index < currentLineIndex
-                                                    ? 'text-2xl md:text-4xl lg:text-5xl font-bold text-gray-300'
-                                                    : 'text-2xl md:text-4xl lg:text-5xl font-bold  text-gray-300'
+                                                    : 'text-gray-300'
                                                 )}
                                                 style={{
                                                     opacity: index === currentLineIndex ? 1 : 0.6,
                                                 }}
                                             >
-                                                {line.text}
+                                                {line.text === "" ? <GiMusicalNotes className="h-10 w-10 md:h-16 md:w-16"/> : line.text}
                                             </p>
                                         ))}
                                         <div className="h-28 w-full" />

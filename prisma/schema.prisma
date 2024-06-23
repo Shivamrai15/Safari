@@ -167,6 +167,7 @@ model Genre {
   id    String      @id @default(auto()) @map("_id") @db.ObjectId
   name  String
   image String
+  color String
   songs GenreSong[]
   remix Remix[]
 }
@@ -175,6 +176,7 @@ model Remix {
   id      String      @id @default(auto()) @map("_id") @db.ObjectId
   name    String
   image   String
+  color   String
   songs   RemixSong[]
   genreId String      @db.ObjectId
   genre   Genre       @relation(fields: [genreId], references: [id])

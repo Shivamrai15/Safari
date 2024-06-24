@@ -1,46 +1,45 @@
-"use client"
+import { Metadata } from "next";
+import { Track } from "@/components/song/track";
+import { trackMetaData } from "@/server/meta";
 
-import axios from "axios";
-import { useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+interface SongLayoutProps {
+    searchParams : {
+        id : string
+    };
+}
 
-import { useQueue } from "@/hooks/use-queue";
-import { SyncLoader } from "react-spinners";
-import { Album, Song } from "@prisma/client";
-import { toast } from "sonner";
+export async function generateMetadata(
+    { searchParams }: SongLayoutProps,
+): Promise<Metadata> {
+
+    const track = await trackMetaData(searchParams.id);
+    
+    if ( !track ) {
+        return {}
+    }
+   
+    return {
+        title: track.name,
+        description : `${track.artists.map((artist)=>artist.name).join(", ")} • Song • ${new Date(track.album.release).getFullYear()}`,
+        openGraph: {
+            images: [track.image],
+            type : "music.song",
+        },
+        twitter : {
+            card: 'summary_large_image',
+            title: track.name,
+            description : `${track.artists.map((artist)=>artist.name).join(", ")} • Song • ${new Date(track.album.release).getFullYear()}`,
+            images: [track.image], 
+        },
+        category : "song"
+        
+    }
+}
 
 const SongPage = () => {
-    
-    const router = useRouter();
-    const searchParams = useSearchParams();
-    const id = searchParams.get("id");
-
-    const { priorityEnqueue } = useQueue();
-    
-    const fetchSong = async()=> {
-        try {
-            const response = await axios.get(`/api/v1/song?id=${id}`);
-            const song : (Song & { album : Album }) = response.data;
-            priorityEnqueue([song]);
-            router.push(`/album/${song.albumId}`);
-        } catch (error) {
-            toast.error("Song not found");
-            router.push('/');
-        }
-
-    }
-
-    useEffect(()=>{
-        if (id) {
-            fetchSong();
-        }
-    }, [id]);
-
 
     return (
-        <div className="w-full h-full flex items-center justify-center">
-            <SyncLoader color="#252525" />
-        </div>
+        <Track/>
     )
 }
 

@@ -12,7 +12,7 @@ export const protectedRoutes = [
     "/account/subscription#plans",
     "/account/profile",
     "/account/following",
-    "/song"
+    "/track"
 ];
 
 export const authRoutes = [

@@ -16,6 +16,7 @@ interface UseQueueProps {
     replace : ( id: string, source : number, destination : number )=>null|void;
     remove : ( id : string )=>null|void;
     shuffle : () => void;
+    playNext : (song : ( Song & { album : Album } ))=>void;
 }
 
 export const useQueue = create<UseQueueProps>((set, get)=>({
@@ -110,6 +111,11 @@ export const useQueue = create<UseQueueProps>((set, get)=>({
                     set({ queue : [currentItem, ...queueList] })
                 }
             }
+        },
+        playNext : ( song : ( Song & { album : Album } ) ) => {
+            const remainingSongs = get().queue.slice(1);
+            const songs = [ get().queue[0], song, ...remainingSongs ];
+            set({ queue : songs });
         }
     })
 );

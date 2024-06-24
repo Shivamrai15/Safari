@@ -11,7 +11,8 @@ export const protectedRoutes = [
     "/account/subscription",
     "/account/subscription#plans",
     "/account/profile",
-    "/account/following"
+    "/account/following",
+    "/song"
 ];
 
 export const authRoutes = [

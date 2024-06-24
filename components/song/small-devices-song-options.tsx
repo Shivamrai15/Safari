@@ -24,6 +24,7 @@ import {
     Disc3,
     EllipsisVertical,
     ListMusic,
+    ListVideo,
     MicVocal,
     Plus,
 } from "lucide-react";
@@ -53,7 +54,7 @@ export const SmallDevicesSongOptions = ({
 
     const router = useRouter();
     const session = useSession()
-    const { enQueue } = useQueue();
+    const { enQueue, queue, playNext } = useQueue();
     const { onOpen } = usePlaylistModal();
     const { mutate } = usePlaylist();
     const shareModal = useShareModal();
@@ -135,6 +136,16 @@ export const SmallDevicesSongOptions = ({
                                 <span className="font-medium text-base" >Add to queue</span>
                             </button>
                         </DrawerClose>
+                        <DrawerClose>
+                            <button 
+                                className="flex items-center"
+                                disabled = { session.status === "unauthenticated" || queue.length === 0 }
+                                onClick={()=>playNext(song)}
+                            >
+                                <ListVideo className="mr-3 h-5 w-5" />
+                                <span className="font-medium text-base" >Play Next</span>
+                            </button>
+                        </DrawerClose>
                         <Accordion type="single" collapsible className="w-full"  >
                             <AccordionItem value={song.id} >
                                 <AccordionTrigger className="justify-start no-underline pt-0 pb-4 hover:no-underline" disabled = {session.status === "unauthenticated"} >
@@ -175,7 +186,7 @@ export const SmallDevicesSongOptions = ({
                             </button>
                         </DrawerClose>
                         <DrawerClose>
-                            <button className="flex items-center" onClick={()=>shareModal.onOpen(`/song/${song.id}`)} >
+                            <button className="flex items-center" onClick={()=>shareModal.onOpen(`/track?id=${song.id}`)} >
                                 <PiShareFat className="mr-3 h-5 w-5" />
                                 <span className="font-medium" >Share</span>
                             </button>

@@ -48,3 +48,36 @@ export const albumMetaData = async ( id: string ) => {
         return null;
     }
 }
+
+
+export const trackMetaData = async ( id: string ) => {
+    try {
+        
+        const song = await db.song.findUnique({
+            where : {
+                id
+            },
+            select : {
+                name : true,
+                image: true,
+                album : {
+                    select : {
+                        name : true,
+                        release : true
+                    }
+                },
+                artists : {
+                    select :{
+                        name : true
+                    }
+                }
+            }
+        });
+
+        return song;
+
+    } catch (error) {
+        console.error("TRACK METADATA API ERROR", error);
+        return null;
+    }
+}

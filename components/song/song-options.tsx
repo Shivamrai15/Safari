@@ -22,6 +22,7 @@ import {
     Disc3,
     EllipsisVertical,
     ListMusic,
+    ListVideo,
     MicVocal,
     Plus,
     Trash,
@@ -55,7 +56,7 @@ export const SongOptions = ({
 
     const router = useRouter();
     const session = useSession();
-    const { enQueue } = useQueue();
+    const { enQueue, playNext, queue } = useQueue();
     const { data, error, isLoading } : { data : PlayList[], error : any, isLoading : boolean }  = usePlaylist();
     const { mutate } = usePlaylist();
     const { onOpen } = usePlaylistModal();
@@ -106,6 +107,17 @@ export const SongOptions = ({
                     >
                         <ListMusic className="mr-2 h-5 w-5" />
                         <span className="font-medium" >Add to queue</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                        disabled = { session.status === "unauthenticated" || queue.length === 0 }
+                        onClick={(e)=>{
+                            e.stopPropagation();
+                            playNext(song);
+                        }}
+                        className="px-3 hover:bg-neutral-700 focus:bg-neutral-700 py-2 rounded-none md:cursor-pointer"
+                    >
+                        <ListVideo className="mr-2 h-5 w-5" />
+                        <span className="font-medium" >Play Next</span>
                     </DropdownMenuItem>
                     {
                         playlistId  && isAuth && (
@@ -192,7 +204,7 @@ export const SongOptions = ({
                         <span className="font-medium" >Go to Album</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem 
-                        onClick={()=>shareModal.onOpen(`/song/${song.id}`)}
+                        onClick={()=>shareModal.onOpen(`/track?id=${song.id}`)}
                         className="px-3 hover:bg-neutral-700 focus:bg-neutral-700 py-2 rounded-none md:cursor-pointer"
                     >
                         <PiShareFat className="mr-2 h-5 w-5"/>

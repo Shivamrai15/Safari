@@ -264,7 +264,7 @@ export const SongSheet = ({
                                                 id={`lry${index}`}
                                                 key={index}
                                                 className={cn(
-                                                    "my-2 transition-all text-2xl md:text-4xl lg:text-5xl font-bold duration-500 select-none text-center z-50",
+                                                    "my-2 transition-all text-2xl md:text-4xl lg:text-5xl font-bold duration-500 select-none text-center",
                                                     index === currentLineIndex ? 'text-3xl md:text-5xl lg:text-6xl font-extrabold text-white'
                                                     : 'text-gray-300'
                                                 )}
@@ -280,7 +280,7 @@ export const SongSheet = ({
                                 </div>
                                 <div 
                                     className="hidden md:block h-full absolute top-0 w-full z-10 "
-                                    style={{ background: `linear-gradient(to bottom, ${current?.album.color} 0 20%, transparent 35% 80%, ${current?.album.color}) 80% 100%` }}
+                                    style={{ background: `linear-gradient(to bottom, ${current?.album.color} 0 10%, transparent 35% 90%, ${current?.album.color}) 90% 100%` }}
                                 />
                                 <div className="md:hidden h-full absolute top-0 w-full z-10 bg-gradient-to-b from-neutral-950 via-transparent to-neutral-950"/>
                                 {

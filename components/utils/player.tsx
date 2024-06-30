@@ -33,11 +33,9 @@ import axios from "axios";
 import { useAccount } from "@/hooks/use-account";
 import { PlayerShortCutProvider } from "@/providers/player-shortcut-provider";
 import { useAds } from "@/hooks/use-ads";
-import { usePathname } from "next/navigation";
 
 export const Player = () => {
 
-    const pathname = usePathname();
     const { onOpen } = useSheet();
     const { current, deQueue, pop, shuffle } = useQueue();
     const { repeat, setRepeat, mute, setMute, volume, setVolume } = useControls();
@@ -46,7 +44,6 @@ export const Player = () => {
     const [currentTime, setCurrentTime] = useState(0);
     const audioRef = useRef<HTMLAudioElement|null>(null);
     const { prevAdTimeStamp, setPrevAdTimeStamp } = useAds();
-    const originalTitle = useRef(document.title);
     const [isAdPlaying, setIsAdPlaying] = useState(false);
 
 
@@ -83,10 +80,8 @@ export const Player = () => {
         if ( audioRef.current ) {
             if ( play ) {
                 audioRef.current.pause();
-                document.title = originalTitle.current
             } else {
                 audioRef.current.play();
-                document.title = `${current?.name}`;
             }
         }
     }
@@ -141,12 +136,6 @@ export const Player = () => {
         }
     }, [volume, current]);
 
-    useEffect(()=>{
-        originalTitle.current = document.title;
-        if (play){
-            document.title = `${current?.name}`;
-        }
-    }, [pathname])
 
     const seekTime = ( num : number ) => {
         if (audioRef.current) {

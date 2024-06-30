@@ -116,6 +116,8 @@ const ArtistPage = async({
             </div>
             <div className="w-full px-4 md:px-20 mt-20 space-y-6 md:pr-32">
                 <Profile
+                    id={artist.id}
+                    name={artist.name}
                     image={artist.image}
                     about={artist.about}
                 />

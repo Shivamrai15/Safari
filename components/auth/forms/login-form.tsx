@@ -41,7 +41,7 @@ export const LoginForm = () => {
             
             setLoading(true);
             const response = await login(values);
-            
+            console.log("Step 1")
             if (response.error) {
                 toast.error(response.error);
             }
@@ -49,7 +49,7 @@ export const LoginForm = () => {
                 toast.info(response.info);
             }
         } catch (error) {
-            
+            location.reload();
         } finally {
             setLoading(false);
         }

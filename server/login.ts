@@ -63,7 +63,7 @@ export const login = async ( data : z.infer<typeof LoginSchema> ) => {
         });
 
         return {
-            success : "Email verified"
+            success : "Logged In Successfully"
         }
 
     } catch (error) {

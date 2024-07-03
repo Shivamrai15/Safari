@@ -19,7 +19,7 @@ const SearchPage = async({
 
     const responses = await getTopSearches(searchParams.query);    
 
-    if ( !responses?.bestResult ) {
+    if ( !responses ) {
         return (
             <div className="w-full h-full flex items-center justify-center pt-32">
                 <h4 className="font-semibold md:text-lg text-center text-zinc-300 select-none">No results found for &quot;{searchParams.query}&quot;</h4>
@@ -27,25 +27,24 @@ const SearchPage = async({
         )
     }
 
-    const albums = responses.albumResults.map((album)=>album.item);
-    const artists = responses.artistResults.map((artist)=>artist.item);
+    const { albums, artists, songs, topResult } = responses;
 
     return (
         <div className="pt-10 space-y-12">
             <div className="space-y-8">
                 <h1 className="text-2xl md:text-3xl font-bold select-none" >Top Result</h1>
                 <div>
-                    <TopResult data={responses.bestResult.item} />
+                    <TopResult data={topResult!} />
                 </div>
             </div>
             <div>
-                { responses.songResults.length > 0 && (
+                { songs.length > 0 && (
                     <div className="space-y-8">
                         <h1 className="text-2xl md:text-3xl font-bold select-none" >Songs</h1>
                         <div>
                             {
-                                responses.songResults.map((song)=>(
-                                    <SongItem song={song.item} key={song.item.id} />
+                                songs.map((song)=>(
+                                    <SongItem song={song} key={song.id} />
                                 ))
                             }
                         </div>

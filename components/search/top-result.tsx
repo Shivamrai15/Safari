@@ -32,7 +32,7 @@ export const TopResult = ({
                         <div className="text-sm flex gap-1 text-zinc-200">
                             <span className="select-none" >Album</span>
                             <Dot/>
-                            <span className="select-none">{data.release.getFullYear()}</span>
+                            <span className="select-none">{new Date(data.release).getFullYear()}</span>
                         </div>
                         <div className="mt-3 flex items-center gap-x-4">
                             <SongPlayButton id={data.id} />

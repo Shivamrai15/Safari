@@ -59,7 +59,7 @@ export default async function RootLayout({
                         disableTransitionOnChange
                     >
                         <QueryProvider>
-                            <Toaster position="top-right" />
+                            <Toaster position="bottom-center" />
                             <ModalProvider/>
                             {children}
                         </QueryProvider>

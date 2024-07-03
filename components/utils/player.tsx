@@ -8,6 +8,7 @@ import {
 } from "react";
 
 import {
+    Loader2,
     Maximize2,
     Repeat,
     Repeat1,
@@ -36,16 +37,17 @@ import { useAds } from "@/hooks/use-ads";
 
 export const Player = () => {
 
+    const [ play, setPlay ] = useState(false);
+    const [currentTime, setCurrentTime] = useState(0);
+    const audioRef = useRef<HTMLAudioElement|null>(null);
+    const [ metadataLoading, setMetadataLoading ] = useState(true);
+    const [isAdPlaying, setIsAdPlaying] = useState(false);
+
     const { onOpen } = useSheet();
     const { current, deQueue, pop, shuffle } = useQueue();
     const { repeat, setRepeat, mute, setMute, volume, setVolume } = useControls();
     const { setAlbumId, setSongId , setIsPlaying } = usePlayer();
-    const [ play, setPlay ] = useState(false);
-    const [currentTime, setCurrentTime] = useState(0);
-    const audioRef = useRef<HTMLAudioElement|null>(null);
     const { prevAdTimeStamp, setPrevAdTimeStamp } = useAds();
-    const [isAdPlaying, setIsAdPlaying] = useState(false);
-
 
 
     const { data , isLoading } : { 
@@ -121,12 +123,12 @@ export const Player = () => {
 
     useEffect(() => {
         if (current) {
+            setMetadataLoading(true);
             setAlbumId( current.albumId );
             setSongId( current.id );
             if ( !isLoading && !data.privateSession ) {
                 updateHistory();
             }
-            document.title = `${current.name}`;   
         }
     }, [current]);
 
@@ -155,10 +157,7 @@ export const Player = () => {
                     { src: current?.image||"", sizes: '96x96', type: 'image/jpeg' },
                 ],
             });
-            const query = document.querySelector('meta[property="og:image"]')
-            if (query) {
-                query.setAttribute('content', current?.image || "");
-            }
+            
         }
     }
 
@@ -214,10 +213,16 @@ export const Player = () => {
                                     )}
                                 />
                             </button>
-                            <Icon
-                                className="h-8 w-8 cursor-pointer"
-                                onClick={togglePlay}
-                            />
+                            {
+                                metadataLoading ? (
+                                    <Loader2 className="h-8 w-8 text-zinc-300 animate-spin"/>
+                                ) : (
+                                    <Icon
+                                        className="h-8 w-8 cursor-pointer"
+                                        onClick={togglePlay}
+                                    />
+                                )
+                            }
                             <button
                                 onClick={handleOnEnd}
                                 disabled = {isAdPlaying}
@@ -266,13 +271,19 @@ export const Player = () => {
                             <PlayerSongInfo song={current} />
                         </div>
                         <div className="w-14 h-10 flex items-center justify-center">
-                            <Icon
-                                className="h-7 w-7 cursor-default"
-                                onClick={(e)=>{
-                                    e.stopPropagation();
-                                    togglePlay();
-                                }}
-                            />
+                            {
+                                metadataLoading ? (
+                                    <Loader2 className="h-8 w-8 text-zinc-300 animate-spin"/>
+                                ) : (
+                                    <Icon
+                                        className="h-7 w-7 cursor-default"
+                                        onClick={(e)=>{
+                                            e.stopPropagation();
+                                            togglePlay();
+                                        }}
+                                    />
+                                )
+                            }
                         </div>
                     </div>
                 </div>
@@ -295,6 +306,8 @@ export const Player = () => {
                     title={current?.name}
                     className="h-0 w-0 sr-only"
                     autoPlay
+                    onWaiting={()=>setMetadataLoading(true)}
+                    onPlaying={()=>setMetadataLoading(false)}
                     src={current?.url}
             >   
             </audio>
@@ -310,7 +323,11 @@ export const Player = () => {
                 handleOnEnd = { handleOnEnd }
                 isAdPlaying = { isAdPlaying }
             />
-            <PlayerShortCutProvider onClick = {togglePlay} />
+            <PlayerShortCutProvider
+                onClick = {togglePlay}
+                audioRef={audioRef}
+                play={play}
+            />
         </>
     )
 }

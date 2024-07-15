@@ -12,6 +12,9 @@ import { FaPause, FaPlay } from "react-icons/fa";
 import { useArtistStack } from "@/hooks/use-artist-stack";
 import { usePlayer } from "@/hooks/use-player";
 import { cn } from "@/lib/utils";
+import { useSocketEvents } from "@/hooks/use-socket-events";
+import { useSocket } from "@/hooks/use-socket";
+import { ENQUEUE, PRIORITY_ENQUEUE } from "@/lib/events";
 
 interface PlayButtonProps {
     artistId : string,
@@ -26,7 +29,9 @@ export const PlayButton = ({
 } : PlayButtonProps ) => {
 
     const session = useSession();
+    const socket = useSocket();
     const { isPlaying } = usePlayer();
+    const { connected, roomId } = useSocketEvents();
     const { clear, current, priorityEnqueue, queue, stack, enQueue } = useQueue();
     const { list, listId, clearList, setList, setListId } = useArtistStack();
 
@@ -45,15 +50,24 @@ export const PlayButton = ({
         clear();
         clearList();
         priorityEnqueue(songs);
+        if ( connected ) {
+            socket.emit(PRIORITY_ENQUEUE, { roomId, songs });
+        }
         setList(songs);
         setListId(artistId)
         try {
-            const response = await axios.get(`/api/v1/artist?id=${artistId}`);
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_SOCKET_API}/api/v2/artist?id=${artistId}`);
             const data : ( Song & { album : Album } )[] = response.data;
             if (songs.length > 0 ) {
                 enQueue(data);
+                if ( connected ) {
+                    socket.emit(ENQUEUE, { roomId, songs:data });
+                }
             } else {
                 priorityEnqueue(data);
+                if ( connected ) {
+                    socket.emit(PRIORITY_ENQUEUE, { roomId, songs:data });
+                }
             }
             setList(data);
         } catch (error) {

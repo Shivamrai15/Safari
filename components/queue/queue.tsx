@@ -22,6 +22,9 @@ import { Audio } from "react-loader-spinner";
 import { usePlayer } from "@/hooks/use-player";
 import { LikeButton } from "../utils/like-button";
 import { useAccount } from "@/hooks/use-account";
+import { useSocket } from "@/hooks/use-socket";
+import { useSocketEvents } from "@/hooks/use-socket-events";
+import { CLEAR, REMOVE, REPLACE, SHIFT_TOP } from "@/lib/events";
 
 export const Queue = () => {
 
@@ -32,6 +35,9 @@ export const Queue = () => {
             remove,
             shiftToTopOfQueue,
     } = useQueue();
+
+    const socket = useSocket();
+    const { connected, roomId } = useSocketEvents();
 
     const { data } : { 
         data : { 
@@ -60,7 +66,7 @@ export const Queue = () => {
             return;
         }
         replace(draggableId, source.index, destination.index);
-
+        socket.emit(REPLACE, { roomId, id:draggableId , source:source.index, destination:destination.index });
     }
 
     return (
@@ -70,7 +76,10 @@ export const Queue = () => {
                     <LibraryBig className="h-10 w-10 text-red-500"/>
                 </div>
                 <div className="hidden group-hover:flex">
-                    <Button className="rounded-full px-6 font-semibold" onClick={clear} >
+                    <Button className="rounded-full px-6 font-semibold" onClick={()=>{
+                        clear();
+                        socket.emit(CLEAR, { roomId });
+                    }} >
                         Clear
                     </Button>
                 </div>
@@ -95,7 +104,12 @@ export const Queue = () => {
                                                     {...provided.dragHandleProps}
                                                     ref={provided.innerRef}
                                                     role="button"
-                                                    onClick={()=>shiftToTopOfQueue(song.id)}
+                                                    onClick={()=>{
+                                                        shiftToTopOfQueue(song.id);
+                                                        if ( connected ) {
+                                                            socket.emit(SHIFT_TOP, { roomId, id: song.id });
+                                                        }
+                                                    }}
                                                     className={cn(
                                                         "flex z-[9999] items-center space-x-4 bg-neutral-800 hover:bg-neutral-900 focus:bg-neutral-900 px-4 py-2 transition-all cursor-default md:cursor-pointer select-none group/song",
                                                         index === 0 && "bg-neutral-900/80",
@@ -155,6 +169,9 @@ export const Queue = () => {
                                                                 onClick={(e)=>{
                                                                     e.stopPropagation();
                                                                     remove(song.id);
+                                                                    if ( connected ) {
+                                                                        socket.emit(REMOVE, {roomId, id:song.id});
+                                                                    }
                                                                 }}
                                                             />
                                                         </div>

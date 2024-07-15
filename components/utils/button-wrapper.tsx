@@ -20,7 +20,6 @@ export const ButtonWrapper = ({
         <Button
             className={cn(
                 "h-12 px-6 rounded-full bg-red-600 hover:bg-red-600/80 text-white font-semibold",
-
             )}
             onClick={onClick}
             disabled={disabled}

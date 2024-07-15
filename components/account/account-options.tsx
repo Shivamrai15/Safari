@@ -75,6 +75,13 @@ export const AccountOptions = () => {
                     <span>Private Session</span>
                     { !isLoading && data.privateSession && (<Check className="ml-auto"/>) }
                 </DropdownMenuItem>
+                <DropdownMenuItem
+                    className="px-3 hover:bg-neutral-700 focus:bg-neutral-700 py-2 rounded-none md:cursor-pointer"
+                    onClick={()=>router.push("/play-with-friends")}
+                    disabled = {loading || !data?.isActive}
+                >
+                    Play with friends
+                </DropdownMenuItem>
                 <DropdownMenuItem 
                     className="px-3 hover:bg-neutral-700 focus:bg-neutral-700 py-2 rounded-none md:cursor-pointer"
                     onClick={()=>router.push("/account/subscription")}

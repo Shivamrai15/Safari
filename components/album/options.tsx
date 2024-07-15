@@ -13,6 +13,9 @@ import { Album, Song } from "@prisma/client";
 import { ListMusic, Share } from "lucide-react";
 import { SlOptionsVertical } from "react-icons/sl";
 import { useShareModal } from "@/hooks/use-share-modal";
+import { useSocketEvents } from "@/hooks/use-socket-events";
+import { useSocket } from "@/hooks/use-socket";
+import { ENQUEUE } from "@/lib/events";
 
 interface OptionsProps {
     id : string;
@@ -25,8 +28,10 @@ export const Options = ({
 } : OptionsProps ) => {
     
     const session = useSession();
+    const socket = useSocket();
     const { enQueue } = useQueue();
     const { onOpen } = useShareModal();
+    const { connected, roomId } = useSocketEvents();
     
     return (
         <DropdownMenu>
@@ -37,7 +42,12 @@ export const Options = ({
                 <DropdownMenuItem 
                     className="px-3 hover:bg-neutral-700 focus:bg-neutral-700 py-2 rounded-none md:cursor-pointer" 
                     disabled = { session.status === "unauthenticated" }
-                    onClick={()=>enQueue(songs)}
+                    onClick={()=>{
+                        enQueue(songs);
+                        if ( connected ) {
+                            socket.emit(ENQUEUE, { roomId, songs });
+                        }
+                    }}
                 >
                     <ListMusic className="h-5 w-5 mr-3"/>
                     Add to queue

@@ -40,6 +40,9 @@ import { toast } from "sonner";
 import { useShareModal } from "@/hooks/use-share-modal";
 import { useAccount } from "@/hooks/use-account";
 import { usePremiumModal } from "@/hooks/use-premium-modal";
+import { useSocket } from "@/hooks/use-socket";
+import { ENQUEUE, PLAYNEXT } from "@/lib/events";
+import { useSocketEvents } from "@/hooks/use-socket-events";
 
 interface SmallDevicesSongOptionsProps {
     song : Song & {
@@ -53,7 +56,9 @@ export const SmallDevicesSongOptions = ({
 } : SmallDevicesSongOptionsProps ) => {
 
     const router = useRouter();
-    const session = useSession()
+    const session = useSession();
+    const socket = useSocket();
+    const { connected, roomId } = useSocketEvents();
     const { enQueue, queue, playNext } = useQueue();
     const { onOpen } = usePlaylistModal();
     const { mutate } = usePlaylist();
@@ -130,7 +135,12 @@ export const SmallDevicesSongOptions = ({
                             <button 
                                 className="flex items-center"
                                 disabled = { session.status === "unauthenticated" }
-                                onClick={()=>enQueue([song])}
+                                onClick={()=>{
+                                    enQueue([song]);
+                                    if( connected ) {
+                                        socket.emit(ENQUEUE,{roomId, songs:[song]});
+                                    }
+                                }}
                             >
                                 <ListMusic className="mr-3 h-5 w-5" />
                                 <span className="font-medium text-base" >Add to queue</span>
@@ -140,7 +150,12 @@ export const SmallDevicesSongOptions = ({
                             <button 
                                 className="flex items-center"
                                 disabled = { session.status === "unauthenticated" || queue.length === 0 }
-                                onClick={()=>playNext(song)}
+                                onClick={()=>{
+                                    playNext(song);
+                                    if (connected) {
+                                        socket.emit(PLAYNEXT, {roomId, song});
+                                    }
+                                }}
                             >
                                 <ListVideo className="mr-3 h-5 w-5" />
                                 <span className="font-medium text-base" >Play Next</span>

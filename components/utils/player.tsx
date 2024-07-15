@@ -34,9 +34,14 @@ import axios from "axios";
 import { useAccount } from "@/hooks/use-account";
 import { PlayerShortCutProvider } from "@/providers/player-shortcut-provider";
 import { useAds } from "@/hooks/use-ads";
+import { useSocket } from "@/hooks/use-socket";
+import { useSocketEvents } from "@/hooks/use-socket-events";
+import { DEQUEUE, PAUSE, PLAY, POP, SEEK } from "@/lib/events";
 
 export const Player = () => {
 
+    const socket = useSocket();
+    const { connected, roomId } = useSocketEvents();
     const [ play, setPlay ] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
     const audioRef = useRef<HTMLAudioElement|null>(null);
@@ -82,11 +87,19 @@ export const Player = () => {
         if ( audioRef.current ) {
             if ( play ) {
                 audioRef.current.pause();
+                if ( connected ) {
+                    socket.emit(PAUSE, {roomId});
+                }
             } else {
                 audioRef.current.play();
+                if ( connected ) {
+                    socket.emit(PLAY, {roomId});
+                }
             }
         }
     }
+
+    
 
     const toggleRepeat = () => {
         if(repeat){
@@ -143,6 +156,9 @@ export const Player = () => {
         if (audioRef.current) {
             audioRef.current.currentTime = num;
             setCurrentTime(num);
+            if ( connected ){
+                socket.emit(SEEK, { roomId, time:num });
+            }
         }
     }
 
@@ -165,6 +181,9 @@ export const Player = () => {
         setIsAdPlaying(false)
         if ( data?.isActive ) {
             deQueue();
+            if ( connected ) {
+                socket.emit(DEQUEUE, {roomId});
+            }
             return;
         } 
         if ( prevAdTimeStamp && ( (Date.now() - prevAdTimeStamp)/60000 < 30 ) ) {
@@ -178,6 +197,39 @@ export const Player = () => {
             setSongId("");
         }
     }
+
+    useEffect(()=>{
+    
+        const handleSeekEvent = (payload: { roomId: string, time: number }) => {
+            if (audioRef.current) {
+                audioRef.current.currentTime = payload.time;
+                setCurrentTime(payload.time);
+            }
+        }
+
+        const handlePlayEvent = () => {
+            if ( audioRef.current ) {
+                audioRef.current.play();
+            }
+        }
+
+        const handlePauseEvent = () => {
+            if ( audioRef.current ) {
+                audioRef.current.pause();
+            }
+        }
+
+        socket.on(PAUSE, handlePauseEvent);
+        socket.on(PLAY, handlePlayEvent);
+        socket.on(SEEK, handleSeekEvent);
+
+        return () => {
+            socket.off(PAUSE, handlePauseEvent);
+            socket.off(PLAY, handlePlayEvent);
+            socket.off(SEEK, handleSeekEvent);
+        }
+
+    }, []);
 
     return (
         <>
@@ -203,7 +255,12 @@ export const Player = () => {
                         <div className="w-full flex items-center justify-center gap-x-5 lg:gap-x-6">
                             <span className="w-8 text-sm text-zinc-300">{songLength(Math.floor(currentTime))}</span>
                             <button
-                                onClick={pop}
+                                onClick={()=>{
+                                    pop();
+                                    if ( connected ) {
+                                        socket.emit(POP, {roomId});
+                                    }
+                                }}
                                 disabled = {data?.isActive === false}
                             >
                                 <FaBackwardStep
@@ -235,8 +292,26 @@ export const Player = () => {
                         </div>
                         <div className="w-full flex items-center justify-end gap-x-3 lg:gap-x-6">
                             <LikeButton id = { current?.id } className="h-6 w-6"/>
-                            <ShuffleIcon onClick={shuffle} />
-                            <RepeatIcon onClick={toggleRepeat}  className="h-6 w-6 text-white cursor-pointer" />
+                            <button
+                                disabled={connected}
+                                onClick={shuffle}
+                                className={cn(
+                                    "focus:outline-none outline-none cursor-pointer",
+                                    connected && "cursor-not-allowed"
+                                )}
+                            >
+                                <ShuffleIcon />
+                            </button>
+                            <button
+                                onClick={toggleRepeat}
+                                disabled={connected}
+                                className={cn(
+                                    "focus:outline-none outline-none cursor-pointer",
+                                    connected && "cursor-not-allowed"
+                                )}
+                            >
+                                <RepeatIcon className="h-6 w-6 text-white" />
+                            </button>
                             <div className="flex items-center gap-2">
                                 <VolumeIcon
                                     className="h-5 w-5"

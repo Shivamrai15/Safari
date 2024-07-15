@@ -10,6 +10,9 @@ import { useQueue } from "@/hooks/use-queue";
 import { Audio } from "react-loader-spinner";
 import { usePlayer } from "@/hooks/use-player";
 import { useSession } from "next-auth/react";
+import { useSocketEvents } from "@/hooks/use-socket-events";
+import { useSocket } from "@/hooks/use-socket";
+import { PRIORITY_ENQUEUE } from "@/lib/events";
 
 interface SongItemProps {
     song : (Song & {
@@ -27,6 +30,8 @@ export const SongItem = ({
     const session = useSession();
     const { priorityEnqueue, current } = useQueue();
     const { isPlaying } = usePlayer();
+    const { connected, roomId } = useSocketEvents();
+    const socket = useSocket();
 
     return (
         <div
@@ -36,7 +41,10 @@ export const SongItem = ({
                     router.push("/login");
 
                 } else {
-                    priorityEnqueue([song])
+                    priorityEnqueue([song]);
+                    if ( connected ) {
+                        socket.emit(PRIORITY_ENQUEUE, { roomId, songs:[song] });
+                    }
                 }
             }}
         >

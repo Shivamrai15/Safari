@@ -73,6 +73,7 @@ export const LikeButton = ({
                 toggleLikeButton();
             }}
             disabled = { loading }
+            className="outline-none focus:outline-none"
         >
             {
                 isLiked ? (
@@ -94,7 +95,7 @@ export const LikeButton = ({
                                 "h-6 w-6",
                                 className,
                                 loading && "opacity-80 cursor-default",
-                                label && "mr-3"
+                                label && "mr-2"
                             )}
                         />
                         { label && "Add to liked songs" }

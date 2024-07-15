@@ -2,13 +2,15 @@
 import { usePlayer } from '@/hooks/use-player';
 import { useQueue } from '@/hooks/use-queue';
 import { cn } from '@/lib/utils';
-import { getAlbum } from '@/server/album';
-import { Album, Artist, Song } from '@prisma/client';
+import { Album, Song } from '@prisma/client';
 import { FaPause, FaPlay } from 'react-icons/fa';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { toast } from 'sonner';
+import { useSocket } from '@/hooks/use-socket';
+import { useSocketEvents } from '@/hooks/use-socket-events';
+import { PRIORITY_ENQUEUE } from '@/lib/events';
 
 interface SongPlayButton {
     songs? : (Song & {
@@ -25,10 +27,12 @@ export const SongPlayButton = ({
     className
 } : SongPlayButton ) => {
 
+    const socket = useSocket();
+    const router = useRouter();
+    const session = useSession();
     const { priorityEnqueue, current } = useQueue();
     const { isPlaying } = usePlayer(); 
-    const session = useSession();
-    const router = useRouter();
+    const { connected, roomId } = useSocketEvents();
 
     const handleButton = async() =>{
         if ( session.status === "unauthenticated" ) {
@@ -36,10 +40,16 @@ export const SongPlayButton = ({
         } else {
             if ( songs ){
                 priorityEnqueue(songs);
+                if ( connected ) {
+                    socket.emit(PRIORITY_ENQUEUE, { roomId, songs });
+                }
             } else {
                 try {
-                    const songs : ( Song & { album : Album } )[] = (await axios.get(`/api/v1/album?id=${id}`)).data;
+                    const songs : ( Song & { album : Album } )[] = (await axios.get(`${process.env.NEXT_PUBLIC_SOCKET_API}/api/v2/album?id=${id}`)).data;
                     priorityEnqueue(songs);
+                    if ( connected ) {
+                        socket.emit(PRIORITY_ENQUEUE, { roomId, songs });
+                    }
                 } catch (error) {
                     console.error(error);
                     toast.error("Something went wrong");

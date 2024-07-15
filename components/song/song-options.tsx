@@ -3,7 +3,7 @@
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { Album, Artist, PlayList, Song } from "@prisma/client";
+import { Album, PlayList, Song } from "@prisma/client";
 
 import {
     DropdownMenu,
@@ -36,6 +36,9 @@ import { toast } from "sonner";
 import { useShareModal } from "@/hooks/use-share-modal";
 import { usePremiumModal } from "@/hooks/use-premium-modal";
 import { useAccount } from "@/hooks/use-account";
+import { useSocket } from "@/hooks/use-socket";
+import { useSocketEvents } from "@/hooks/use-socket-events";
+import { ENQUEUE, PLAYNEXT } from "@/lib/events";
 
 interface SongOptionsProps {
     song : (Song & {
@@ -56,6 +59,8 @@ export const SongOptions = ({
 
     const router = useRouter();
     const session = useSession();
+    const socket = useSocket();
+    const { connected, roomId } = useSocketEvents();
     const { enQueue, playNext, queue } = useQueue();
     const { data, error, isLoading } : { data : PlayList[], error : any, isLoading : boolean }  = usePlaylist();
     const { mutate } = usePlaylist();
@@ -101,7 +106,10 @@ export const SongOptions = ({
                         disabled = { session.status === "unauthenticated" }
                         onClick={(e)=>{
                             e.stopPropagation();
-                            enQueue([song])
+                            enQueue([song]);
+                            if (connected) {
+                                socket.emit(ENQUEUE,{roomId, songs:[song]});
+                            }
                         }}
                         className="px-3 hover:bg-neutral-700 focus:bg-neutral-700 py-2 rounded-none md:cursor-pointer"
                     >
@@ -113,6 +121,9 @@ export const SongOptions = ({
                         onClick={(e)=>{
                             e.stopPropagation();
                             playNext(song);
+                            if (connected) {
+                                socket.emit(PLAYNEXT, {roomId, song});
+                            }
                         }}
                         className="px-3 hover:bg-neutral-700 focus:bg-neutral-700 py-2 rounded-none md:cursor-pointer"
                     >

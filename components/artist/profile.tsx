@@ -25,7 +25,7 @@ export const Profile = ({
     const fetchViews = async()=>{
         try {
 
-            const response = await axios.get(`/api/v1/artist/views?id=${id}`);
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_SOCKET_API}/api/v2/artist/views?id=${id}`);
             if ( response.status == 200 ){
                 const artistViews:number = response.data['views']
                 setViews(artistViews);

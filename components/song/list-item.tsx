@@ -9,6 +9,9 @@ import { SongOptions } from "./song-options";
 import { SmallDevicesSongOptions } from "./small-devices-song-options";
 import { useQueue } from "@/hooks/use-queue";
 import { usePlayer } from "@/hooks/use-player";
+import { useSocketEvents } from "@/hooks/use-socket-events";
+import { useSocket } from "@/hooks/use-socket";
+import { PRIORITY_ENQUEUE } from "@/lib/events";
 
 interface ListItemProps {
     song : Song & {
@@ -27,6 +30,8 @@ export const ListItem = ({
     const session = useSession();
     const { priorityEnqueue, current } = useQueue();
     const { isPlaying } = usePlayer();
+    const { connected, roomId } = useSocketEvents();
+    const socket = useSocket();
 
     return (
         <div
@@ -36,7 +41,10 @@ export const ListItem = ({
                     router.push("/login");
 
                 } else {
-                    priorityEnqueue([song])
+                    priorityEnqueue([song]);
+                    if ( connected ) {
+                        socket.emit(PRIORITY_ENQUEUE, { roomId, songs:[song] });
+                    }
                 }
             }}
         >

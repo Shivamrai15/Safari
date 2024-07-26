@@ -12,7 +12,7 @@ import { useQueue } from "@/hooks/use-queue";
 import { Album, Song } from "@prisma/client";
 import { ListMusic, Share } from "lucide-react";
 import { SlOptionsVertical } from "react-icons/sl";
-import { useShareModal } from "@/hooks/use-share-modal";
+import { useShare } from "@/hooks/use-share";
 
 interface OptionsProps {
     id : string;
@@ -26,7 +26,6 @@ export const Options = ({
     
     const session = useSession();
     const { enQueue } = useQueue();
-    const { onOpen } = useShareModal();
     
     return (
         <DropdownMenu>
@@ -44,7 +43,7 @@ export const Options = ({
                 </DropdownMenuItem>
                 <DropdownMenuItem 
                     className="px-3 hover:bg-neutral-700 focus:bg-neutral-700 py-2 rounded-none md:cursor-pointer"
-                    onClick={()=>onOpen(`/album/${id}`)}
+                    onClick={()=>useShare(`/album/${id}`, "album")}
                 >
                     <Share className="h-5 w-5 mr-3"/>
                     Share

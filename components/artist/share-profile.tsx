@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useShareModal } from "@/hooks/use-share-modal";
+import { useShare } from "@/hooks/use-share";
 import { PiShareFatFill } from "react-icons/pi";
 
 interface ShareProfileButtonProps {
@@ -12,14 +12,13 @@ export const ShareProfileButton = ({
     artistId
 } : ShareProfileButtonProps ) => {
 
-    const { onOpen } = useShareModal();
 
     return (
         <Button
             variant="ghost"
             size="icon"
             className="focus:outline-none hover:bg-transparent"
-            onClick={()=>onOpen(`/artist/${artistId}`)}
+            onClick={()=>useShare(`/artist/${artistId}`, 'artist')}
         >
             <PiShareFatFill className="h-8 w-8 md:h-10 md:w-10 text-white" />
         </Button>

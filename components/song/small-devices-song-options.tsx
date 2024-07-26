@@ -37,9 +37,9 @@ import { usePlaylistModal } from "@/hooks/use-playlist-modal";
 import { LikeButton } from "@/components/utils/like-button";
 import { usePlaylist } from "@/hooks/use-playlist";
 import { toast } from "sonner";
-import { useShareModal } from "@/hooks/use-share-modal";
 import { useAccount } from "@/hooks/use-account";
 import { usePremiumModal } from "@/hooks/use-premium-modal";
+import { useShare } from "@/hooks/use-share";
 
 interface SmallDevicesSongOptionsProps {
     song : Song & {
@@ -57,7 +57,6 @@ export const SmallDevicesSongOptions = ({
     const { enQueue, queue, playNext } = useQueue();
     const { onOpen } = usePlaylistModal();
     const { mutate } = usePlaylist();
-    const shareModal = useShareModal();
     const { data, error, isLoading } : { data : PlayList[], error : any, isLoading : boolean }  = usePlaylist();
     const { onOpenPremiumModal } = usePremiumModal();
     const account = useAccount();
@@ -186,7 +185,7 @@ export const SmallDevicesSongOptions = ({
                             </button>
                         </DrawerClose>
                         <DrawerClose>
-                            <button className="flex items-center" onClick={()=>shareModal.onOpen(`/track?id=${song.id}`)} >
+                            <button className="flex items-center" onClick={()=>useShare(`/track?id=${song.id}`, "song")} >
                                 <PiShareFat className="mr-3 h-5 w-5" />
                                 <span className="font-medium" >Share</span>
                             </button>

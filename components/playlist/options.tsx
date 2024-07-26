@@ -16,8 +16,8 @@ import { usePlaylist } from "@/hooks/use-playlist";
 import { useRouter } from "next/navigation";
 import { Album, Song } from "@prisma/client";
 import { useQueue } from "@/hooks/use-queue";
-import { useShareModal } from "@/hooks/use-share-modal";
 import { AlertModal } from "../modals/alert-modal";
+import { useShare } from "@/hooks/use-share";
 
 interface PlaylistOptionsProps {
     id : string;
@@ -42,7 +42,6 @@ export const PlaylistOptions = ({
     const [ isOpen, setOpen ] = useState(false); 
     const { enQueue } = useQueue();
     const { mutate } = usePlaylist();
-    const { onOpen } = useShareModal();
 
     const addToQueue = async() => {
         try {
@@ -109,7 +108,7 @@ export const PlaylistOptions = ({
                     <DropdownMenuItem 
                         className="px-3 hover:bg-neutral-700 focus:bg-neutral-700 py-2 rounded-none md:cursor-pointer"
                         disabled = {isPrivate}
-                        onClick={()=>onOpen(`/playlists/${id}`)}
+                        onClick={()=>useShare(`/playlists/${id}`, "playlist")}
                     >
                         <Share className="h-5 w-5 mr-3"/>
                         Share

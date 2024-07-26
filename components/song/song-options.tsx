@@ -33,9 +33,9 @@ import { usePlaylist } from "@/hooks/use-playlist";
 import { usePlaylistModal } from "@/hooks/use-playlist-modal";
 import { LikeButton } from "@/components/utils/like-button";
 import { toast } from "sonner";
-import { useShareModal } from "@/hooks/use-share-modal";
 import { usePremiumModal } from "@/hooks/use-premium-modal";
 import { useAccount } from "@/hooks/use-account";
+import { useShare } from "@/hooks/use-share";
 
 interface SongOptionsProps {
     song : (Song & {
@@ -60,7 +60,6 @@ export const SongOptions = ({
     const { data, error, isLoading } : { data : PlayList[], error : any, isLoading : boolean }  = usePlaylist();
     const { mutate } = usePlaylist();
     const { onOpen } = usePlaylistModal();
-    const shareModal = useShareModal();
     const { onOpenPremiumModal } = usePremiumModal();
     const account = useAccount();
 
@@ -204,7 +203,7 @@ export const SongOptions = ({
                         <span className="font-medium" >Go to Album</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem 
-                        onClick={()=>shareModal.onOpen(`/track?id=${song.id}`)}
+                        onClick={()=>useShare(`/track?id=${song.id}`, "song")}
                         className="px-3 hover:bg-neutral-700 focus:bg-neutral-700 py-2 rounded-none md:cursor-pointer"
                     >
                         <PiShareFat className="mr-2 h-5 w-5"/>

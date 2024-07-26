@@ -4,6 +4,7 @@ import {
     Dialog,
     DialogContent
 } from "@/components/ui/dialog";
+import NumberTicker from "@/components/ui/number-ticker";
 
 interface ArtistDescriptionProps {
     name : string;
@@ -42,7 +43,10 @@ export const ArtistDescriptionModal = ({
                     </div>
                     <div className="py-10 px-6 md:px-10 space-y-10">
                         <div className="flex flex-col space-y-1">
-                            <span className="text-3xl md:text-4xl font-extrabold select-none" >{views.toLocaleString()}</span>
+
+                            <p className="text-3xl md:text-4xl font-extrabold select-none" >
+                                <NumberTicker value={views} />
+                            </p>
                             <span className="select-none font-medium">Views</span>
                         </div>
                         <p className="text-zinc-300 select-none">

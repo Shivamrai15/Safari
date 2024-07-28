@@ -39,7 +39,6 @@ import { usePlaylist } from "@/hooks/use-playlist";
 import { toast } from "sonner";
 import { useAccount } from "@/hooks/use-account";
 import { usePremiumModal } from "@/hooks/use-premium-modal";
-import { useShare } from "@/hooks/use-share";
 
 interface SmallDevicesSongOptionsProps {
     song : Song & {
@@ -84,6 +83,15 @@ export const SmallDevicesSongOptions = ({
                     onOpenPremiumModal();
                 }
             }
+        }
+    }
+
+    const share = async ( url: string , type : "song"|"album"|"artist"|"playlist" ) => {
+        if ( navigator ) {
+            await navigator.share({
+                title : `Check out this ${type} on Safari`,
+                url : `${window.location.origin}${url}`
+            });
         }
     }
 
@@ -185,7 +193,7 @@ export const SmallDevicesSongOptions = ({
                             </button>
                         </DrawerClose>
                         <DrawerClose>
-                            <button className="flex items-center" onClick={()=>useShare(`/track?id=${song.id}`, "song")} >
+                            <button className="flex items-center" onClick={()=>share(`/track?id=${song.id}`, "song")} >
                                 <PiShareFat className="mr-3 h-5 w-5" />
                                 <span className="font-medium" >Share</span>
                             </button>

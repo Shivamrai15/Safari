@@ -100,7 +100,6 @@ export const Queue = () => {
                                                         "flex z-[9999] items-center space-x-4 bg-neutral-800 hover:bg-neutral-900 focus:bg-neutral-900 px-4 py-2 transition-all cursor-default md:cursor-pointer select-none group/song",
                                                         index === 0 && "bg-neutral-900/80",
                                                         
-                                                        
                                                     )}
                                                 >
                                                     <div className="w-12 aspect-square shrink-0 rounded-md relative overflow-hidden" >

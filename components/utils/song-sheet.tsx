@@ -25,7 +25,6 @@ import { SyncLoader } from "react-spinners";
 import { Button } from "@/components/ui/button";
 import { thumbnailVariants } from "@/lib/variants";
 import { BlurFade } from "../ui/blur-fade";
-import { useShare } from "@/hooks/use-share";
 import Link from "next/link";
 
 interface LyricLine {
@@ -123,6 +122,16 @@ export const SongSheet = ({
             
         }
     }, [lyrics, currentTime]);
+
+
+    const share = async ( url: string , type : "song"|"album"|"artist"|"playlist" ) => {
+        if ( navigator ) {
+            await navigator.share({
+                title : `Check out this ${type} on Safari`,
+                url : `${window.location.origin}${url}`
+            });
+        }
+    }
 
     return (
 
@@ -243,10 +252,7 @@ export const SongSheet = ({
                                                 </div>
                                             </div>
                                             <ul className="space-y-6">
-                                                <li>
-                                                    <LikeButton id={current?.id} className="h-6 w-6" label />
-                                                </li>
-                                                <li className="flex items-center gap-x-3" onClick={()=>useShare(`/track?id=${current?.id}`, "song")} >
+                                                <li className="flex items-center gap-x-3" onClick={()=>share(`/track?id=${current?.id}`, "song")} >
                                                     <Share2 className="h-6 w-6"/>
                                                     <span className="select-none">Share</span>
                                                 </li>
@@ -272,7 +278,7 @@ export const SongSheet = ({
                                                     <Rows4 className="h-6 w-6"/>
                                                     <span className="select-none">Queue</span>
                                                 </Link>
-                                                
+                                                <LikeButton id={current?.id} className="h-6 w-6" label />
                                             </ul>
                                         </div>
                                         <div className="w-full flex items-center justify-center">
@@ -344,10 +350,10 @@ export const SongSheet = ({
                                 </div>
                                 <div className="flex items-center justify-between w-full">
                                     <button onClick={()=>setSmOptions(true)} >
-                                        <List className="h-4 w-4 text-red-500"/>
+                                        <List className="h-5 w-5 text-red-500"/>
                                     </button>
-                                    <button onClick={()=>useShare(`/track?id=${current?.id}`, "song")} >
-                                        <Share2 className="h-4 w-4 text-red-500"/>
+                                    <button onClick={()=>share(`/track?id=${current?.id}`, "song")} >
+                                        <Share2 className="h-5 w-5 text-red-500"/>
                                     </button>
                                 </div>
                             </div>

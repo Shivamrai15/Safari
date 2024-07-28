@@ -24,12 +24,14 @@ export default auth( (req) => {
 
     if (isAuthRoute) {
         if (isLoggedIn) {
+            // @ts-ignore
             return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl))
         }
         return;
     }
 
     if (!isLoggedIn && isProtectedRoute ) {
+        // @ts-ignore
         return Response.redirect(new URL("/login", nextUrl));
     }
 

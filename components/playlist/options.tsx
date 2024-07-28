@@ -17,7 +17,6 @@ import { useRouter } from "next/navigation";
 import { Album, Song } from "@prisma/client";
 import { useQueue } from "@/hooks/use-queue";
 import { AlertModal } from "../modals/alert-modal";
-import { useShare } from "@/hooks/use-share";
 
 interface PlaylistOptionsProps {
     id : string;
@@ -74,6 +73,15 @@ export const PlaylistOptions = ({
         }
     }
 
+    const share = async ( url: string , type : "song"|"album"|"artist"|"playlist" ) => {
+        if ( navigator ) {
+            await navigator.share({
+                title : `Check out this ${type} on Safari`,
+                url : `${window.location.origin}${url}`
+            });
+        }
+    }
+
     return (
         <>
             <DropdownMenu>
@@ -108,7 +116,7 @@ export const PlaylistOptions = ({
                     <DropdownMenuItem 
                         className="px-3 hover:bg-neutral-700 focus:bg-neutral-700 py-2 rounded-none md:cursor-pointer"
                         disabled = {isPrivate}
-                        onClick={()=>useShare(`/playlists/${id}`, "playlist")}
+                        onClick={()=>share(`/playlists/${id}`, "playlist")}
                     >
                         <Share className="h-5 w-5 mr-3"/>
                         Share

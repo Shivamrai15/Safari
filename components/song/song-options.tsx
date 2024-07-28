@@ -35,7 +35,6 @@ import { LikeButton } from "@/components/utils/like-button";
 import { toast } from "sonner";
 import { usePremiumModal } from "@/hooks/use-premium-modal";
 import { useAccount } from "@/hooks/use-account";
-import { useShare } from "@/hooks/use-share";
 
 interface SongOptionsProps {
     song : (Song & {
@@ -85,6 +84,15 @@ export const SongOptions = ({
                     onOpenPremiumModal();
                 }
             }
+        }
+    }
+
+    const share = async ( url: string , type : "song"|"album"|"artist"|"playlist" ) => {
+        if ( navigator ) {
+            await navigator.share({
+                title : `Check out this ${type} on Safari`,
+                url : `${window.location.origin}${url}`
+            });
         }
     }
 
@@ -203,7 +211,7 @@ export const SongOptions = ({
                         <span className="font-medium" >Go to Album</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem 
-                        onClick={()=>useShare(`/track?id=${song.id}`, "song")}
+                        onClick={()=>share(`/track?id=${song.id}`, "song")}
                         className="px-3 hover:bg-neutral-700 focus:bg-neutral-700 py-2 rounded-none md:cursor-pointer"
                     >
                         <PiShareFat className="mr-2 h-5 w-5"/>

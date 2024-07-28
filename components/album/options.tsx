@@ -12,7 +12,6 @@ import { useQueue } from "@/hooks/use-queue";
 import { Album, Song } from "@prisma/client";
 import { ListMusic, Share } from "lucide-react";
 import { SlOptionsVertical } from "react-icons/sl";
-import { useShare } from "@/hooks/use-share";
 
 interface OptionsProps {
     id : string;
@@ -26,6 +25,15 @@ export const Options = ({
     
     const session = useSession();
     const { enQueue } = useQueue();
+
+    const share = async ( url: string , type : "song"|"album"|"artist"|"playlist" ) => {
+        if ( navigator ) {
+            await navigator.share({
+                title : `Check out this ${type} on Safari`,
+                url : `${window.location.origin}${url}`
+            });
+        }
+    }
     
     return (
         <DropdownMenu>
@@ -43,7 +51,7 @@ export const Options = ({
                 </DropdownMenuItem>
                 <DropdownMenuItem 
                     className="px-3 hover:bg-neutral-700 focus:bg-neutral-700 py-2 rounded-none md:cursor-pointer"
-                    onClick={()=>useShare(`/album/${id}`, "album")}
+                    onClick={()=>share(`/album/${id}`, "album")}
                 >
                     <Share className="h-5 w-5 mr-3"/>
                     Share

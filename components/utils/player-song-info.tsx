@@ -30,7 +30,7 @@ export const PlayerSongInfo = ({
             </div>
             <div className="w-full flex-1 space-y-0 select-none">
                 <h3 className="line-clamp-1 font-medium text-sm md:text-base py-0 my-0">{song.name}</h3>
-                <Link href={`/album/${song.albumId}`} onClick={(e)=>e.stopPropagation()} className="text-xs md:text-sm py-0 my-0 text-zinc-200 hover:underline" >{song.album.name}</Link>
+                <Link href={`/album/${song.albumId}`} onClick={(e)=>e.stopPropagation()} className="text-xs md:text-sm py-0 my-0 text-zinc-200 hover:underline line-clamp-1 w-fit" >{song.album.name}</Link>
             </div>
         </div>
     )

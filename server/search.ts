@@ -1,5 +1,4 @@
 "use server";
-import {dataset} from "./dataset.mjs";
 
 import { db } from "@/lib/db";
 import Fuse from "fuse.js";
@@ -12,31 +11,15 @@ const fuseOptions = {
 export const getTopSearches =  async( query: string ) => {
     try {
 
-        const fuse = new Fuse(dataset, fuseOptions);
-        const similarity =  fuse.search(query);
-
-        if ( similarity.length === 0 ) {
-            return null;
-        }
-
-        const songIds = similarity.filter((res)=>res.item.type==="SONG").map((res)=>res.item.id).slice(0,5); 
-        const albumIds = similarity.filter((res)=>res.item.type==="ALBUM").map((res)=>res.item.id).slice(0,5); 
-        const artistIds = similarity.filter((res)=>res.item.type==="ARTIST").map((res)=>res.item.id).slice(0,5);
-
-
-        const [ albums, artists, songs ] = await db.$transaction([
+        const [ albums, artists, songs ] = await Promise.all([
             db.album.findMany({
                 where : {
-                    id : {
-                        in : albumIds
-                    }
+                    name : { contains: query, mode : "insensitive" }
                 }
             }),
             db.artist.findMany({
                 where : {
-                    id : {
-                        in  : artistIds
-                    }
+                    name : { contains: query, mode : "insensitive" }
                 },
                 select : {
                     id : true,
@@ -46,9 +29,7 @@ export const getTopSearches =  async( query: string ) => {
             }),
             db.song.findMany({
                 where : {
-                    id  : {
-                        in : songIds
-                    }
+                    name : { contains: query, mode : "insensitive" }
                 },
                 include : {
                     album : true,
@@ -63,13 +44,22 @@ export const getTopSearches =  async( query: string ) => {
             }),
         ]);
 
-        songs.sort((a, b)=>songIds.indexOf(a.id)-songIds.indexOf(b.id));
-        albums.sort((a, b)=>albumIds.indexOf(a.id)-albumIds.indexOf(b.id));
-        artists.sort((a, b)=>artistIds.indexOf(a.id)-artistIds.indexOf(b.id));
+        const allDocuments = [...albums, ...artists, ...songs];
+        const bestSearchFuse = new Fuse(allDocuments, fuseOptions);
+        const songFuse = new Fuse(songs, fuseOptions);
+        const albumFuse = new Fuse(albums, fuseOptions);
+        const artistFuse = new Fuse(artists, fuseOptions);
 
-        const topResult = similarity[0].item.type === "SONG" ? songs.shift() : similarity[0].item.type === "ALBUM" ? albums.shift() : artists.shift()
+        const bestSearch = bestSearchFuse.search(query);
+        const albumResults = albumFuse.search(query).slice(0, 5).map((album)=>album.item);
+        const songResults = songFuse.search(query).slice(0, 5).map((song)=>song.item);
+        const artistResults = artistFuse.search(query).slice(0, 5).map((artist)=>artist.item);
+
+        const topResult = bestSearch.length > 0 ? bestSearch[0].item : null;
+        console.log(topResult);
         
-        return { topResult, songs, albums, artists }
+        
+        return { topResult, songs:songResults, albums:albumResults, artists:artistResults }
         
     } catch (error) {
         console.error("TOP SEARCH API ERROR", error);
@@ -80,26 +70,19 @@ export const getTopSearches =  async( query: string ) => {
 export const getAlbumSearches = async( query: string ) => {
     try {
 
-        const fuse = new Fuse(dataset, fuseOptions);
-        const similarity = fuse.search(query);
-
-        if ( similarity.length === 0 ){
-            return null;
-        }
-
-        const albumIds = similarity.filter((res)=>res.item.type==="ALBUM").map((res)=>res.item.id).slice(0,15);
-        
         const albums = await db.album.findMany({
             where : {
-                id : {
-                    in : albumIds
+                name : {
+                    contains : query,
+                    mode : "insensitive"
                 }
             }
         });
 
-        albums.sort((a, b)=>albumIds.indexOf(a.id)-albumIds.indexOf(b.id));
-
-        return albums;
+        const fuse = new Fuse(albums, fuseOptions);
+        const result = fuse.search(query).map((album)=>album.item);
+        return result
+        
 
     } catch (error) {
         console.error("ALBUM SEARCH API ERROR", error);
@@ -110,19 +93,11 @@ export const getAlbumSearches = async( query: string ) => {
 export const getSongSearches = async( query: string ) => {
     try {
         
-        const fuse = new Fuse(dataset, fuseOptions);
-        const similarity = fuse.search(query);
-
-        if ( similarity.length === 0 ){
-            return null;
-        }
-
-        const songIds = similarity.filter((res)=>res.item.type==="SONG").map((res)=>res.item.id).slice(0,15);
-
         const songs = await db.song.findMany({
             where : {
-                id : {
-                    in : songIds
+                name : {
+                    contains : query,
+                    mode : "insensitive"
                 }
             },
             include : {
@@ -137,8 +112,10 @@ export const getSongSearches = async( query: string ) => {
             }
         });
 
-        songs.sort((a, b)=>songIds.indexOf(a.id)-songIds.indexOf(b.id));
-        return songs;
+        const fuse = new Fuse(songs, fuseOptions);
+        const result = fuse.search(query).map((song)=>song.item);
+        return result
+        
 
     } catch (error) {
         console.error("SONGS SEARCH API ERROR", error);
@@ -149,19 +126,11 @@ export const getSongSearches = async( query: string ) => {
 export const getArtistSearches = async( query: string ) => {
     try {
         
-        const fuse = new Fuse(dataset, fuseOptions);
-        const similarity = fuse.search(query);
-
-        if ( similarity.length === 0 ){
-            return null;
-        }
-
-        const artistIds = similarity.filter((res)=>res.item.type==="ARTIST").map((res)=>res.item.id).slice(0,15);
-
         const artists = await db.artist.findMany({
             where : {
-                id : {
-                    in : artistIds
+                name : {
+                    contains : query,
+                    mode : "insensitive"
                 }
             },
             select : {
@@ -171,8 +140,9 @@ export const getArtistSearches = async( query: string ) => {
             }
         });
 
-        artists.sort((a, b)=>artistIds.indexOf(a.id)-artistIds.indexOf(b.id));
-        return artists;
+        const fuse = new Fuse(artists, fuseOptions);
+        const result = fuse.search(query).map((artist)=>artist.item);
+        return result
 
     } catch (error) {
         console.error("SONGS SEARCH API ERROR", error);

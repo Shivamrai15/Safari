@@ -19,7 +19,7 @@ const SearchPage = async({
 
     const responses = await getTopSearches(searchParams.query);    
 
-    if ( !responses ) {
+    if ( !responses?.topResult  ) {
         return (
             <div className="w-full h-full flex items-center justify-center pt-32">
                 <h4 className="font-semibold md:text-lg text-center text-zinc-300 select-none">No results found for &quot;{searchParams.query}&quot;</h4>
@@ -28,6 +28,7 @@ const SearchPage = async({
     }
 
     const { albums, artists, songs, topResult } = responses;
+
 
     return (
         <div className="pt-10 space-y-12">

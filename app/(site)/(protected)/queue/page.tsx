@@ -35,10 +35,10 @@ const QueuePage = () => {
 
 
     useEffect(()=>{
-        if (select.length > 0) {
+        if (select.length > 0 && open===false) {
             setOpen(true);
         }
-    }, [open]);
+    }, [select]);
 
 
     return (
@@ -58,13 +58,13 @@ const QueuePage = () => {
             </header>
             <section className="px-6 w-full space-y-8 pb-20">
                 <div className="w-full space-y-4">
-                    <h1 className="font-semibold px-1">Now Playing</h1>
-                    <div className="h-10 px-1">
+                    <h1 className="font-semibold px-2 text-lg">Now Playing</h1>
+                    <div className="h-12 px-2">
                         <PlayerSongInfo song={current} />
                     </div>
                 </div>
                 <div className="w-full space-y-4">
-                    <h1 className="font-semibold px-1">Upcoming</h1>
+                    <h1 className="font-semibold px-2 text-lg">Upcoming</h1>
                     <DragDropContext onDragEnd={handleDragEnd}>
                         <Droppable droppableId="lists" >
                             {(provided)=>(
@@ -83,7 +83,7 @@ const QueuePage = () => {
                                                         ref={provided.innerRef}
                                                         role="button"
                                                         className={cn(
-                                                            "h-14 w-full py-2 px-1 rounded-sm",
+                                                            "h-16 w-full p-2 rounded-sm",
                                                             select.includes(song.id) && "bg-violet-500/40"
                                                         )}
                                                         onClick={(e)=>{

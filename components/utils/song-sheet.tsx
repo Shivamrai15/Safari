@@ -59,7 +59,7 @@ export const SongSheet = ({
 } : SongSheet ) => {
 
     const { isOpen, onClose } = useSheet();
-    const { current, deQueue, pop, shuffle } = useQueue();
+    const { current, pop, shuffle } = useQueue();
     const [ smOptions, setSmOptions ] = useState(false)
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
@@ -136,7 +136,7 @@ export const SongSheet = ({
     return (
 
         <Sheet open = { isOpen } onOpenChange={handleClose} >
-            <SheetContent side="bottom" className="h-full w-full bg-neutral-900 p-0 sheet-scroll overflow-y-auto" style={{background : `${current?.album.color}` }} >
+            <SheetContent side="bottom" className="h-full w-full bg-neutral-900 p-0 sheet-scroll overflow-y-auto" style={{backgroundColor : `${current?.album.color}`, transition: 'background-color 2s ease-in-out' }} >
                 <div 
                     className="w-full h-full"
                     style={{ 

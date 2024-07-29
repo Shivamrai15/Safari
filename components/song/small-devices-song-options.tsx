@@ -103,8 +103,8 @@ export const SmallDevicesSongOptions = ({
             </DrawerTrigger>
             <DrawerContent>
                 <DrawerHeader>
-                    <div className="p-4 flex items-center gap-4">
-                        <div className="aspect-square h-16 rounded-sm overflow-hidden relative">
+                    <div className="p-4 flex items-center gap-x-4">
+                        <div className="aspect-square h-16 shrink-0 rounded-sm overflow-hidden relative">
                             <Image
                                 src={song.image}
                                 alt={song.name}
@@ -114,15 +114,15 @@ export const SmallDevicesSongOptions = ({
                         </div>
                         <div className="flex flex-col items-start">
                             <h3 className="line-clamp-1 font-semibold"> {song.name} </h3>
-                            <div className="text-sm text-zinc-300 line-clamp-1 font-normal overflow-hidden space-x-2" >
+                            <div className="text-sm text-zinc-300 line-clamp-1 font-normal space-x-2 px-0" >
                                 {
                                     song.artists.map((artist, idx)=>(
                                         <span
                                             key={artist.id}
                                             onClick={()=>router.push(`/artist/${artist.id}`)}
-                                            className="hover:underline"
+                                            className="hover:underline p-0"
                                         >
-                                            {artist.name}{ (idx !== song.artists.length-1)&&"," }
+                                            {artist.name.trimStart()}{ (idx !== song.artists.length-1)&&"," }
                                         </span>
                                     ))
                                 }

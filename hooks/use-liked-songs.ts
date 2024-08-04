@@ -1,20 +1,22 @@
-import useSWR from "swr";
-import fetcher from "@/lib/fetcher";
+import { create } from "zustand";
 
-
-export const useLikedSongs = () => {
-
-    const { data, error, isLoading, mutate } = useSWR("/api/v1/user/liked-music", fetcher, {
-        revalidateIfStale : false,
-        revalidateOnFocus : false,
-        revalidateOnReconnect : false
-    });
-
-    return {
-        data,
-        error,
-        isLoading,
-        mutate
-    };
-
+interface UseLikedSongsProps {
+    songIds : string[];
+    setSongIds : (ids: string[])=>void;
+    addSongId : (id: string)=>void;
+    removeSongId : (id: string)=>void;
 }
+
+
+export const useLikedSongs = create<UseLikedSongsProps>((set, get)=>({
+    songIds : [],
+    setSongIds : (ids: string[])=>set({songIds:ids}),
+    addSongId : (id: string)=>{
+        const updatedSongIds = [...(get().songIds), id]
+        set({songIds: updatedSongIds})
+    },
+    removeSongId : (id: string)=>{
+        const ids = get().songIds.filter((songId)=>songId!==id);
+        set({ songIds: ids });
+    }
+}));

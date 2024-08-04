@@ -1,11 +1,16 @@
 "use client";
 
+import axios from "axios";
+import { useCallback, useEffect } from "react";
+import { useSession } from "next-auth/react";
+
 import { cn } from "@/lib/utils";
 import { Sidebar } from "./navigation/sidebar";
 import { MobileMenu } from "./navigation/mobile-menu";
 import { Queue } from "./queue/queue";
 import { useQueue } from "@/hooks/use-queue";
 import { Player } from "./utils/player";
+import { useLikedSongs } from "@/hooks/use-liked-songs";
 
        
 interface LayoutWrapperProps {
@@ -17,7 +22,25 @@ export const LayoutWrapper = ({
     children
 } : LayoutWrapperProps ) => {
 
+    const session = useSession();
     const { current } = useQueue();
+    const { setSongIds } = useLikedSongs();
+
+    const fetchLikedSongs = useCallback(async()=>{
+        if ( session.status === "authenticated" ) {
+            try {
+                const response = await axios.get("/api/v1/user/liked-music");
+                const data = response.data;
+                setSongIds(data.tracks);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    }, [])
+
+    useEffect(()=>{
+        fetchLikedSongs();
+    }, []);
 
     return (
         <main className={cn(

@@ -21,30 +21,8 @@ export async function GET () {
                 songId : true
             }
         });
-
         const likedSongIds = likedSongs.map((song)=> song.songId);
-
-
-        const songs = await db.song.findMany({
-            where : {
-                id : {
-                    in : likedSongIds
-                }
-            },
-            include : {
-                artists : {
-                    select : {
-                        id : true,
-                        name : true
-                    }
-                },
-                album : true
-            }
-        });
-
-        songs.sort((a, b) => likedSongIds.indexOf(a.id) - likedSongIds.indexOf(b.id));
-
-        return NextResponse.json(songs, { status:200 });
+        return NextResponse.json({ tracks : likedSongIds});
 
     } catch (error) {
         console.error("LIKED MUSIC GET API ERROR", error);

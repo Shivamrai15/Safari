@@ -1,16 +1,15 @@
 "use client";
+
 import Image from "next/image";
-import { Album, Artist, Song } from "@prisma/client";
-import { ShuffleButton } from "@/components/utils/shuffle-btn";
-import { PlayButton } from "@/components/utils/user-play-button";
 import { useLikedSongs } from "@/hooks/use-liked-songs";
-import { Skeleton } from "@/components/ui/skeleton";
-import { useQueue } from "@/hooks/use-queue";
+import { ShuffleButton } from "@/components/utils/shuffle-btn";
+import { LikedPlayButton } from "@/components/song/liked-play-btn";
 
 
-export const Header = () => {
 
-    const { data, isLoading } : { data  : ( Song & { album : Album, artists : Artist[] } )[], isLoading : boolean } = useLikedSongs();
+export const Header = () => {   
+
+    const { songIds } = useLikedSongs();
 
     return (
         <div className="px-4 md:px-20" style={{background :  `linear-gradient(160deg, #87141b 40%, #111 30%)` }} >
@@ -38,16 +37,12 @@ export const Header = () => {
                             Liked Songs
                         </h1>
                         <div className="font-semibold text-sm flex items-center justify-center md:justify-start">
-                            { isLoading ? (
-                                <Skeleton  className="h-5 w-16 rounded-lg bg-neutral-800" />
-                            ) : (
-                                <span className="select-none">
-                                    { data.length } Songs
-                                </span>
-                            ) }
+                            <span className="select-none">
+                                { songIds.length } Songs
+                            </span>
                         </div>
                         <div className="flex justify-center md:justify-start items-center gap-6 pt-2 md:pr-28" >
-                                <PlayButton songs={data} />
+                                <LikedPlayButton/>
                                 <ShuffleButton />
                         </div>
                     </div>

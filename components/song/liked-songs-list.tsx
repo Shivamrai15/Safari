@@ -1,24 +1,33 @@
 "use client";
 
-import { useLikedSongs } from "@/hooks/use-liked-songs";
-import { Album, Artist, Song } from "@prisma/client";
-import { SyncLoader } from "react-spinners";
+
+import { Album, Song } from "@prisma/client";
 import { List } from "../playlist/list";
 import { LuMusic3 } from "react-icons/lu";
+import { useEffect, useState } from "react";
+import { useLikedSongs } from "@/hooks/use-liked-songs";
 
-export const LikedSongsList = () => {
 
-    const { data, isLoading } : { data  : ( Song & { album : Album, artists : Artist[] } )[], isLoading : boolean } = useLikedSongs();
-    
-    if ( isLoading ) {
-        return (
-            <div className="mt-16 md:mt-20 w-full flex items-center justify-center">
-                <SyncLoader color="#252525" />
-            </div>
-        )
-    }
+interface LikedSongsListProps  {
+    songs : ( Song & { album : Album, artists : ({ id: string, name: string, image: string })[] }  )[];
+}
 
-    if (data.length === 0) {
+export const LikedSongsList = ({
+    songs
+} : LikedSongsListProps ) => {
+
+
+    const [ songRefs, setSongRefs ] = useState(songs);
+    const { songIds } = useLikedSongs();
+
+    useEffect(()=>{
+
+        const filteredSongs = songs.filter((song)=>songIds.includes(song.id));
+        setSongRefs(filteredSongs);
+
+    }, [songIds]);
+
+    if (songs.length === 0) {
         return (
             <div className="flex-1 flex flex-col items-center justify-center mt-16 space-y-10">
                 <div className="flex items-center justify-center">
@@ -31,7 +40,10 @@ export const LikedSongsList = () => {
 
     return (
         <div className="pt-14 pb-10">
-            <List  songs={data} />
+            {
+                // @ts-ignore
+                <List songs={songRefs} />
+            }
         </div>
     )
 }

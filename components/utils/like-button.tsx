@@ -1,13 +1,13 @@
 "use client";
 
+import { useMemo } from "react";
+import axios from "axios";
+import { toast } from "sonner";
+
 import { useLikedSongs } from "@/hooks/use-liked-songs";
 import { cn } from "@/lib/utils";
-import { Album, Song } from "@prisma/client";
-import axios from "axios";
-import { useSession } from "next-auth/react";
-import { useMemo, useState } from "react";
 import { MdOutlineThumbUpAlt, MdThumbUp } from "react-icons/md";
-import { toast } from "sonner";
+
 
 interface LikeButtonProps {
     id : string|undefined;
@@ -21,39 +21,25 @@ export const LikeButton = ({
     label
 } : LikeButtonProps ) => {
 
-    const [ loading, setLoading ] = useState(false);
-    const session = useSession();
+    const { songIds, addSongId, removeSongId } = useLikedSongs();
     
-    const { data, isLoading, mutate } : { 
-        data : ( Song & { album : Album } )[],
-        isLoading : boolean,
-        mutate : ()=>void
-    } = useLikedSongs();
-
 
     const isLiked = useMemo(()=>{
-        if (session.status === "authenticated" && !isLoading) {
-            const isExist = data.find((song)=> song.id === id)
-            if ( isExist ) {
-                return true;
-            }
-            return false;
-        }
-    }, [data, id, mutate, isLoading, session]);
+        return songIds.includes(id!);
+    }, [id, songIds, addSongId, removeSongId]);
 
 
     const toggleLikeButton = async() => {
         try {
-
-            setLoading(true)
             if ( isLiked ) {
+                removeSongId(id!);
+                toast.success("Removed from Liked Songs");
                 await axios.delete(`/api/v1/user/liked-music/${id}`);
-                toast.success("Removed from Liked Songs")
             } else {
+                addSongId(id!);
                 await axios.post("/api/v1/user/liked-music", { id : id });
-                toast.success("Added to Liked Songs")
+                toast.success("Added to Liked Songs");
             }
-            mutate();
 
         } catch (error) {
             if ( axios.isAxiosError(error) ){
@@ -61,9 +47,7 @@ export const LikeButton = ({
             } else {
                 toast.error("Something went wrong");
             }
-        } finally {
-            setLoading(false)
-        }
+        } 
     }
 
     return (
@@ -72,7 +56,6 @@ export const LikeButton = ({
                 e.stopPropagation();
                 toggleLikeButton();
             }}
-            disabled = { loading }
         >
             {
                 isLiked ? (
@@ -81,7 +64,6 @@ export const LikeButton = ({
                             className={cn(
                                 "h-6 w-6",
                                 className,
-                                loading && "opacity-80 cursor-default",
                                 label && "mr-3"
                             )}
                         />
@@ -93,7 +75,6 @@ export const LikeButton = ({
                             className={cn(
                                 "h-6 w-6",
                                 className,
-                                loading && "opacity-80 cursor-default",
                                 label && "mr-3"
                             )}
                         />

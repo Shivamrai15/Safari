@@ -8,7 +8,7 @@ import { CreatePlaylistCard } from "./create-playlist-card";
 
 export const SavedPalylists = () => {
 
-    const likedSongs = useLikedSongs();
+    const { songIds } = useLikedSongs();
     const { data, isLoading } : { data : (PlayList & { _count: { songs: number} })[], isLoading: boolean } = usePlaylist();
 
     return (
@@ -18,7 +18,7 @@ export const SavedPalylists = () => {
                 name="Liked Songs"
                 image="/assets/liked-thumb.png"
                 url="/liked-music"
-                tracks={ likedSongs.isLoading ? 0 : likedSongs.data.length }
+                tracks={ songIds.length }
             />
             { !isLoading && data.map((playlist)=>(
                 <SavedPlaylistCard

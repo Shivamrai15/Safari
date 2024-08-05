@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { Metadata, ResolvingMetadata } from "next";
 
 import { Albums } from "@/components/artist/albums";
@@ -12,6 +11,7 @@ import { PlayButton } from "@/components/artist/play-button";
 import { ShareProfileButton } from "@/components/artist/share-profile";
 import { artistMetaData } from "@/server/meta";
 import { Profile } from "@/components/artist/profile";
+import { Error } from "@/components/utils/error";
 
 interface ArtistPageProps {
     params : { artistId: string }
@@ -68,7 +68,9 @@ const ArtistPage = async({
     const artist = await getArtist(params.artistId);
 
     if (!artist) {
-        redirect("/");
+        return (
+            <Error />
+        )
     }
 
     return (

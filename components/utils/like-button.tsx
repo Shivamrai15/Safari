@@ -13,12 +13,14 @@ interface LikeButtonProps {
     id : string|undefined;
     className? : string;
     label? : boolean;
+    disabled? : boolean;
 }
 
 export const LikeButton = ({
     id,
     className,
-    label
+    label,
+    disabled
 } : LikeButtonProps ) => {
 
     const { songIds, addSongId, removeSongId } = useLikedSongs();
@@ -56,6 +58,7 @@ export const LikeButton = ({
                 e.stopPropagation();
                 toggleLikeButton();
             }}
+            disabled = {disabled}
         >
             {
                 isLiked ? (

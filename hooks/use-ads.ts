@@ -4,12 +4,16 @@ import { persist } from "zustand/middleware";
 
 interface UseAdsProps {
     prevAdTimeStamp : undefined | number,
-    setPrevAdTimeStamp : () => void; 
+    setPrevAdTimeStamp : () => void;
+    isAdPlaying : boolean;
+    setIsAdPlaying : ( value: boolean ) => void;
 }
 
 export const useAds = create(persist<UseAdsProps>((set)=>({
-        prevAdTimeStamp: undefined,
-        setPrevAdTimeStamp:()=>set({ prevAdTimeStamp : Date.now() })
+        prevAdTimeStamp : undefined,
+        isAdPlaying : false, 
+        setPrevAdTimeStamp : ()=>set({ prevAdTimeStamp : Date.now() }),
+        setIsAdPlaying : ( value: boolean )=> set({ isAdPlaying: value })
     }),
     {
         name: "af0f2fbc667b5174f58240e6",

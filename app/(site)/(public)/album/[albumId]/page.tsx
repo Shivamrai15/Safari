@@ -1,10 +1,10 @@
-import { redirect } from "next/navigation";
 import { Metadata, ResolvingMetadata } from "next";
 
 import { Header } from "@/components/album/header";
 import { SongsList } from "@/components/song/songs-list";
 import { getAlbum, getAlbums } from "@/server/album";
 import { albumMetaData } from "@/server/meta";
+import { Error } from "@/components/utils/error";
 
 interface AlbumPageProps  {
     params : { albumId : string }
@@ -60,7 +60,9 @@ const AlbumPage = async({
     const album = await getAlbum(params.albumId);
 
     if (!album) {
-        redirect("/");
+        return (
+            <Error />
+        )
     }
 
     return (

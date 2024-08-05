@@ -1,7 +1,7 @@
-import { redirect } from "next/navigation";
 import { getGenreById } from "@/server/genre";
 import { Header } from "@/components/genre/header";
 import { Songs } from "@/components/genre/songs";
+import { Error } from "@/components/utils/error";
 
 interface GenrePageProps {
     params : { genreId : string }
@@ -14,7 +14,9 @@ const GenrePage = async({
     const genre = await getGenreById(params.genreId);
 
     if ( !genre ) {
-        redirect("/");
+        return (
+            <Error />
+        )
     }
 
     return (

@@ -136,12 +136,12 @@ export const SongSheet = ({
     return (
 
         <Sheet open = { isOpen } onOpenChange={handleClose} >
-            <SheetContent side="bottom" className="h-full w-full bg-neutral-900 p-0 sheet-scroll overflow-y-auto" style={{backgroundColor : `${current?.album.color}`, transition: 'background-color 2s ease-in-out' }} >
+            <SheetContent side="bottom" className="h-full w-full bg-neutral-900 p-0 sheet-scroll overflow-y-auto" style={{backgroundColor : isAdPlaying? "#47102d":`${current?.album.color}`, transition: 'background-color 1s ease-in-out' }} >
                 <div 
                     className="w-full h-full"
                     style={{ 
-                        background : `linear-gradient(-20deg, ${current?.album.color}, ${current?.album.color}, #121212)`,
-                        transition: 'background 2.5s ease-in-out'
+                        backgroundColor : isAdPlaying ? "#47102d" : `linear-gradient(-20deg, ${current?.album.color}, ${current?.album.color}, #121212)`,
+                        transition: 'background-color 1s ease-in-out'
                     }}    
                 >
                     <div className="h-full w-full hidden p-6 px-20 lg:px-28  md:grid md:grid-cols-3 md:gap-10 lg:gap-12 xl:gap-32">
@@ -154,7 +154,7 @@ export const SongSheet = ({
                                     animate={isOpen ? "open" : "closed"}
                                 >
                                     <Image
-                                        src={current?.image || ""}
+                                        src={isAdPlaying ? "/assets/ad.avif" : (current?.image || "")}
                                         alt={current?.name || "Image"}
                                         fill
                                         className="object-cover select-none"
@@ -166,11 +166,11 @@ export const SongSheet = ({
                             <div className="flex flex-col items-center justify-center h-full w-full space-y-10">
                                 <div className="w-full text-left pb-4">
                                     <BlurFade delay={0.25} inView>
-                                        <h3 className="text-lg font-semibold select-none">{current?.album.name}</h3>
+                                        <h3 className="text-lg font-semibold select-none">{isAdPlaying ? "Safari Ad" : current?.album.name}</h3>
                                     </BlurFade>
                                     <div className="flex items-center justify-between gap-x-4">
                                         <BlurFade delay={0.25} inView>
-                                            <h2 className="text-5xl lg:text-8xl font-bold md:font-extrabold line-clamp-1 drop-shadow-2xl flex-1 select-none" >{current?.name}</h2>
+                                            <h2 className="text-5xl lg:text-8xl font-bold md:font-extrabold line-clamp-1 drop-shadow-2xl flex-1 select-none" >{isAdPlaying ? "End Audio Ads": current?.name}</h2>
                                         </BlurFade>
                                     </div>
                                 </div>
@@ -221,7 +221,7 @@ export const SongSheet = ({
                                                 /> 
                                             </button>
                                             <RepeatIcon onClick={toggleRepeat}  className="h-8 w-8 text-white cursor-pointer" />
-                                            <LikeButton id={current?.id} className="h-8 w-8 block"/>
+                                            <LikeButton id={current?.id} className="h-8 w-8 block" disabled = {isAdPlaying} />
                                         </div>
                                     </BlurFade>
                                 </div>
@@ -230,7 +230,7 @@ export const SongSheet = ({
                     </div>
                     <div 
                         className="h-full w-full md:hidden relative bg-cover bg-center backdrop-brightness-50"
-                        style={{backgroundImage : `url(${current?.image})`}}
+                        style={{backgroundImage : `url(${isAdPlaying ? "/assets/ad.avif" : current?.image})`}}
                     >
                         {
                            smOptions && (
@@ -298,8 +298,8 @@ export const SongSheet = ({
                             <div className="flex flex-col items-center justify-center h-fit space-y-2 px-6 pb-8 w-full">
                                 <div className="w-full text-left pb-2">
                                     <div className="flex items-center justify-between gap-x-4">       
-                                        <h2 className="text-2xl font-bold line-clamp-1 drop-shadow-2xl flex-1 select-none" >{current?.name}</h2>
-                                        <LikeButton id={current?.id} className="h-6 w-6"/>
+                                        <h2 className="text-2xl font-bold line-clamp-1 drop-shadow-2xl flex-1 select-none" >{isAdPlaying ? "End Audio Ads": current?.name}</h2>
+                                        <LikeButton id={current?.id} className="h-6 w-6" disabled = {isAdPlaying} />
                                     </div>
                                 </div>
                                 <div className="w-full">
@@ -349,10 +349,10 @@ export const SongSheet = ({
                                     </div>
                                 </div>
                                 <div className="flex items-center justify-between w-full">
-                                    <button onClick={()=>setSmOptions(true)} >
+                                    <button onClick={()=>setSmOptions(true)}  disabled = {isAdPlaying} >
                                         <List className="h-5 w-5 text-red-500"/>
                                     </button>
-                                    <button onClick={()=>share(`/track?id=${current?.id}`, "song")} >
+                                    <button onClick={()=>share(`/track?id=${current?.id}`, "song")} disabled = {isAdPlaying} >
                                         <Share2 className="h-5 w-5 text-red-500"/>
                                     </button>
                                 </div>
@@ -362,7 +362,8 @@ export const SongSheet = ({
                 </div>
                 <div className={cn(
                         "bg-neutral-950 md:bg-inherit h-full w-full flex items-center md:items-start justify-center px-6",
-                        smOptions && "hidden"
+                        smOptions && "hidden",
+                        isAdPlaying && "hidden"
                     )}
                 >
                     {

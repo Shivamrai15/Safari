@@ -3,8 +3,10 @@ import { decrypt, encrypt } from '@/lib/cryptography';
 
 
 interface UseAdsProps {
-    prevAdTimeStamp : undefined | number,
+    prevAdTimeStamp : undefined | number;
     setPrevAdTimeStamp : () => void; 
+    isAdPlaying : boolean;
+    setIsAdPlaying : ( value: boolean ) => void;
 }
 
 

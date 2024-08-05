@@ -34,6 +34,7 @@ import axios from "axios";
 import { useAccount } from "@/hooks/use-account";
 import { PlayerShortCutProvider } from "@/providers/player-shortcut-provider";
 import { useAds } from "@/hooks/use-ads";
+import { AdInfo } from "./ad-info";
 
 export const Player = () => {
 
@@ -122,15 +123,51 @@ export const Player = () => {
     }
 
     useEffect(() => {
-        if (current) {
-            setMetadataLoading(true);
-            setAlbumId( current.albumId );
-            setSongId( current.id );
-            if ( !isLoading && !data.privateSession ) {
-                updateHistory();
+
+        const updateData = () => {
+            if ( data?.isActive ) {
+                if (current && audioRef.current) {
+                    setMetadataLoading(true);
+                    setAlbumId( current.albumId );
+                    setSongId( current.id );
+                    audioRef.current.src = current.url; 
+                    if ( !isLoading && !data.privateSession ) {
+                        updateHistory();
+                    }
+                }
+                return;
             }
+
+            if ( isAdPlaying ) {
+                return;
+            }
+
+            if ( prevAdTimeStamp && ( (Date.now() - prevAdTimeStamp)/60000 < 30 ) ) {
+                if (current && audioRef.current) {
+                    setMetadataLoading(true);
+                    setAlbumId( current.albumId );
+                    setSongId( current.id );
+                    audioRef.current.src = current.url; 
+                    if ( !isLoading && !data.privateSession ) {
+                        updateHistory();
+                    }
+                }
+                return;
+            }
+
+            if ( audioRef.current ) {
+                setIsAdPlaying(true);
+                audioRef.current.src = "https://res.cloudinary.com/dkaj1swfy/video/upload/Shivam_Rai_s_Video_-_Jun_11_2024_1_mndvk3.mp3"
+                setPrevAdTimeStamp();
+                setSongId("");
+            }
+
         }
-    }, [current]);
+
+
+        updateData();
+        
+    }, [current, isAdPlaying]);
 
     useEffect(()=>{
         if (audioRef.current) {
@@ -161,22 +198,14 @@ export const Player = () => {
         }
     }
 
+
     const handleOnEnd = () => {
-        setIsAdPlaying(false)
-        if ( data?.isActive ) {
-            deQueue();
-            return;
-        } 
-        if ( prevAdTimeStamp && ( (Date.now() - prevAdTimeStamp)/60000 < 30 ) ) {
-            deQueue();
+        if ( isAdPlaying ) {
+            setIsAdPlaying(false);
             return;
         }
-        if ( audioRef.current ) {
-            setIsAdPlaying(true);
-            audioRef.current.src = "https://res.cloudinary.com/dkaj1swfy/video/upload/Shivam_Rai_s_Video_-_Jun_11_2024_1_mndvk3.mp3"
-            setPrevAdTimeStamp();
-            setSongId("");
-        }
+        deQueue();
+        
     }
 
     return (
@@ -198,7 +227,13 @@ export const Player = () => {
                 <div className="w-full h-full flex items-center justify-center px-6 lg:px-10">
                     <div className="grid grid-cols-3 w-full">
                         <div className="w-full h-11">
-                            <PlayerSongInfo song={current} />
+                            {
+                                isAdPlaying ? (
+                                    <AdInfo />
+                                ) : (
+                                    <PlayerSongInfo song={current} />  
+                                )
+                            }
                         </div>
                         <div className="w-full flex items-center justify-center gap-x-5 lg:gap-x-6">
                             <span className="w-8 text-sm text-zinc-300">{songLength(Math.floor(currentTime))}</span>
@@ -234,7 +269,7 @@ export const Player = () => {
                             <span className="text-sm text-zinc-300" >{ songLength(isAdPlaying ? 16 : (current?.duration||1))}</span>
                         </div>
                         <div className="w-full flex items-center justify-end gap-x-3 lg:gap-x-6">
-                            <LikeButton id = { current?.id } className="h-6 w-6"/>
+                            <LikeButton id = { current?.id } className="h-6 w-6" disabled = {isAdPlaying} />
                             <ShuffleIcon onClick={shuffle} />
                             <RepeatIcon onClick={toggleRepeat}  className="h-6 w-6 text-white cursor-pointer" />
                             <div className="flex items-center gap-2">
@@ -259,7 +294,7 @@ export const Player = () => {
                 <div
                     onClick={()=>onOpen()}
                     className="w-full h-full bg-neutral-900 rounded-lg overflow-hidden relative"
-                    style={{background : `${current?.album.color}`}}
+                    style={{background : isAdPlaying? "#47102d":`${current?.album.color}`}}
                 >
                     <Slider
                         value={[currentTime]}
@@ -268,7 +303,13 @@ export const Player = () => {
                     />
                     <div className="flex items-center h-full px-4">
                         <div className="w-[calc(100%-3.5rem)] h-8">
-                            <PlayerSongInfo song={current} />
+                            {
+                                isAdPlaying ? (
+                                    <AdInfo />
+                                ) : (
+                                    <PlayerSongInfo song={current} />
+                                )
+                            }
                         </div>
                         <div className="w-14 h-10 flex items-center justify-center">
                             {
@@ -308,7 +349,6 @@ export const Player = () => {
                     autoPlay
                     onWaiting={()=>setMetadataLoading(true)}
                     onPlaying={()=>setMetadataLoading(false)}
-                    src={current?.url}
             >   
             </audio>
             <SongSheet

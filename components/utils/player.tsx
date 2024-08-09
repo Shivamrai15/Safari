@@ -127,7 +127,6 @@ export const Player = () => {
         const updateData = () => {
             try {
                 if ( data?.isActive ) {
-                    console.log("Data isActive loop")
                     if (current && audioRef.current) {
                         setMetadataLoading(true);
                         setAlbumId( current.albumId );
@@ -141,13 +140,11 @@ export const Player = () => {
                 }
     
                 if ( isAdPlaying ) {
-                    console.log("isAdPlaying loop")
                     return;
                 }
     
                 if ( prevAdTimeStamp && ( (Date.now() - prevAdTimeStamp)/60000 < 30 ) ) {
                     if (current && audioRef.current) {
-                        console.log("prevAdTimeStamp loop is working")
                         setMetadataLoading(true);
                         setAlbumId( current.albumId );
                         setSongId( current.id );
@@ -160,7 +157,6 @@ export const Player = () => {
                 }
     
                 if ( audioRef.current ) {
-                    console.log("audioRef.current loop is working")
                     setIsAdPlaying(true);
                     audioRef.current.src = "https://res.cloudinary.com/dkaj1swfy/video/upload/Shivam_Rai_s_Video_-_Jun_11_2024_1_mndvk3.mp3"
                     setPrevAdTimeStamp();

@@ -51,6 +51,7 @@ export default async function RootLayout({
 
     return (
         <html lang="en">
+            <link rel="icon" href="/assets/favicon.ico" sizes="any" />
             <body className={inter.className} >
                 <SessionProvider session={session} >
                     <ThemeProvider

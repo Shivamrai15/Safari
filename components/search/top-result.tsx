@@ -79,6 +79,7 @@ export const TopResult = ({
                         <SongPlayButton id={data.id} songs={[data]} />
                         <Button
                             className="px-6 rounded-full font-bold text-base"
+                            onClick={()=>router.push(`/album/${data.albumId}`)}
                         >
                             <Disc className="h-5 w-5 mr-2"/> Go to Album
                         </Button>

@@ -5,6 +5,8 @@ import { SongsList } from "@/components/song/songs-list";
 import { getAlbum, getAlbums } from "@/server/album";
 import { albumMetaData } from "@/server/meta";
 import { Error } from "@/components/utils/error";
+import { Copyright } from "@/components/album/copyright";
+import { MoreAlbums } from "@/components/album/more-albums";
 
 interface AlbumPageProps  {
     params : { albumId : string }
@@ -66,7 +68,7 @@ const AlbumPage = async({
     }
 
     return (
-        <div className="min-h-full pb-10 md:pb-0" style={{background :  `linear-gradient(180deg, #111 70%,  ${album.color}5a 100%)` }}  >
+        <div className="min-h-full pb-10 md:pb-0" style={{background :  `linear-gradient(180deg, #111 80%,  ${album.color}5a 100%)` }}  >
             <Header
                 id={album.id}
                 color = {album.color}
@@ -80,8 +82,10 @@ const AlbumPage = async({
                 data={album.songs}
             />
             <div className="md:pr-28">
-                <SongsList songs = { album.songs } />
+                <SongsList className="px-4 md:px-20 gap-y-8" songs = { album.songs } />
             </div>
+            <Copyright label={album.label} date={album.release} />
+            <MoreAlbums data={album.songs} albumId={album.id} />
         </div>
     )
 }

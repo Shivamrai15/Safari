@@ -5,13 +5,16 @@ import { usePlayer } from "@/hooks/use-player";
 import { useQueue } from "@/hooks/use-queue";
 import { Song , Album} from "@prisma/client"
 import { FaPause, FaPlay } from "react-icons/fa";
+import { cn } from "@/lib/utils";
 
 interface PlayButtonProps {
-    songs : (Song & { album : Album })[]
+    songs : (Song & { album : Album })[];
+    className? : string;
 }
 
 export const PlayButton = ({
-    songs
+    songs,
+    className
 } : PlayButtonProps ) => {
 
     const { priorityEnqueue, current, clear } = useQueue();
@@ -30,7 +33,11 @@ export const PlayButton = ({
     }, [current]);
 
     return (
-        <button className="rounded-full bg-red-600 flex items-center justify-center h-12 w-12 hover:scale-105 transition-all duration-150"
+        <button 
+            className={cn(
+                "rounded-full bg-red-600 flex items-center justify-center h-12 w-12 hover:scale-105 transition-all duration-150",
+                className
+            )}
             onClick={(e)=>{
                 e.stopPropagation();
                 clear();
@@ -39,7 +46,7 @@ export const PlayButton = ({
             }}
         >
             {
-                ( isPlaying && isPlaylistPlaying ) ? <FaPause className='h-5 w-5' /> : <FaPlay className='h-5 w-5' /> 
+                ( isPlaying && isPlaylistPlaying ) ? <FaPause /> : <FaPlay /> 
             }
         </button>
     )

@@ -19,9 +19,10 @@ export const getAlbum =  async ( id : string ) => {
                                 image : true
                             }
                         },
-                        album : true 
+                        album : true,
                     }
-                }
+                },
+                label : true
             },
         });
 

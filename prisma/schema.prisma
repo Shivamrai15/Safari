@@ -9,21 +9,21 @@ datasource db {
 }
 
 model User {
-  id              String          @id @default(auto()) @map("_id") @db.ObjectId
+  id              String       @id @default(auto()) @map("_id") @db.ObjectId
   name            String?
-  email           String          @unique
+  email           String       @unique
   password        String?
   image           String?
   accountVerified DateTime?
   emailVerified   DateTime?
   history         History[]
   accounts        Account[]
-  privateSession  Boolean         @default(false)
+  privateSession  Boolean      @default(false)
   sessions        Session[]
   playlists       PlayList[]
   likedSongs      LikedSongs[]
-  followingIds    String[]        @db.ObjectId
-  following       Artist[]        @relation(fields: [followingIds], references: [id])
+  followingIds    String[]     @db.ObjectId
+  following       Artist[]     @relation(fields: [followingIds], references: [id])
   customer        Customer?
 
   createdAt DateTime @default(now())
@@ -70,9 +70,12 @@ model Album {
   color   String
   release DateTime
   songs   Song[]
-
+  labelId String? @db.ObjectId
+  label Label? @relation(fields: [labelId], references: [id])
+  
   @@unique([id, image])
   @@index([name])
+  @@index([labelId])
 }
 
 model Song {
@@ -273,4 +276,12 @@ model Lyrics {
   id     String @id @default(auto()) @map("_id") @db.ObjectId
   songId String @unique @db.ObjectId
   lyrics Json
+}
+
+model Label {
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  name  String
+  image String?
+  color String
+  album Album[]
 }

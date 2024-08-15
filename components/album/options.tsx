@@ -10,17 +10,19 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useQueue } from "@/hooks/use-queue";
 import { Album, Song } from "@prisma/client";
-import { ListMusic, Share } from "lucide-react";
+import { Ellipsis, ListMusic, Share } from "lucide-react";
 import { SlOptionsVertical } from "react-icons/sl";
 
 interface OptionsProps {
     id : string;
     songs : ( Song & { album : Album } )[];
+    orientation? : "horizontal" | "vertical";
 }
 
 export const Options = ({
     id,
-    songs
+    songs,
+    orientation
 } : OptionsProps ) => {
     
     const session = useSession();
@@ -38,7 +40,13 @@ export const Options = ({
     return (
         <DropdownMenu>
             <DropdownMenuTrigger className="focus:outline-none">
-                <SlOptionsVertical className="h-9 w-9 md:cursor-pointer" />
+                {
+                    orientation === "horizontal" ? (
+                        <Ellipsis className="h-6 w-6 text-zinc-400 md:cursor-pointer" />
+                    ) : (
+                        <SlOptionsVertical className="h-9 w-9 md:cursor-pointer text-zinc-300" />
+                    )    
+                }
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-52 p-1 rounded-sm shadow-lg bg-neutral-800 mt-2" align="start" side="bottom" >
                 <DropdownMenuItem 

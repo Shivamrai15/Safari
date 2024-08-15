@@ -110,3 +110,24 @@ export const getArtists = async () => {
         return [];
     }
 }
+
+export const getArtistName = async( id: string )=> {
+    try {
+
+        const artist = await db.artist.findUnique({
+            where : {
+                id
+            },
+            select : {
+                id: true,
+                name : true
+            }
+        });
+
+        return artist
+        
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}

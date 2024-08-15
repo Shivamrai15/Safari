@@ -11,22 +11,41 @@ import {
 } from "@/components/ui/carousel";
 import { AlbumCard } from "./album-card";
 import { AlbumCardSkeleton } from "./album-card-skeleton";
+import Link from "next/link";
 
 interface AlbumCarouselProps {
-    label : string,
-    href : string
+    label : string;
+    href : string;
+    url? : string
 }
 
 export const AlbumCarousel = ({
     href,
-    label
+    label,
+    url 
 } : AlbumCarouselProps ) => {
 
-    const {data, isLoading } : { data : Album[], isLoading : boolean } = useAlbum(href);  
+    const {data, isLoading } : { data : Album[], isLoading : boolean } = useAlbum(href); 
+    
+    if ( !isLoading && data.length === 0 ) {
+        return null;
+    }
 
     return (
         <div className="space-y-6 md:space-y-10 w-full">
-            <h3 className="text-2xl md:text-3xl font-bold select-none" >{label}</h3>
+            <div className="flex items-center justify-between">
+                <h3 className="text-2xl md:text-3xl font-bold select-none" >{label}</h3>
+                {
+                    url && (
+                        <Link
+                            href={url}
+                            className="text-zinc-300 font-bold"
+                        >
+                            Discography
+                        </Link>
+                    )
+                }
+            </div>
             <Carousel 
                 className="w-full space-y-3"
                 opts = {{

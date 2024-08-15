@@ -108,3 +108,23 @@ export const getSubArrays = ( data : (Song & { album : Album, artists : Artist[]
     }
     return subarrays;
 } 
+
+export const getMax = ( data : string[] ) => {
+    const idCount : { [key:string] : number } = {};
+
+    data.forEach(id => {
+        idCount[id] = (idCount[id] || 0) + 1;
+    });
+
+    let mostRepeatedId = null;
+    let maxCount = 0;
+
+    for (const id in idCount) {
+        if (idCount[id] > maxCount) {
+        mostRepeatedId = id;
+        maxCount = idCount[id];
+        }
+    }
+
+    return mostRepeatedId;
+}

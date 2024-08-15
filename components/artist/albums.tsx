@@ -8,6 +8,7 @@ import {
     CarouselNext,
     CarouselPrevious
 } from "@/components/ui/carousel";
+import Link from "next/link";
 
 interface AlbumsProps {
     id : string
@@ -21,7 +22,15 @@ export const Albums = async({
 
     return (
         <div className="w-full px-4 md:px-20 mt-20" >
-            <h3 className="text-lg sm:text-xl md:text-2xl font-bold select-none" >Albums</h3>
+            <div className="flex items-center justify-between">
+                <h3 className="text-lg sm:text-xl md:text-2xl font-bold select-none" >Albums</h3>
+                <Link
+                    href={`/artist/${id}/discography`}
+                    className="text-zinc-300 font-bold"
+                >
+                    Discography
+                </Link>
+            </div>
             <Carousel 
                 className="w-full space-y-3 mt-10"
                 opts = {{

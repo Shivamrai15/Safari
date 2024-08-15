@@ -16,7 +16,7 @@ export const AlbumSection = ({
     return (
         <div className="flex flex-col">
             <div className="flex items-start gap-x-6 md:gap-x-10">
-                <div className="shrink-0 h-20 md:h-32 aspect-square relative rounded-md overflow-hidden shadow-lg shadow-neutral-950">
+                <div className="shrink-0 h-24 md:h-32 aspect-square relative rounded-md overflow-hidden shadow-lg shadow-neutral-950">
                     <Image
                         src={album.image}
                         fill
@@ -24,14 +24,14 @@ export const AlbumSection = ({
                         alt={album.name}
                     />
                 </div>
-                <div className="flex flex-col justify-between gap-y-6">
+                <div className="flex flex-col justify-between gap-y-2 md:gap-y-6">
                     <div>
                         <h1 className="text-xl md:text-2xl font-semibold line-clamp-1 select-none">{album.name}</h1>
                         <span className="text-zinc-400 text-sm font-medium">
                             {album.songs.length === 1 ? "Single" : "Playlist" } • {new Date(album.release).getFullYear()} • {album.songs.length} Songs
                         </span>
                     </div>
-                    <div className="flex items-center gap-x-4">
+                    <div className="flex items-center gap-x-6">
                         <PlayButton
                             songs={ album.songs.map((song)=> { 
                                 return {...song, album}

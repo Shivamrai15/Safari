@@ -39,7 +39,7 @@ export const Lists = ({
     }
 
     return (
-        <div className="w-full flex flex-col gap-y-12 md:gap-y-16 pb-10">
+        <div className="w-full flex flex-col gap-y-12 md:gap-y-16">
             {
                     data?.pages.map((group, i)=>(
                         <Fragment key={i} >

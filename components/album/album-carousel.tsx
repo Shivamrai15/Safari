@@ -34,7 +34,7 @@ export const AlbumCarousel = ({
     return (
         <div className="space-y-6 md:space-y-10 w-full">
             <div className="flex items-center justify-between">
-                <h3 className="text-2xl md:text-3xl font-bold select-none" >{label}</h3>
+                <h3 className="text-xl md:text-3xl font-bold select-none" >{label}</h3>
                 {
                     url && (
                         <Link

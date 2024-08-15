@@ -37,7 +37,26 @@ export const metadata: Metadata = {
         "Punjabi music",
         "English music",
         "Hindi music"
-    ]
+    ],
+    openGraph: {
+        images: [{
+            url : "/assets/meta.avif",
+            height : 1920,
+            width : 1280
+        }],
+        type : "music.album",
+    },
+    twitter : {
+        card: 'summary_large_image',
+        title: "Safari",
+        description: "Discover endless playlists, top hits, and albums in Hindi, English, and Punjabi. Stream the latest Hindi MP3 songs on Safari. Listen to high-quality audio online - all for free!",
+        images: [{
+            url : "/assets/meta.avif",
+            height : 1920,
+            width : 1280
+        }], 
+    },
+    category : "music streaming"
     
 };
 
@@ -51,7 +70,6 @@ export default async function RootLayout({
 
     return (
         <html lang="en">
-            <link rel="icon" href="/assets/favicon.ico" sizes="any" />
             <body className={inter.className} >
                 <SessionProvider session={session} >
                     <ThemeProvider

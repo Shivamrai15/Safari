@@ -55,7 +55,10 @@ export const LikedPlayButton = ({
                 className
             )}
             disabled = { session.status === "unauthenticated" || playing }
-            onClick={handlePlayButton}
+            onClick={(e)=>{
+                e.stopPropagation();
+                handlePlayButton();
+            }}
         >
             {
                 (isPlaying && playing ) ? <FaPause className='h-5 w-5' /> : <FaPlay className='h-5 w-5' /> 

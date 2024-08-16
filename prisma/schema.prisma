@@ -70,9 +70,9 @@ model Album {
   color   String
   release DateTime
   songs   Song[]
-  labelId String? @db.ObjectId
-  label Label? @relation(fields: [labelId], references: [id])
-  
+  labelId String?  @db.ObjectId
+  label   Label?   @relation(fields: [labelId], references: [id])
+
   @@unique([id, image])
   @@index([name])
   @@index([labelId])
@@ -88,6 +88,7 @@ model Song {
   album     Album    @relation(fields: [albumId], references: [id])
   artistIds String[] @db.ObjectId
   artists   Artist[] @relation(fields: [artistIds], references: [id])
+  view      View[]
 
   @@index([albumId, name])
 }
@@ -156,14 +157,16 @@ model History {
   @@index([userId])
 }
 
-model SongPlays {
+model View {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   songId    String   @db.ObjectId
   userId    String   @db.ObjectId
+  song      Song     @relation(fields: [songId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@unique([songId, userId])
+  @@index([songId])
 }
 
 model Genre {
@@ -172,7 +175,6 @@ model Genre {
   image String
   color String
   songs GenreSong[]
-  remix Remix[]
 }
 
 model Remix {
@@ -181,8 +183,6 @@ model Remix {
   image   String
   color   String
   songs   RemixSong[]
-  genreId String      @db.ObjectId
-  genre   Genre       @relation(fields: [genreId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -279,7 +279,7 @@ model Lyrics {
 }
 
 model Label {
-  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  id    String  @id @default(auto()) @map("_id") @db.ObjectId
   name  String
   image String?
   color String

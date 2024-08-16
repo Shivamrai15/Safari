@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { 
     Carousel,
@@ -27,7 +27,7 @@ export const ListenAgainCarousel = ({
     
     return (
         <div className="space-y-6 md:space-y-10 w-full">
-            <h3 className="text-2xl md:text-3xl font-bold select-none" >QuickPicks</h3>
+            <h3 className="text-xl md:text-2xl font-bold select-none" >QuickPicks</h3>
             <Carousel 
                 className="w-full space-y-3"
                 opts = {{

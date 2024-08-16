@@ -22,7 +22,7 @@ export const Header = ({
 
         >
             <div className="flex items-center justify-between">
-                <h2 className="text-xl md:text-2xl font-bold" >{name}</h2>
+                <h2 className="text-xl md:text-2xl font-bold select-none" >{name}</h2>
             </div>
         </motion.header>
     )

@@ -24,7 +24,7 @@ export const Albums = async({
                     slidesToScroll : "auto"
                 }}
             >
-                <CarouselContent className="space-x-4">
+                <CarouselContent className="space-x-2">
                     {
                         albums.map((album) => (
                             <CarouselItem key={album.id} className="basis-auto" >

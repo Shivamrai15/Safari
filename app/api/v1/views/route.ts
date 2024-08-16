@@ -1,6 +1,9 @@
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
+import { Album, Song } from "@prisma/client";
 import { NextResponse } from "next/server";
+
+const BATCH = 10;
 
 export async function POST( req : Request ) {
     try {
@@ -16,7 +19,7 @@ export async function POST( req : Request ) {
             return new NextResponse("Song Id is required", { status: 401 });
         }
 
-        const view = await db.songPlays.findUnique({
+        const view = await db.view.findUnique({
             where : {
                 songId_userId : {
                     songId,
@@ -26,7 +29,7 @@ export async function POST( req : Request ) {
         });
 
         if (!view) {
-            await db.songPlays.create({
+            await db.view.create({
                 data : {
                     songId,
                     userId : session.user.id
@@ -41,38 +44,74 @@ export async function POST( req : Request ) {
     }
 }
 
-export async function GET(_req : Request) {
+export async function GET( req : Request) {
     try {
-        
-        const mostPlayedSongs = await db.songPlays.groupBy({
-            by: ['songId'],
-            _count: {
-                songId: true
-            },
-            orderBy: {
-                _count: {
-                songId: 'desc'
-                }
-            },
-            take: 10
+
+        const { searchParams } = new URL(req.url);
+        const cursor = searchParams.get("cursor");
+
+        let songs : (Song & { album: Album })[] = [];
+
+        if (cursor) {
+            songs = await db.song.findMany({
+                where : {
+                    view : {
+                        some : {}
+                    }
+                },
+                include : {
+                    album : true
+                },
+                orderBy : [
+                    {
+                        view : {
+                            _count : "desc"
+                        }
+                    },
+                    {
+                        name : "asc"
+                    }
+                ],
+                skip : 1,
+                cursor : {
+                    id : cursor
+                },
+                take : BATCH 
+            });
+        } else {
+            songs = await db.song.findMany({
+                where : {
+                    view : {
+                        some : {}
+                    }
+                },
+                include : {
+                    album : true
+                },
+                orderBy : [
+                    {
+                        view : {
+                            _count : "desc"
+                        }
+                    },
+                    {
+                        name : "asc"
+                    }
+                ],
+                take : BATCH 
+            });
+        }
+
+        let nextCursor = null;
+
+        if(songs.length === BATCH){
+            nextCursor = songs[BATCH-1].id
+        }
+
+        return NextResponse.json({
+            items : songs,
+            nextCursor
         });
-
-        const mostPlayedSongIds = mostPlayedSongs.map((song)=>song.songId);
-
-        const songs = await db.song.findMany({
-            where : {
-                id : {
-                    in : mostPlayedSongIds
-                }
-            },
-            include : {
-                album : true
-            }
-        });
-
-        songs.sort((a, b)=>mostPlayedSongIds.indexOf(a.id)-mostPlayedSongIds.indexOf(b.id))
-
-        return NextResponse.json(songs);
 
     } catch (error) {
         console.log("VIEWS GET API ERROR", error);

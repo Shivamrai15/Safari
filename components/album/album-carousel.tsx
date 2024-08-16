@@ -34,12 +34,12 @@ export const AlbumCarousel = ({
     return (
         <div className="space-y-6 md:space-y-10 w-full">
             <div className="flex items-center justify-between">
-                <h3 className="text-xl md:text-3xl font-bold select-none" >{label}</h3>
+                <h3 className="text-xl md:text-2xl font-bold select-none" >{label}</h3>
                 {
                     url && (
                         <Link
                             href={url}
-                            className="text-zinc-300 font-bold"
+                            className="text-zinc-300 font-bold select-none"
                         >
                             Discography
                         </Link>
@@ -57,7 +57,7 @@ export const AlbumCarousel = ({
                     <CarouselPrevious className="top-0 left-0"/>
                     <CarouselNext className="top-0 left-14"/>
                 </div>
-                <CarouselContent className="space-x-4">
+                <CarouselContent className="space-x-2">
                     { isLoading ? (
                         <>
                             <CarouselItem className="basis-auto" >

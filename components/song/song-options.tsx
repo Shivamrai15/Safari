@@ -3,7 +3,7 @@
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { Album, Artist, PlayList, Song } from "@prisma/client";
+import { Album, PlayList, Song } from "@prisma/client";
 
 import {
     DropdownMenu,
@@ -25,6 +25,7 @@ import {
     ListVideo,
     MicVocal,
     Plus,
+    Radio,
     Trash,
 } from "lucide-react";
 import { PiShareFat } from "react-icons/pi";
@@ -203,6 +204,13 @@ export const SongOptions = ({
                             </DropdownMenuSubContent>
                         </DropdownMenuPortal>
                     </DropdownMenuSub>
+                    <DropdownMenuItem
+                        onClick={()=>router.push(`/track?id=${song.id}`)}
+                        className="px-3 hover:bg-neutral-700 focus:bg-neutral-700 py-2 rounded-none md:cursor-pointer"
+                    >
+                        <Radio className="mr-2 h-5 w-5" />
+                        <span className="font-medium" >Go to song radio</span>
+                    </DropdownMenuItem>
                     <DropdownMenuItem
                         onClick={()=>router.push(`/album/${song.albumId}`)}
                         className="px-3 hover:bg-neutral-700 focus:bg-neutral-700 py-2 rounded-none md:cursor-pointer"

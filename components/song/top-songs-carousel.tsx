@@ -13,15 +13,24 @@ import { useTopSongs } from "@/hooks/use-top-songs";
 import { Album, Song } from "@prisma/client";
 import { TopSongCard } from "./top-song-card";
 import { AlbumCardSkeleton } from "../album/album-card-skeleton";
+import Link from "next/link";
 
 
 export const TopSongsCarousel = () => {
     
-    const { data, isLoading }:{ data : ( Song & { album : Album } )[], isLoading : boolean } = useTopSongs();
+    const { data, isLoading }:{ data : { items : ( Song & { album : Album } )[], nextCursor: string|null}, isLoading : boolean } = useTopSongs();
     
     return (
         <div className="space-y-6 md:space-y-10 w-full">
-            <h3 className="text-2xl md:text-3xl font-bold select-none" >Top Songs</h3>
+            <div className="flex items-center justify-between">
+                <h3 className="text-xl md:text-2xl font-bold select-none" >Trending Songs</h3>
+                <Link
+                    href="/track/trending"
+                    className="text-zinc-300 font-bold select-none"
+                >
+                    More
+                </Link>
+            </div>
             <Carousel 
                 className="w-full space-y-3"
                 opts = {{
@@ -55,7 +64,7 @@ export const TopSongsCarousel = () => {
                                 <AlbumCardSkeleton/>
                             </CarouselItem>
 
-                        </>) : (data.map((song, idx)=>(
+                        </>) : (data.items.map((song, idx)=>(
                             <CarouselItem key={song.id} className="basis-auto" >
                                 <TopSongCard song={song} idx={idx+1} />
                             </CarouselItem>

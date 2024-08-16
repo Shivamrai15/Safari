@@ -26,7 +26,7 @@ export const Albums = async({
                 <h3 className="text-lg sm:text-xl md:text-2xl font-bold select-none" >Albums</h3>
                 <Link
                     href={`/artist/${id}/discography`}
-                    className="text-zinc-300 font-bold"
+                    className="text-zinc-300 font-bold select-none"
                 >
                     Discography
                 </Link>

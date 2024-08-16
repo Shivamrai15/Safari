@@ -26,7 +26,7 @@ const SearchAlbumPage = async({
     }
 
     return (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-4 gap-y-8 md:gap-10 md:gap-y-8 lg:gap-y-16 py-10">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-2 gap-y-4 md:gap-y-8 py-10">
             {
                 albums.map((album : Album)=>(
                     <AlbumCard

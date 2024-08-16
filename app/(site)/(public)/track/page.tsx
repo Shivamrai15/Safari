@@ -1,6 +1,10 @@
 import { Metadata } from "next";
-import { Track } from "@/components/song/track";
+
 import { trackMetaData } from "@/server/meta";
+import { Header } from "@/components/track/header";
+import { getTrackById } from "@/server/track";
+import { SongsList } from "@/components/song/songs-list";
+import { Error } from "@/components/utils/error";
 
 interface SongLayoutProps {
     searchParams : {
@@ -36,10 +40,30 @@ export async function generateMetadata(
     }
 }
 
-const SongPage = () => {
+const SongPage = async({
+    searchParams
+} : SongLayoutProps ) => {
+
+    const song = await getTrackById(searchParams.id);
+
+    if ( !song ) {
+        return (
+            <div className="h-full w-full flex items-center justify-center">
+                <Error/>
+            </div>
+        )
+    }
+
 
     return (
-        <Track/>
+        <main className="h-full" style={{background :  `linear-gradient(180deg, #111 80%,  ${song.album.color}5a 100%)` }} >
+            <Header
+                song={song}
+            />
+            <div className="md:pr-28">
+                <SongsList className="px-4 md:px-20 gap-y-8" songs = { [song] } />
+            </div>
+        </main>
     )
 }
 

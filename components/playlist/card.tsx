@@ -1,19 +1,20 @@
 "use client";
+
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+
+import { LikedPlayButton } from "@/components/song/liked-play-btn";
 
 interface CardProps {
     label : string;
     href : string;
     image : string;
-    color : string;
 }
 
 export const Card = ({
     label,
     href,
     image,
-    color
 } : CardProps ) => {
 
     const router = useRouter();
@@ -21,10 +22,9 @@ export const Card = ({
     return (
         <div 
             onClick={()=>router.push(href)}
-            className="sm:max-w-64 w-full flex items-center gap-x-6 p-3 bg-neutral-900 hover:bg-neutral-900/80 rounded-md md:cursor-pointer transition-all" 
-            style={{ borderLeftColor : color, borderLeftWidth : "5px" }}
+            className="sm:max-w-80 w-full flex items-center gap-x-4 bg-neutral-900 hover:bg-neutral-800/80 rounded-sm md:cursor-pointer transition-all overflow-hidden relative group" 
         >
-            <div className="aspect-square h-10 shrink-0 rounded-md overflow-hidden relative ">
+            <div className="aspect-square h-16 shrink-0 overflow-hidden relative shadow-neutral-950 shadow-lg">
                 <Image
                     src={image}
                     fill
@@ -32,9 +32,16 @@ export const Card = ({
                     alt={label}
                 />
             </div>
-            <div className="w-full line-clamp-1 overflow-hidden select-none">
-                <h3 className="font-semibold" >{label}</h3>
+            <div className="w-full overflow-hidden select-none">
+                <h3 className="font-semibold line-clamp-1 select-none" >{label}</h3>
             </div>
+            {
+                label === "Liked Songs" && (
+                    <div className="absolute top-0 right-4 h-16 flex items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <LikedPlayButton className="h-10 w-10 md:h-12 md:w-12 shadow-md shadow-neutral-950" />
+                    </div>
+                )
+            }
         </div>
     )
 }

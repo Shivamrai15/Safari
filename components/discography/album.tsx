@@ -27,7 +27,7 @@ export const AlbumSection = ({
                 <div className="flex flex-col justify-between gap-y-2 md:gap-y-6">
                     <div>
                         <h1 className="text-xl md:text-2xl font-semibold line-clamp-1 select-none">{album.name}</h1>
-                        <span className="text-zinc-400 text-sm font-medium">
+                        <span className="text-zinc-400 text-sm font-medium select-none">
                             {album.songs.length === 1 ? "Single" : "Playlist" } • {new Date(album.release).getFullYear()} • {album.songs.length} Songs
                         </span>
                     </div>

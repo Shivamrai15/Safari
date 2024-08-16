@@ -33,7 +33,7 @@ const SearchPage = async({
     return (
         <div className="pt-10 space-y-12">
             <div className="space-y-8">
-                <h1 className="text-2xl md:text-3xl font-bold select-none" >Top Result</h1>
+                <h1 className="text-xl md:text-2xl font-bold select-none" >Top Result</h1>
                 <div>
                     <TopResult data={topResult!} />
                 </div>
@@ -41,7 +41,7 @@ const SearchPage = async({
             <div>
                 { songs.length > 0 && (
                     <div className="space-y-8">
-                        <h1 className="text-2xl md:text-3xl font-bold select-none" >Songs</h1>
+                        <h1 className="text-xl md:text-2xl font-bold select-none" >Songs</h1>
                         <div>
                             {
                                 songs.map((song)=>(
@@ -55,7 +55,7 @@ const SearchPage = async({
             <div>
                 { albums.length > 0 && (
                     <div className="space-y-8">
-                        <h1 className="text-2xl md:text-3xl font-bold select-none" >Albums</h1>
+                        <h1 className="text-xl md:text-2xl font-bold select-none" >Albums</h1>
                         <Albums albums={albums} />
                     </div>
                 ) }
@@ -63,7 +63,7 @@ const SearchPage = async({
             <div>
                 { artists.length > 0 && (
                     <div className="space-y-8">
-                        <h1 className="text-2xl md:text-3xl font-bold select-none" >Artists</h1>
+                        <h1 className="text-xl md:text-2xl font-bold select-none" >Artists</h1>
                         <ArtistCarousel artists={artists} />
                     </div>
                 ) }

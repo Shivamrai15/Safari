@@ -7,12 +7,17 @@ export async function GET ( req:Request ) {
         const { searchParams } = new URL(req.url);
         const artistId = searchParams.get("id");
 
-        const artist = await db.artist.findUnique({
+        if (!artistId) {
+            return new NextResponse("Artist Id not found", { status: 400 });
+        }
+
+        const artist = await db.view.count({
             where : {
-                id : artistId!
-            },
-            select : {
-                songIds : true
+                song : {
+                    artistIds : {
+                        has : artistId
+                    }
+                }
             }
         });
 
@@ -20,15 +25,7 @@ export async function GET ( req:Request ) {
             return new NextResponse("Artist not found", { status:404 });
         }
 
-        const artistViews = await db.songPlays.count({
-            where : {
-                songId : {
-                    in : artist.songIds
-                }
-            }
-        });
-
-        return NextResponse.json({ views : artistViews }, { status:200 });
+        return NextResponse.json({ views : artist }, { status:200 });
 
     } catch (error) {
         console.log("ARTIST VIEW GET API ERROR", error);

@@ -27,6 +27,7 @@ import {
     ListVideo,
     MicVocal,
     Plus,
+    Radio,
 } from "lucide-react";
 
 import { PiShareFat } from "react-icons/pi";
@@ -112,9 +113,9 @@ export const SmallDevicesSongOptions = ({
                                 className="object-cover"
                             />
                         </div>
-                        <div className="flex flex-col items-start">
-                            <h3 className="line-clamp-1 font-semibold"> {song.name} </h3>
-                            <div className="text-sm text-zinc-300 line-clamp-1 font-normal space-x-2 px-0" >
+                        <div className="w-full flex flex-col justify-start items-start">
+                            <h3 className="line-clamp-1 font-semibold text-left"> {song.name} </h3>
+                            <div className="text-sm text-left line-clamp-1 text-zinc-300 font-normal space-x-2 px-0" >
                                 {
                                     song.artists.map((artist, idx)=>(
                                         <span
@@ -196,6 +197,12 @@ export const SmallDevicesSongOptions = ({
                             <button className="flex items-center" onClick={()=>share(`/track?id=${song.id}`, "song")} >
                                 <PiShareFat className="mr-3 h-5 w-5" />
                                 <span className="font-medium" >Share</span>
+                            </button>
+                        </DrawerClose>
+                        <DrawerClose>
+                            <button className="flex items-center" onClick={()=>router.push(`/track?id=${song.id}`)} >
+                                <Radio className="mr-3 h-5 w-5" />
+                                <span className="font-medium" >Go to song radio</span>
                             </button>
                         </DrawerClose>
                         <DrawerClose>

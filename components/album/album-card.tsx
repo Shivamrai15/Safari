@@ -20,13 +20,15 @@ export const AlbumCard = ({
     const router = useRouter();
 
     return (
-        <div className={cn(
-            "aspect-[3/4] h-48 md:h-52 rounded-md space-y-4 md:cursor-pointer select-none",
-            className
-        )}>
+        <div 
+            className={cn(
+                "w-40 md:w-44 rounded-md space-y-4 md:cursor-pointer select-none p-3 bg-neutral-900 hover:bg-neutral-800/80 transition-colors group",
+                className
+            )}
+            onClick={()=>router.push(`/album/${album.id}`)}
+        >
             <div 
-                onClick={()=>router.push(`/album/${album.id}`)}
-                className="aspect-[15/16] relative rounded-md overflow-hidden group"
+                className="w-full aspect-square relative rounded-md overflow-hidden"
             >
                 <Image
                     src={album.image}
@@ -43,7 +45,9 @@ export const AlbumCard = ({
                     </div>
                 </div>
             </div>
-            
+            <div className="pb-2">
+                <h2 className="line-clamp-1 font-medium select-none">{album.name}</h2>
+            </div>
         </div>
     )
 }

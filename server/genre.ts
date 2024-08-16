@@ -18,7 +18,6 @@ export const getGenreById = async( genreId : string )=> {
                 },
                 color : true,
                 name : true,
-                remix : true,
                 image : true
             }
         });

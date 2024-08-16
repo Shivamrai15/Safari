@@ -37,7 +37,15 @@ export const metadata: Metadata = {
         "Punjabi music",
         "English music",
         "Hindi music"
-    ],    
+    ],
+    openGraph: {
+        images: {
+            url : "https://res.cloudinary.com/dkaj1swfy/image/upload/v1723828208/meta_kmiyf4.avif",
+            height : 1280,
+            width : 720
+        },
+        type : "website",
+    },  
 };
 
 export default async function RootLayout({

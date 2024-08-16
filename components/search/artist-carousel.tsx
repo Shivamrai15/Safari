@@ -26,7 +26,7 @@ export const ArtistCarousel = ({
                     slidesToScroll : "auto"
                 }}
             >
-                <CarouselContent className="space-x-4">
+                <CarouselContent className="space-x-2">
                     {
                         artists.map((artist) => (
                             <CarouselItem key={artist.id} className="basis-auto" >

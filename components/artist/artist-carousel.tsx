@@ -1,8 +1,5 @@
 "use client";
 
-import Link from "next/link";
-
-import { Album } from "@prisma/client";
 import { 
     Carousel,
     CarouselContent,
@@ -10,42 +7,35 @@ import {
     CarouselNext,
     CarouselPrevious
 } from "@/components/ui/carousel";
-import { AlbumCard } from "./album-card";
-import { AlbumCardSkeleton } from "./album-card-skeleton";
 import { useSWRQuery } from "@/hooks/use-swr-query";
+import { ArtistCard } from "../search/artist-card";
+import { ArtistCardSkeleton } from "./artist-card-skeleton";
 
-interface AlbumCarouselProps {
+
+interface ArtistCarouselProps {
     label : string;
     href : string;
-    url? : string
 }
 
-export const AlbumCarousel = ({
+export const ArtistCarousel = ({
     href,
-    label,
-    url 
-} : AlbumCarouselProps ) => {
-
-    const {data, isLoading } : { data : Album[], isLoading : boolean } = useSWRQuery(href); 
+    label
+} : ArtistCarouselProps ) => {
     
-    if ( !isLoading && data.length === 0 ) {
-        return null;
+    const  { data, isLoading, error } : { data : { id: string, name: string, image: string }[], isLoading: boolean, error: any } = useSWRQuery(href);
+
+    if ( error ) {
+        return (
+            <div className="w-full flex items-center justify-center text-center">
+                Something went wrong
+            </div>
+        )
     }
 
     return (
         <div className="space-y-6 md:space-y-10 w-full">
             <div className="flex items-center justify-between">
                 <h3 className="text-xl md:text-2xl font-bold select-none" >{label}</h3>
-                {
-                    url && (
-                        <Link
-                            href={url}
-                            className="text-zinc-300 font-bold select-none"
-                        >
-                            Discography
-                        </Link>
-                    )
-                }
             </div>
             <Carousel 
                 className="w-full space-y-3"
@@ -62,33 +52,39 @@ export const AlbumCarousel = ({
                     { isLoading ? (
                         <>
                             <CarouselItem className="basis-auto" >
-                                <AlbumCardSkeleton  />
+                                <ArtistCardSkeleton />
                             </CarouselItem>
                             <CarouselItem className="basis-auto" >
-                                <AlbumCardSkeleton  />
+                                <ArtistCardSkeleton />
                             </CarouselItem>
                             <CarouselItem className="basis-auto" >
-                                <AlbumCardSkeleton  />
+                                <ArtistCardSkeleton />
                             </CarouselItem>
                             <CarouselItem className="basis-auto" >
-                                <AlbumCardSkeleton  />
+                                <ArtistCardSkeleton />
                             </CarouselItem>
                             <CarouselItem className="basis-auto" >
-                                <AlbumCardSkeleton  />
+                                <ArtistCardSkeleton />
                             </CarouselItem>
                             <CarouselItem className="basis-auto" >
-                                <AlbumCardSkeleton  />
+                                <ArtistCardSkeleton />
                             </CarouselItem>
                             <CarouselItem className="basis-auto" >
-                                <AlbumCardSkeleton  />
+                                <ArtistCardSkeleton />
                             </CarouselItem>
                             <CarouselItem className="basis-auto" >
-                                <AlbumCardSkeleton  />
+                                <ArtistCardSkeleton />
+                            </CarouselItem>
+                            <CarouselItem className="basis-auto" >
+                                <ArtistCardSkeleton />
+                            </CarouselItem>
+                            <CarouselItem className="basis-auto" >
+                                <ArtistCardSkeleton />
                             </CarouselItem>
                         </>
-                        ) : data.map((album) => (
-                            <CarouselItem key={album.id} className="basis-auto" >
-                                <AlbumCard album={album} />
+                        ) : data.map((artist) => (
+                            <CarouselItem key={artist.id} className="basis-auto" >
+                                <ArtistCard artist={artist} />
                             </CarouselItem>
                     )) }
                 </CarouselContent>

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 
 import { 
     Carousel,
@@ -9,16 +10,16 @@ import {
     CarouselPrevious
 } from "@/components/ui/carousel";
 
-import { useTopSongs } from "@/hooks/use-top-songs";
+
+import { useSWRQuery } from "@/hooks/use-swr-query";
 import { Album, Song } from "@prisma/client";
 import { TopSongCard } from "./top-song-card";
 import { AlbumCardSkeleton } from "../album/album-card-skeleton";
-import Link from "next/link";
 
 
 export const TopSongsCarousel = () => {
     
-    const { data, isLoading }:{ data : { items : ( Song & { album : Album } )[], nextCursor: string|null}, isLoading : boolean } = useTopSongs();
+    const { data, isLoading }:{ data : { items : ( Song & { album : Album } )[], nextCursor: string|null}, isLoading : boolean } = useSWRQuery("/api/v1/views");
     
     return (
         <div className="space-y-6 md:space-y-10 w-full">

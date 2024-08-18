@@ -1,4 +1,5 @@
 import { AlbumCarousel } from "@/components/album/album-carousel";
+import { ArtistCarousel } from "@/components/artist/artist-carousel";
 import { Header } from "@/components/header";
 import PlaylistCards from "@/components/playlist/playlist-cards";
 import { ListenAgain } from "@/components/song/listen-again";
@@ -16,6 +17,7 @@ const HomePage = () => {
                 <TopSongsCarousel/>
                 <AlbumCarousel label="New Releases" href="/api/v1/new-releases" />
                 <AlbumCarousel label="Recommended Albums" href="/api/v1/recommended" />
+                <ArtistCarousel label="Your favorite artists" href="/api/v1/artist/favourite" />
             </div>
         </div>
     );

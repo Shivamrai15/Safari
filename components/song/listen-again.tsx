@@ -1,9 +1,9 @@
 "use client"
 
-import { useListenAgain } from "@/hooks/use-listen-again";
 import { Album, Artist, Song } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { ListenAgainCarousel } from "./listen-again-carousel";
+import { useSWRQuery } from "@/hooks/use-swr-query";
 
 export const ListenAgain = () => {
 
@@ -13,7 +13,7 @@ export const ListenAgain = () => {
         data : (Song & { album : Album, artists : Artist[] })[],
         isLoading : boolean,
         error : any
-    } = useListenAgain()
+    } = useSWRQuery("/api/v1/user/listen-again")
     
     if ( session.status === "unauthenticated" ) {
         return null;

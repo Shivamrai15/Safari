@@ -65,7 +65,7 @@ export const PlayButton = ({
     return (
         <Button 
             className={cn(
-                "h-12 w-12 md:h-14 md:w-14 rounded-full bg-red-600 hover:bg-red-600/80 text-white",
+                "h-12 w-12 md:h-14 md:w-14 rounded-full bg-red-600 hover:bg-red-500 text-white",
                 className
             )}
             disabled = { session.status === "unauthenticated" || playing }

@@ -1,12 +1,12 @@
 "use client";
 import { Genre } from "@/components/genre/genre";
 import { GenreSkeleton } from "@/components/genre/genre-skeleton";
-import { useGenre } from "@/hooks/use-genre";
+import { useSWRQuery } from "@/hooks/use-swr-query";
 import { Genre as GenreType } from "@prisma/client";
 
 const BrowsePage = () => {
 
-    const  { data, isLoading } : { data : GenreType[] , isLoading: boolean }  = useGenre();
+    const  { data, isLoading } : { data : GenreType[] , isLoading: boolean }  = useSWRQuery("/api/v1/genre");
 
     
 

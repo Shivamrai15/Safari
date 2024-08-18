@@ -24,7 +24,7 @@ export const ArtistCard = ({
 
     return (
         <div className={cn(
-            "aspect-[3/4] w-44 w:h-48 shrink-0 rounded-md space-y-4 cursor-default select-none md:cursor-pointer bg-neutral-900 hover:bg-neutral-900/80 p-4 group",
+            "aspect-[3/4] w-44 shrink-0 rounded-md space-y-4 cursor-default select-none md:cursor-pointer bg-neutral-900 hover:bg-neutral-900/80 p-4 group",
             className
         )}>
             <div 

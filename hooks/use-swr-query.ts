@@ -1,8 +1,9 @@
 import useSWR from "swr";
 import fetcher from "@/lib/fetcher";
 
-export const useGenre = () => {
-    const { data, error, isLoading, mutate } = useSWR("/api/v1/genre", fetcher, {
+export const useSWRQuery = (url : string) => {
+    
+    const { data, error, isLoading, mutate } = useSWR(url, fetcher, {
         revalidateIfStale : false,
         revalidateOnFocus : false,
         revalidateOnReconnect : false
@@ -14,4 +15,5 @@ export const useGenre = () => {
         isLoading,
         mutate
     };
+    
 }

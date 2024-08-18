@@ -35,13 +35,13 @@ export const Subscribe = ({
         try {
             setLoading(true);
             if ( isFollowing ) {
+                setSubscribers((prev)=>prev-1);
                 await axios.patch("/api/v1/user/unsubscribe", { artistId });
                 mutate();
-                setSubscribers((prev)=>prev-1);
             } else {
+                setSubscribers((prev)=>prev+1);
                 await axios.patch("/api/v1/user/subscribe", { artistId });
                 mutate();
-                setSubscribers((prev)=>prev+1);
             }
         } catch (error) {
             console.error(error);

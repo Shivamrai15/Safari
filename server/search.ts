@@ -20,60 +20,13 @@ interface TopSearchesResponse {
 export const getTopSearches =  async( query: string ) => {
     try {
 
-        const response = await axios.get(`/api/v2/search?query=${query}`);
+        const response = await axios.get(`https://api.safari.shivamrai.online/api/v2/search?query=${query}`);
         if ( !response.data ) {
             return null;
         }
 
         const { topResult, songs, albums, artists } : TopSearchesResponse = response.data;
         return { topResult, songs, albums, artists}
-
-        // const [ albums, artists, songs ] = await Promise.all([
-        //     db.album.findMany({
-        //         where : {
-        //             name : { contains: query, mode : "insensitive" }
-        //         }
-        //     }),
-        //     db.artist.findMany({
-        //         where : {
-        //             name : { contains: query, mode : "insensitive" }
-        //         },
-        //         select : {
-        //             id : true,
-        //             name : true,
-        //             image : true
-        //         }
-        //     }),
-        //     db.song.findMany({
-        //         where : {
-        //             name : { contains: query, mode : "insensitive" }
-        //         },
-        //         include : {
-        //             album : true,
-        //             artists : {
-        //                 select : {
-        //                     id : true,
-        //                     image : true,
-        //                     name : true
-        //                 }
-        //             }
-        //         }
-        //     }),
-        // ]);
-
-        // const allDocuments = [...albums, ...artists, ...songs];
-        // const bestSearchFuse = new Fuse(allDocuments, fuseOptions);
-        // const songFuse = new Fuse(songs, fuseOptions);
-        // const albumFuse = new Fuse(albums, fuseOptions);
-        // const artistFuse = new Fuse(artists, fuseOptions);
-
-        // const bestSearch = bestSearchFuse.search(query);
-        // const albumResults = albumFuse.search(query).slice(0, 5).map((album)=>album.item);
-        // const songResults = songFuse.search(query).slice(0, 5).map((song)=>song.item);
-        // const artistResults = artistFuse.search(query).slice(0, 5).map((artist)=>artist.item);
-
-        // const topResult = bestSearch.length > 0 ? bestSearch[0].item : null;
-        // console.log(topResult);
         
         
     } catch (error) {
@@ -85,27 +38,13 @@ export const getTopSearches =  async( query: string ) => {
 export const getAlbumSearches = async( query: string ) => {
     try {
 
-        const response = await axios.get(`/api/v2/search/album?query=${query}`);
+        const response = await axios.get(`https://api.safari.shivamrai.online/api/v2/search/album?query=${query}`);
         if ( !response.data ) {
             return null;
         }
 
         const albums : Album[] = response.data;
         return albums;
-
-        // const albums = await db.album.findMany({
-        //     where : {
-        //         name : {
-        //             contains : query,
-        //             mode : "insensitive"
-        //         }
-        //     }
-        // });
-
-        // const fuse = new Fuse(albums, fuseOptions);
-        // const result = fuse.search(query).map((album)=>album.item);
-        // return result
-        
 
     } catch (error) {
         console.error("ALBUM SEARCH API ERROR", error);
@@ -116,37 +55,13 @@ export const getAlbumSearches = async( query: string ) => {
 export const getSongSearches = async( query: string ) => {
     try {
         
-        const response = await axios.get(`/api/v2/search/song?query=${query}`);
+        const response = await axios.get(`https://api.safari.shivamrai.online/api/v2/search/song?query=${query}`);
         if ( !response.data ) {
             return null;
         }
 
         const songs : (Song & { album : Album, artists : { id: string, name: string, image: string }[] })[] = response.data;
         return songs;
-
-        // const songs = await db.song.findMany({
-        //     where : {
-        //         name : {
-        //             contains : query,
-        //             mode : "insensitive"
-        //         }
-        //     },
-        //     include : {
-        //         album : true,
-        //         artists : {
-        //             select : {
-        //                 id : true,
-        //                 name : true,
-        //                 image : true
-        //             }
-        //         }
-        //     }
-        // });
-
-        // const fuse = new Fuse(songs, fuseOptions);
-        // const result = fuse.search(query).map((song)=>song.item);
-        // return result
-        
 
     } catch (error) {
         console.error("SONGS SEARCH API ERROR", error);
@@ -157,31 +72,13 @@ export const getSongSearches = async( query: string ) => {
 export const getArtistSearches = async( query: string ) => {
     try {
 
-        const response = await axios.get(`/api/v2/search/artist?query=${query}`);
+        const response = await axios.get(`https://api.safari.shivamrai.online/api/v2/search/artist?query=${query}`);
         if ( !response.data ) {
             return null;
         }
 
         const artists : { id: string, name: string, image: string }[] = response.data;
         return artists;
-        
-        // const artists = await db.artist.findMany({
-        //     where : {
-        //         name : {
-        //             contains : query,
-        //             mode : "insensitive"
-        //         }
-        //     },
-        //     select : {
-        //         id : true,
-        //         name : true,
-        //         image : true
-        //     }
-        // });
-
-        // const fuse = new Fuse(artists, fuseOptions);
-        // const result = fuse.search(query).map((artist)=>artist.item);
-        // return result
 
     } catch (error) {
         console.error("SONGS SEARCH API ERROR", error);

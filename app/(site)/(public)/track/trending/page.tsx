@@ -9,7 +9,7 @@ import { SyncLoader } from "react-spinners";
 
 const TrendingPage = () => {
     
-    const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } = useQuery({ url : `${process.env.NEXT_PUBLIC_SOCKET_API}/api/v2/song/most-played`, paramKey : "id" , paramValue : "", queryKey:"" });
+    const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } = useQuery({ url : `/api/v2/song/most-played`, paramKey : "id" , paramValue : "", queryKey:"" });
     
     const { ref, inView } = useInView();
 

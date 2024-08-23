@@ -38,7 +38,7 @@ export const SongPlayButton = ({
                 priorityEnqueue(songs);
             } else {
                 try {
-                    const songs : ( Song & { album : Album } )[] = (await axios.get(`${process.env.NEXT_PUBLIC_SOCKET_API}/api/v2/album?id=${id}`)).data;
+                    const songs : ( Song & { album : Album } )[] = (await axios.get(`/api/v2/album?id=${id}`)).data;
                     priorityEnqueue(songs);
                 } catch (error) {
                     console.error(error);

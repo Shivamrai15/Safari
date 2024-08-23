@@ -16,7 +16,7 @@ export const Songs = ({
     genreId
 } : SongsProps ) => {
     
-    const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } = useQuery({ url : `${process.env.NEXT_PUBLIC_SOCKET_API}/api/v2/genre/songs`, paramKey : "id" , paramValue : genreId, queryKey:genreId });
+    const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } = useQuery({ url : `/api/v2/genre/songs`, paramKey : "id" , paramValue : genreId, queryKey:genreId });
 
     const { ref, inView } = useInView();
 

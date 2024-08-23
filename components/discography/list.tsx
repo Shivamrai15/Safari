@@ -20,7 +20,7 @@ export const Lists = ({
 } : AlbumsProps ) => {
 
 
-    const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } = useQuery({ url : `${process.env.NEXT_PUBLIC_SOCKET_API}/api/v2/artist/discography`, paramKey : "id" , paramValue : artistId, queryKey:artistId });
+    const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } = useQuery({ url : `/api/v2/artist/discography`, paramKey : "id" , paramValue : artistId, queryKey:artistId });
     const { ref, inView } = useInView();
 
     useEffect(()=>{

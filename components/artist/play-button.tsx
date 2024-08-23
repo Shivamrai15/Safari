@@ -48,7 +48,7 @@ export const PlayButton = ({
         setList(songs);
         setListId(artistId)
         try {
-            const response = await axios.get(`/api/v1/artist?id=${artistId}`);
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_SOCKET_API}/api/v2/artist?id=${artistId}`);
             const data : ( Song & { album : Album } )[] = response.data;
             if (songs.length > 0 ) {
                 enQueue(data);

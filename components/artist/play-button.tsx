@@ -13,6 +13,11 @@ import { useArtistStack } from "@/hooks/use-artist-stack";
 import { usePlayer } from "@/hooks/use-player";
 import { cn } from "@/lib/utils";
 
+import { useSocket } from "@/hooks/use-socket";
+import { useSocketEvents } from "@/hooks/use-socket-events";
+import { ENQUEUE, PRIORITY_ENQUEUE } from "@/lib/events";
+
+
 interface PlayButtonProps {
     artistId : string,
     songs : ( Song & { album : Album } )[];
@@ -26,7 +31,9 @@ export const PlayButton = ({
 } : PlayButtonProps ) => {
 
     const session = useSession();
+    const socket = useSocket();
     const { isPlaying } = usePlayer();
+    const { connected, roomId } = useSocketEvents();
     const { clear, current, priorityEnqueue, queue, stack, enQueue } = useQueue();
     const { list, listId, clearList, setList, setListId } = useArtistStack();
 
@@ -45,6 +52,9 @@ export const PlayButton = ({
         clear();
         clearList();
         priorityEnqueue(songs);
+        if ( connected ) {
+            socket.emit(PRIORITY_ENQUEUE, { roomId, songs });
+        }
         setList(songs);
         setListId(artistId)
         try {
@@ -52,8 +62,14 @@ export const PlayButton = ({
             const data : ( Song & { album : Album } )[] = response.data;
             if (songs.length > 0 ) {
                 enQueue(data);
+                if ( connected ) {
+                    socket.emit(ENQUEUE, { roomId, songs:data });
+                }
             } else {
                 priorityEnqueue(data);
+                if ( connected ) {
+                    socket.emit(PRIORITY_ENQUEUE, { roomId, songs:data });
+                }
             }
             setList(data);
         } catch (error) {
@@ -69,7 +85,10 @@ export const PlayButton = ({
                 className
             )}
             disabled = { session.status === "unauthenticated" || playing }
-            onClick={handlePlayButton}
+            onClick={(e)=>{
+                e.stopPropagation();
+                handlePlayButton();
+            }}
         >
             {
                 (isPlaying && playing ) ? <FaPause className='h-5 w-5' /> : <FaPlay className='h-5 w-5' /> 

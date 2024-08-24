@@ -67,7 +67,7 @@ export const LikeButton = ({
                             className={cn(
                                 "h-6 w-6",
                                 className,
-                                label && "mr-3"
+                                label && "mr-2"
                             )}
                         />
                         { label && "Remove from liked songs" }

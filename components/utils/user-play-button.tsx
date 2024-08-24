@@ -6,6 +6,9 @@ import { useQueue } from "@/hooks/use-queue";
 import { Song , Album} from "@prisma/client"
 import { FaPause, FaPlay } from "react-icons/fa";
 import { cn } from "@/lib/utils";
+import { useSocket } from "@/hooks/use-socket";
+import { useSocketEvents } from "@/hooks/use-socket-events";
+import { PRIORITY_ENQUEUE } from "@/lib/events";
 
 interface PlayButtonProps {
     songs : (Song & { album : Album })[];
@@ -17,8 +20,11 @@ export const PlayButton = ({
     className
 } : PlayButtonProps ) => {
 
-    const { priorityEnqueue, current, clear } = useQueue();
+    const socket = useSocket();
+    const { connected, roomId } = useSocketEvents();
+
     const { isPlaying } = usePlayer();
+    const { priorityEnqueue, current, clear } = useQueue();
     const [ isPlaylistPlaying , setPlaylistPlaying ] = useState(false);
 
     useEffect (()=> {
@@ -42,7 +48,10 @@ export const PlayButton = ({
                 e.stopPropagation();
                 clear();
                 priorityEnqueue(songs);
-                setPlaylistPlaying(true)
+                setPlaylistPlaying(true);
+                if ( connected ) {
+                    socket.emit(PRIORITY_ENQUEUE, { roomId, songs });
+                }
             }}
         >
             {

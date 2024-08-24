@@ -36,6 +36,9 @@ import { LikeButton } from "@/components/utils/like-button";
 import { toast } from "sonner";
 import { usePremiumModal } from "@/hooks/use-premium-modal";
 import { useAccount } from "@/hooks/use-account";
+import { useSocket } from "@/hooks/use-socket";
+import { useSocketEvents } from "@/hooks/use-socket-events";
+import { ENQUEUE, PLAYNEXT } from "@/lib/events";
 
 interface SongOptionsProps {
     song : (Song & {
@@ -62,6 +65,9 @@ export const SongOptions = ({
     const { onOpen } = usePlaylistModal();
     const { onOpenPremiumModal } = usePremiumModal();
     const account = useAccount();
+
+    const socket = useSocket();
+    const { connected, roomId } = useSocketEvents();
 
     const handleAddSongInPlaylist = async( playlistId : string, name: string )=>{
         try {
@@ -109,7 +115,11 @@ export const SongOptions = ({
                         disabled = { session.status === "unauthenticated" }
                         onClick={(e)=>{
                             e.stopPropagation();
-                            enQueue([song])
+                            enQueue([song]);
+                            enQueue([song]);
+                            if (connected) {
+                                socket.emit(ENQUEUE,{roomId, songs:[song]});
+                            }
                         }}
                         className="px-3 hover:bg-neutral-700 focus:bg-neutral-700 py-2 rounded-none md:cursor-pointer"
                     >
@@ -121,6 +131,9 @@ export const SongOptions = ({
                         onClick={(e)=>{
                             e.stopPropagation();
                             playNext(song);
+                            if (connected) {
+                                socket.emit(PLAYNEXT, {roomId, song});
+                            }
                         }}
                         className="px-3 hover:bg-neutral-700 focus:bg-neutral-700 py-2 rounded-none md:cursor-pointer"
                     >

@@ -6,6 +6,9 @@ import { useRouter } from "next/navigation";
 import { SmallDevicesSongOptions } from "./small-devices-song-options";
 import { SongOptions } from "./song-options";
 import { useQueue } from "@/hooks/use-queue";
+import { useSocket } from "@/hooks/use-socket";
+import { useSocketEvents } from "@/hooks/use-socket-events";
+import { PRIORITY_ENQUEUE } from "@/lib/events";
 
 interface SongCardProps {
     song : Song & { album : Album , artists : Artist[] }
@@ -16,12 +19,19 @@ export const SongCard = ({
 } : SongCardProps ) => {
     
     const router = useRouter();
-    const { priorityEnqueue, current } = useQueue();
+    const { priorityEnqueue } = useQueue();
+    const socket = useSocket();
+    const { connected, roomId } = useSocketEvents();
 
     return (
         <div
             className="w-full bg-neutral-900 hover:bg-neutral-800/90 transition-all rounded-sm group p-2 md:cursor-pointer"
-            onClick={()=>priorityEnqueue([song])}
+            onClick={()=>{
+                priorityEnqueue([song]);
+                if ( connected ) {
+                    socket.emit(PRIORITY_ENQUEUE, { roomId, songs:[song] });
+                }
+            }}
         >
             <div className="flex items-center gap-x-4">
                 <div className="h-12 w-12 shrink-0 overflow-hidden relative">

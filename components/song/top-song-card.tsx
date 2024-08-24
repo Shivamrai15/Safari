@@ -8,6 +8,9 @@ import { useRouter } from "next/navigation";
 import { usePlayer } from "@/hooks/use-player";
 import { Audio } from "react-loader-spinner";
 import { cn } from "@/lib/utils";
+import { useSocket } from "@/hooks/use-socket";
+import { useSocketEvents } from "@/hooks/use-socket-events";
+import { PRIORITY_ENQUEUE } from "@/lib/events";
 
 interface TopSongCardProps {
     song : ( Song & { album : Album } );
@@ -23,6 +26,8 @@ export const TopSongCard = ({
     const session = useSession();
     const { priorityEnqueue, current } = useQueue();
     const { isPlaying } = usePlayer();
+    const socket = useSocket();
+    const { connected, roomId } = useSocketEvents();
 
     return (
         <div className="h-40 md:h-44 flex items-center group">
@@ -36,7 +41,10 @@ export const TopSongCard = ({
                         router.push("/login");
     
                     } else {
-                        priorityEnqueue([song])
+                        priorityEnqueue([song]);
+                        if ( connected ) {
+                            socket.emit(PRIORITY_ENQUEUE, { roomId, songs:[song] });
+                        }
                     }
                 }}
             >

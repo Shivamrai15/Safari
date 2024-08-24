@@ -7,6 +7,7 @@ import { Toaster } from "sonner";
 import { auth } from "@/auth";
 import { SessionProvider } from "next-auth/react";
 import { ModalProvider } from "@/providers/modal-provider";
+import { SocketProvider } from "@/providers/socket-provider";
 
 const inter = Figtree({subsets : ["latin"] });
 
@@ -66,8 +67,9 @@ export default async function RootLayout({
                         disableTransitionOnChange
                     >
                         <QueryProvider>
-                            <Toaster position="bottom-center" />
+                            <Toaster position="bottom-right" />
                             <ModalProvider/>
+                            <SocketProvider/>
                             {children}
                         </QueryProvider>
                     </ThemeProvider>

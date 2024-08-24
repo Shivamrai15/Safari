@@ -22,6 +22,9 @@ import { Audio } from "react-loader-spinner";
 import { usePlayer } from "@/hooks/use-player";
 import { LikeButton } from "../utils/like-button";
 import { useAccount } from "@/hooks/use-account";
+import { useSocketEvents } from "@/hooks/use-socket-events";
+import { useSocket } from "@/hooks/use-socket";
+import { REMOVE, REPLACE, SHIFT_TOP } from "@/lib/events";
 
 export const Queue = () => {
 
@@ -33,6 +36,8 @@ export const Queue = () => {
             shiftToTopOfQueue,
     } = useQueue();
 
+    const socket = useSocket();
+    const { connected, roomId } = useSocketEvents();
     const { data } : { 
         data : { 
             name: string | null,
@@ -60,6 +65,7 @@ export const Queue = () => {
             return;
         }
         replace(draggableId, source.index, destination.index);
+        socket.emit(REPLACE, { roomId, id:draggableId , source:source.index, destination:destination.index });
 
     }
 
@@ -95,7 +101,13 @@ export const Queue = () => {
                                                     {...provided.dragHandleProps}
                                                     ref={provided.innerRef}
                                                     role="button"
-                                                    onClick={()=>shiftToTopOfQueue(song.id)}
+                                                    onClick={()=>{
+                                                            shiftToTopOfQueue(song.id);
+                                                            if ( connected ) {
+                                                                socket.emit(SHIFT_TOP, { roomId, id: song.id });
+                                                            }
+                                                        }
+                                                    }
                                                     className={cn(
                                                         "flex z-[9999] items-center space-x-4 bg-neutral-800 hover:bg-neutral-900 focus:bg-neutral-900 px-4 py-2 transition-all cursor-default md:cursor-pointer select-none group/song",
                                                         index === 0 && "bg-neutral-900/80",
@@ -154,6 +166,9 @@ export const Queue = () => {
                                                                 onClick={(e)=>{
                                                                     e.stopPropagation();
                                                                     remove(song.id);
+                                                                    if ( connected ) {
+                                                                        socket.emit(REMOVE, {roomId, id:song.id});
+                                                                    }
                                                                 }}
                                                             />
                                                         </div>

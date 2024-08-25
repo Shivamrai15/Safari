@@ -20,7 +20,7 @@ interface TopSearchesResponse {
 export const getTopSearches =  async( query: string ) => {
     try {
 
-        const response = await axios.get(`http://localhost:8080/api/v2/search?query=${query}`);
+        const response = await axios.get(`https://api.safari.shivamrai.online/api/v2/search?query=${query}`);
         if ( !response.data ) {
             return null;
         }
@@ -38,7 +38,7 @@ export const getTopSearches =  async( query: string ) => {
 export const getAlbumSearches = async( query: string ) => {
     try {
 
-        const response = await axios.get(`http://localhost:8080/api/v2/search/album?query=${query}`);
+        const response = await axios.get(`https://api.safari.shivamrai.online/api/v2/search/album?query=${query}`);
         if ( !response.data ) {
             return null;
         }
@@ -55,7 +55,7 @@ export const getAlbumSearches = async( query: string ) => {
 export const getSongSearches = async( query: string ) => {
     try {
         
-        const response = await axios.get(`http://localhost:8080/api/v2/search/song?query=${query}`);
+        const response = await axios.get(`https://api.safari.shivamrai.online/api/v2/search/song?query=${query}`);
         if ( !response.data ) {
             return null;
         }
@@ -72,7 +72,7 @@ export const getSongSearches = async( query: string ) => {
 export const getArtistSearches = async( query: string ) => {
     try {
 
-        const response = await axios.get(`http://localhost:8080/api/v2/search/artist?query=${query}`);
+        const response = await axios.get(`https://api.safari.shivamrai.online/api/v2/search/artist?query=${query}`);
         if ( !response.data ) {
             return null;
         }

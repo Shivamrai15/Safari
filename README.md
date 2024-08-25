@@ -22,7 +22,11 @@ For our music streaming app, we used Next.js and React.js with TailwindCSS for t
 * **Queue Management:** Subscribed users can manage and organize their playback queue.
 * **History Management:** User can manage their listening history.
 
+## Listen with friends
+I implemented a **Listen with Friends** feature that lets multiple subscribed users listen to music together in real time. To make this possible, I used Socket.io and created a custom backend hosted on an **AWS EC2** instance. Users can manage the queue, play, pause, and change songs in real time. ( For more details, visit the repository https://github.com/Shivamrai15/public-apis-and-socket-server-for-safari )
+
 
 ## Queue Working
 
 ![Untitled-2024-04-09-1926](https://github.com/Shivamrai15/Safari/assets/111892135/924720fe-69c0-4faf-8279-b9dea3aa34ba)
+

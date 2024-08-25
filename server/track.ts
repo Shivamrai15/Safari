@@ -9,25 +9,22 @@ export const getTrackById = async( id: string ) => {
             where : {
                 id
             },
-            select : {
-                id : true,
-                image : true,
-                album : true,
-                albumId : true,
-                artistIds : true,
+            include : {
+                _count : {
+                    select : {
+                        view : true
+                    }
+                },
+                album : {
+                    include : {
+                        label : true
+                    }
+                },
                 artists : {
                     select : {
                         id : true,
                         name : true,
-                        image : true,
-                    }
-                },
-                duration : true,
-                name : true,
-                url : true,
-                _count : {
-                    select : {
-                        view : true
+                        image : true
                     }
                 }
             }

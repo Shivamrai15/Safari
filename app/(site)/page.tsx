@@ -8,7 +8,7 @@ import { Profile } from "@/components/utils/profile";
 
 const HomePage = () => {
     return (
-        <div className="space-y-12 md:space-y-16 mb-10 md:pr-28 relative">
+        <div className="space-y-12 md:space-y-16 mb-16 md:mb-10 md:pr-28 relative">
             <Header/>
             <div className="px-4 md:px-10 w-full mt-20 space-y-10 md:space-y-16">
                 <Profile/>

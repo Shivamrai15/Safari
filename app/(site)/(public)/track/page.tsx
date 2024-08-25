@@ -5,6 +5,7 @@ import { Header } from "@/components/track/header";
 import { getTrackById } from "@/server/track";
 import { SongsList } from "@/components/song/songs-list";
 import { Error } from "@/components/utils/error";
+import { Copyright } from "@/components/album/copyright";
 
 interface SongLayoutProps {
     searchParams : {
@@ -63,6 +64,7 @@ const SongPage = async({
             <div className="md:pr-28">
                 <SongsList className="px-4 md:px-20 gap-y-8" songs = { [song] } />
             </div>
+            <Copyright label={song.album.label} date={song.album.release} />
         </main>
     )
 }

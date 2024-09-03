@@ -1,13 +1,11 @@
 "use client";
 
 import { IoDiamond } from "react-icons/io5";
-import { PiNewspaperClippingFill } from "react-icons/pi";
 import { SectionItem } from "./section-item";
 
 export const PaymentSection = () => {
 
     const routes = [
-        { title: "Order History", Icon: PiNewspaperClippingFill, route: "/account/order-history" },
         { title : "Manage your subscriptions", Icon : IoDiamond, route : "account::manage"},
     ]
 

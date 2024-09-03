@@ -52,7 +52,7 @@ export const Header = ({
                             <p className="hidden md:block font-semibold text-sm select-none">
                                 { songs === 1 ? "Single" : "Playlist" }
                             </p>
-                            <h1 className="text-white text-4xl sm:text-5xl lg:text-8xl font-extrabold line-clamp-1 md:py-2 overflow-hidden select-none">
+                            <h1 className="text-white text-4xl sm:text-5xl lg:text-8xl font-extrabold line-clamp-1 py-1 overflow-hidden select-none">
                                 {name}
                             </h1>
                             <div className="font-semibold text-sm flex items-center justify-center md:justify-start">

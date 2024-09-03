@@ -25,11 +25,7 @@ export const ArtistCarousel = ({
     const  { data, isLoading, error } : { data : { id: string, name: string, image: string }[], isLoading: boolean, error: any } = useSWRQuery(href);
 
     if ( error ) {
-        return (
-            <div className="w-full flex items-center justify-center text-center">
-                Something went wrong
-            </div>
-        )
+        return null;
     }
 
     return (

@@ -4,11 +4,11 @@ import * as z from "zod";
 import { db } from "@/lib/db";
 import bcrypt from "bcryptjs";
 import { LoginSchema } from "@/schemas/login.schema";
-import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { signIn } from "@/auth";
 import { AuthError } from "next-auth";
 import { generateVerificationToken } from "@/lib/tokens";
 import { sendVerificationEmail } from "@/lib/mail";
+import { rateLimit } from "@/lib/ratelimit";
 
 export const login = async ( data : z.infer<typeof LoginSchema> ) => {
     try {
@@ -21,6 +21,13 @@ export const login = async ( data : z.infer<typeof LoginSchema> ) => {
         }
 
         const { email, password } = validatedData.data;
+
+        const { success } = await rateLimit.limit(email);
+        if (!success) {
+            return {
+                error : "Too many requests"
+            }
+        }
 
         const user = await db.user.findUnique({
             where : {

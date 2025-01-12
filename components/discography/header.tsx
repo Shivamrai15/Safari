@@ -18,7 +18,7 @@ export const Header = ({
     return (
         <motion.header
             style={{boxShadow}}
-            className="py-10 px-4 md:px-20 md:pr-32 sticky top-0 bg-[#121212] z-10"
+            className="py-10 px-4 md:px-20 md:pr-32 sticky top-0 bg-gradient-to-b from-[#121212] via-[#121212] z-10"
 
         >
             <div className="flex items-center justify-between">

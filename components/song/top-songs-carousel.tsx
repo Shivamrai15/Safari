@@ -19,7 +19,7 @@ import { AlbumCardSkeleton } from "../album/album-card-skeleton";
 
 export const TopSongsCarousel = () => {
     
-    const { data, isLoading }:{ data : { items : ( Song & { album : Album } )[], nextCursor: string|null}, isLoading : boolean } = useSWRQuery(`/api/v2/song/most-played`);
+    const { data, isLoading }:{ data : { items : ( Song & { album : Album } )[], nextCursor: string|null}, isLoading : boolean } = useSWRQuery(`/api/v1/song/trending`);
     
     return (
         <div className="space-y-6 md:space-y-10 w-full">

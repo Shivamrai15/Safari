@@ -20,7 +20,7 @@ export const Lists = ({
 } : AlbumsProps ) => {
 
 
-    const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } = useQuery({ url : `/api/v2/artist/discography`, paramKey : "id" , paramValue : artistId, queryKey:artistId });
+    const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } = useQuery({ url : `/api/v1/artist/discography`, paramKey : "id" , paramValue : artistId, queryKey:artistId });
     const { ref, inView } = useInView();
 
     useEffect(()=>{
@@ -53,7 +53,7 @@ export const Lists = ({
                 {
                     isFetchingNextPage && (
                         <div className="w-full flex justify-center">
-                            <SyncLoader color="#252525" />
+                            <SyncLoader color="#393939" />
                         </div>
                     )
                 }

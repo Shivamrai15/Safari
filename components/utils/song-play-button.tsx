@@ -48,7 +48,7 @@ export const SongPlayButton = ({
                 }
             } else {
                 try {
-                    const songs : ( Song & { album : Album } )[] = (await axios.get(`/api/v2/album?id=${id}`)).data;
+                    const songs : ( Song & { album : Album } )[] = (await axios.get(`/api/v1/album?id=${id}`)).data;
                     priorityEnqueue(songs);
                     if ( connected ) {
                         socket.emit(PRIORITY_ENQUEUE, { roomId, songs });

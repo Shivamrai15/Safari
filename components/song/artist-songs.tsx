@@ -17,7 +17,7 @@ export const ArtistSongs = ({
     id
 } : ArtistSongsProps ) => {
 
-    const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } = useQuery({ url : `/api/v2/artist/songs`, paramKey : "id" , paramValue : id, queryKey:id })
+    const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } = useQuery({ url : `/api/v1/artist/songs`, paramKey : "id" , paramValue : id, queryKey:id })
 
     const { ref, inView } = useInView();
 

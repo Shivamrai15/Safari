@@ -1,6 +1,5 @@
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["fullTextSearch"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -178,11 +177,11 @@ model Genre {
 }
 
 model Remix {
-  id      String      @id @default(auto()) @map("_id") @db.ObjectId
-  name    String
-  image   String
-  color   String
-  songs   RemixSong[]
+  id    String      @id @default(auto()) @map("_id") @db.ObjectId
+  name  String
+  image String
+  color String
+  songs RemixSong[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

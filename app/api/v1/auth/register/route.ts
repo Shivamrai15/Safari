@@ -4,6 +4,7 @@ import { RegistrationSchema } from "@/schemas/registration.schema";
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { sendVerificationEmail } from "@/lib/mail";
+import { rateLimit } from "@/lib/ratelimit";
 
 export async function POST ( request : Request ) {
     try {
@@ -16,6 +17,12 @@ export async function POST ( request : Request ) {
         }
 
         const  { email, password, name } = data.data;
+
+        const { success } = await rateLimit.limit(email);
+        if (!success) {
+            return new NextResponse("Too many requests", {status : 403});
+        }
+
         const existingUser = await db.user.findUnique({
             where : {
                 email

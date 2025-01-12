@@ -87,7 +87,7 @@ export const AlbumCarousel = ({
                             </CarouselItem>
                         </>
                         ) : data.map((album) => (
-                            <CarouselItem key={album.id} className="basis-auto" >
+                            <CarouselItem key={album.id} className="basis-auto py-2" >
                                 <AlbumCard album={album} />
                             </CarouselItem>
                     )) }

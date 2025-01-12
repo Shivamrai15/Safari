@@ -41,7 +41,6 @@ export const LoginForm = () => {
             
             setLoading(true);
             const response = await login(values);
-            console.log("Step 1")
             if (response.error) {
                 toast.error(response.error);
             }
@@ -108,10 +107,10 @@ export const LoginForm = () => {
                     </div>
                     <Button
                         type="submit"
-                        className="w-full h-14 rounded-full bg-red-600/90 hover:bg-red-600/80 text-white font-semibold text-base"
+                        className="w-full h-12 rounded-full bg-red-600/90 hover:bg-red-600/80 text-white font-semibold text-base"
                         disabled = {loading}
                     >
-                        Log In
+                        Continue
                     </Button>
                     <div>
                         <Link href="/sign-up" className="text-zinc-200 text-sm select-none" aria-disabled = {loading} >

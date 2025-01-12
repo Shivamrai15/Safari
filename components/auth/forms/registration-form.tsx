@@ -118,7 +118,7 @@ export const RegistrationForm = () => {
                     </div>
                     <Button
                         type="submit"
-                        className="w-full h-14 rounded-full bg-red-600/90 hover:bg-red-600/80 text-white font-semibold text-base"
+                        className="w-full h-12 rounded-full bg-red-600/90 hover:bg-red-600/80 text-white font-semibold text-base"
                         disabled = {loading}
                     >
                         Create Account

@@ -38,10 +38,10 @@ import { AdInfo } from "./ad-info";
 import { useSocket } from "@/hooks/use-socket";
 import { useSocketEvents } from "@/hooks/use-socket-events";
 import { DEQUEUE, PAUSE, PLAY, POP, SEEK } from "@/lib/events";
+import { usePlay } from "@/hooks/use-play";
 
 export const Player = () => {
 
-    const [ play, setPlay ] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
     const audioRef = useRef<HTMLAudioElement|null>(null);
     const [ metadataLoading, setMetadataLoading ] = useState(true);
@@ -52,6 +52,7 @@ export const Player = () => {
     const { repeat, setRepeat, mute, setMute, volume, setVolume } = useControls();
     const { setAlbumId, setSongId , setIsPlaying } = usePlayer();
     const { prevAdTimeStamp, setPrevAdTimeStamp } = useAds();
+    const { play, setPlay } = usePlay();
 
     const socket = useSocket();
     const { connected, roomId } = useSocketEvents();

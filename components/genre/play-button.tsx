@@ -46,7 +46,7 @@ export const PlayButton = ({
     const handlePlayGenre = async () => {
         try {
             setLoading(true);
-            const response = await axios.get(`/api/v2/genre/tracks?id=${genreId}`);
+            const response = await axios.get(`/api/v1/genre/tracks?id=${genreId}`);
             const response_data : (Song & { album : Album })[] = response.data;
             setData(response_data);
             setUuid(genreId);

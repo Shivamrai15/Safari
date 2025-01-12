@@ -28,6 +28,10 @@ export const ArtistCarousel = ({
         return null;
     }
 
+    if (!isLoading && data.length === 0) {
+        return null;
+    }
+
     return (
         <div className="space-y-6 md:space-y-10 w-full">
             <div className="flex items-center justify-between">

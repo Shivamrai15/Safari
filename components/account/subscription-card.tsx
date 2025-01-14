@@ -56,7 +56,7 @@ export const SubscriptionCard = ({
     }
 
     return (
-        <div className="w-full rounded-2xl bg-neutral-800 overflow-hidden py-10 space-y-12 hover:-translate-y-3 transition-all hover:shadow-[0_10px_30px_rgba(0,0,0,0.3)] duration-300" >
+        <div className="w-full rounded-2xl bg-gradient-to-b from-neutral-700/10 to-neutral-800 overflow-hidden py-10 space-y-12 hover:-translate-y-3 transition-all hover:shadow-[0_10px_30px_rgba(0,0,0,0.3)] duration-300" >
             <div className="w-full flex flex-col space-y-4">
                 <div className="relative px-6 space-y-6">
                     <div className="flex items-center justify-center pt-4">

@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 
 interface FromWrapperProps {
@@ -38,7 +39,7 @@ export const FormWrapper = ({
     }
 
     return (
-        <div className="max-w-sm w-full p-6 space-y-10 my-10">
+        <div className="max-w-sm w-full p-6 space-y-10 mt-10 mb-4">
             <h1 className="text-3xl md:text-4xl font-extrabold select-none">
                 {label} <br /> Safari Account
             </h1>
@@ -74,6 +75,23 @@ export const FormWrapper = ({
                     </>
                 )
             }
+            <footer className="h-40 flex w-full items-end">
+                <div className="flex items-center justify-center w-full gap-x-3">
+                    <Link
+                        href="/policies/terms-of-use"
+                        className="text-sm select-none text-zinc-200 hover:text-white transition-all"
+                    >
+                        Terms of Use
+                    </Link>
+                    <div className="h-4 w-0.5 bg-zinc-200 rounded-full" />
+                    <Link
+                        href="/policies/privacy-policy"
+                        className="text-sm select-none text-zinc-200 hover:text-white transition-all"
+                    >   
+                        Privacy Policy
+                    </Link>
+                </div>
+            </footer>
         </div>
     )
 }

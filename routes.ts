@@ -8,8 +8,6 @@ export const protectedRoutes = [
     "/playlists",
     "/account",
     "/account/history",
-    "/account/subscription",
-    "/account/subscription#plans",
     "/account/profile",
     "/account/following",
     "/track",

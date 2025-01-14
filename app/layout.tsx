@@ -8,6 +8,7 @@ import { auth } from "@/auth";
 import { SessionProvider } from "next-auth/react";
 import { ModalProvider } from "@/providers/modal-provider";
 import { SocketProvider } from "@/providers/socket-provider";
+import { ProgressProvider } from "@/providers/progress.provider";
 
 const inter = Figtree({subsets : ["latin"] });
 
@@ -69,6 +70,7 @@ export default async function RootLayout({
                         <QueryProvider>
                             <Toaster position="bottom-right" />
                             <ModalProvider/>
+                            <ProgressProvider/>
                             <SocketProvider/>
                             {children}
                         </QueryProvider>

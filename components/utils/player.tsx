@@ -39,6 +39,8 @@ import { useSocket } from "@/hooks/use-socket";
 import { useSocketEvents } from "@/hooks/use-socket-events";
 import { DEQUEUE, PAUSE, PLAY, POP, SEEK } from "@/lib/events";
 import { usePlay } from "@/hooks/use-play";
+import Hls from "hls.js";
+
 
 export const Player = () => {
 
@@ -144,7 +146,21 @@ export const Player = () => {
                         setMetadataLoading(true);
                         setAlbumId( current.albumId );
                         setSongId( current.id );
-                        audioRef.current.src = current.url; 
+                        
+                        if (Hls.isSupported()) {
+                            const hls = new Hls();
+                            hls.loadSource(current.url);
+                            hls.attachMedia(audioRef.current);
+                            hls.on(Hls.Events.MANIFEST_PARSED, ()=>{
+                                audioRef.current?.play();
+                            });
+                        } else if (audioRef.current.canPlayType('application/vnd.apple.mpegurl')) {
+                            audioRef.current.src = current.url;
+                            audioRef.current.addEventListener('loadedmetadata', () => {
+                                audioRef.current?.play();
+                            });
+                        }
+
                         if ( !isLoading && !data.privateSession ) {
                             updateHistory();
                         }
@@ -161,7 +177,21 @@ export const Player = () => {
                         setMetadataLoading(true);
                         setAlbumId( current.albumId );
                         setSongId( current.id );
-                        audioRef.current.src = current.url; 
+                        
+                        if (Hls.isSupported()) {
+                            const hls = new Hls();
+                            hls.loadSource(current.url);
+                            hls.attachMedia(audioRef.current);
+                            hls.on(Hls.Events.MANIFEST_PARSED, ()=>{
+                                audioRef.current?.play();
+                            });
+                        } else if (audioRef.current.canPlayType('application/vnd.apple.mpegurl')) {
+                            audioRef.current.src = current.url;
+                            audioRef.current.addEventListener('loadedmetadata', () => {
+                                audioRef.current?.play();
+                            });
+                        }
+
                         if ( !isLoading && !data.privateSession ) {
                             updateHistory();
                         }

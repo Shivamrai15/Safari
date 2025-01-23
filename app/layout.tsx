@@ -70,7 +70,7 @@ export default async function RootLayout({
                         <QueryProvider>
                             <Toaster position="bottom-right" />
                             <ModalProvider/>
-                            <ProgressProvider/>
+                            {/* <ProgressProvider/> */}
                             <SocketProvider/>
                             {children}
                         </QueryProvider>

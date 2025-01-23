@@ -37,6 +37,7 @@
     "embla-carousel-react": "^8.0.1",
     "framer-motion": "^11.2.10",
     "fuse.js": "^7.0.0",
+    "hls.js": "^1.5.20",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.364.0",
     "nanoid": "^5.0.7",

@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
+import { qdrant } from "@/lib/qdrant";
 import { Album, Artist, Song, History } from "@prisma/client";
 import { NextResponse } from "next/server";
 
@@ -53,12 +54,7 @@ export async function GET ( req : Request ) {
         const { searchParams } = new URL(req.url); 
         const cursor = searchParams.get("cursor");
 
-        let songs : (Song & {
-            artists : {id:string, name:string}[],
-            album : Album
-        })[] = [] ;
-
-        let history : History[] = []
+        let history : (History & { song : Song & { album: Album, artists : { id: string, name: string, image: string }[] } })[] = []
 
         if ( cursor ) {
             history = await db.history.findMany({
@@ -68,37 +64,24 @@ export async function GET ( req : Request ) {
                 orderBy : {
                     createdAt : "desc"
                 },
+                include : {
+                    song : {
+                        include : {
+                            album : true,
+                            artists : {
+                                select : {
+                                    id : true,
+                                    name : true,
+                                    image : true
+                                }
+                            }
+                        }
+                    }
+                },
                 take : SONGS_BATCH,
                 skip : 1,
                 cursor : {
                     id : cursor
-                }
-            });
-
-            const historySongIds = history.map((item)=> item.songId);
-
-            songs = await db.song.findMany({
-                where : {
-                    id : {
-                        in : historySongIds
-                    }
-                },
-                include : {
-                    artists : {
-                        select : {
-                            id : true,
-                            name : true
-                        }
-                    },
-                    album : true
-                }
-            });
-
-            songs.sort((a, b)=>historySongIds.indexOf(a.id)-historySongIds.indexOf(b.id));
-            songs = songs.map((song)=>{
-                return {
-                    ...song,
-                    history : history.find((item)=>item.songId===song.id)?.createdAt
                 }
             });
 
@@ -111,36 +94,23 @@ export async function GET ( req : Request ) {
                 orderBy : {
                     createdAt : "desc"
                 },
+                include : {
+                    song : {
+                        include : {
+                            album : true,
+                            artists : {
+                                select : {
+                                    id : true,
+                                    name : true,
+                                    image : true
+                                }
+                            }
+                        }
+                    }
+                },
                 take : SONGS_BATCH,
             });
 
-            const historySongIds = history.map((item)=> item.songId);
-
-            songs = await db.song.findMany({
-                where : {
-                    id : {
-                        in : historySongIds
-                    }
-                },
-                include : {
-                    artists : {
-                        select : {
-                            id : true,
-                            name : true
-                        }
-                    },
-                    album : true
-                }
-            });
-
-            songs.sort((a, b)=>historySongIds.indexOf(a.id)-historySongIds.indexOf(b.id));
-            songs = songs.map((song)=>{
-                return {
-                    ...song,
-                    history : history.find((item)=>item.songId===song.id)?.createdAt
-                }
-            });
-            
         }
 
         let nextCursor = null;
@@ -150,7 +120,7 @@ export async function GET ( req : Request ) {
         }
 
         return NextResponse.json({
-            items : songs,
+            items : history,
             nextCursor
         });
 

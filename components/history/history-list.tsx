@@ -6,12 +6,16 @@ import { format } from "date-fns"
 
 import { useQuery } from "@/hooks/use-query";
 import { SyncLoader } from "react-spinners";
-import { Album, Artist, Song } from "@prisma/client";
+import { Album, Song, History } from "@prisma/client";
 import { SongItem } from "../song/song-item";
-import { HistoryHeader } from "./history-header";
 import { differnceBtwHistory, historyPartition } from "@/lib/utils";
+import { HistoryHeader } from "./history-header";
 
 export const revalidate = 0;
+
+type ItemType = History & {
+    song : Song & { album: Album, artists : { id: string, name: string, image: string }[]}; 
+}
 
 export const HistoryList = () => {
     
@@ -57,25 +61,21 @@ export const HistoryList = () => {
             {
                 data?.pages.map((group, i)=>(
                     <Fragment key={i} >
-                        { group.items.map((song : (Song & {
-                            artists : Artist[],
-                            album : Album,
-                            history : Date
-                        }), idx : number ) => (
+                        { group.items.map((history : ItemType, idx : number ) => (
                             <>
                                 {
-                                    idx===0 && i===0 && ((new Date(song.history).getDate() === new Date().getDate()) ? 
+                                    idx===0 && i===0 && ((new Date(history.createdAt).getDate() === new Date().getDate()) ? 
                                         (<HistoryHeader label="Today" />):
-                                        (<HistoryHeader label={differnceBtwHistory(new Date(), song.history)} />)
+                                        (<HistoryHeader label={differnceBtwHistory(new Date(), history.createdAt)} />)
                                     )
                                 }
-                                <div className="w-full flex items-center justify-start gap-x-6 md:gap-x-10" key={song.id} >
+                                <div className="w-full flex items-center justify-start gap-x-6 md:gap-x-10" key={history.song.id} >
                                     <div className="w-1 ml-[22px] h-28 bg-red-500" />
                                     <div className="w-full mt-4">
                                         <span className="text-white text-xs ml-4" >
-                                            { format(new Date(song.history), "hh:mm a")}
+                                            { format(new Date(history.createdAt), "hh:mm a")}
                                         </span>
-                                        <SongItem song={song} key={song.id} />
+                                        <SongItem song={history.song} key={history.song.id} />
                                     </div>
                                 </div>
                                 {

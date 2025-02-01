@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
+import { redisClient } from "@/lib/redis";
 import { NextResponse } from "next/server";
 
 export async function GET ( req : Request ) {
@@ -17,6 +18,15 @@ export async function GET ( req : Request ) {
             return new NextResponse("Artist id missing", { status:401 });
         }
 
+        const cacheKey = `/api/v1/artist:${id}`;
+        const cachedData = await redisClient.get(cacheKey);
+
+        if (cacheKey) {
+            if (cachedData) {
+                return NextResponse.json(cachedData, {status: 200});
+            }
+        }
+
         const songs = await db.song.findMany({
             where : {
                 artistIds : {
@@ -26,6 +36,7 @@ export async function GET ( req : Request ) {
             include : { album : true }
         });
 
+        await redisClient.set(cacheKey, songs);
         return NextResponse.json(songs);
 
     } catch (error) {

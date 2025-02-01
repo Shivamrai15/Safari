@@ -15,9 +15,9 @@ const SearchAlbumPage = async({
     if (!searchParams.query)
         return null;
 
-    const albums = await getAlbumSearches(searchParams.query);
+    const data = await getAlbumSearches(searchParams.query);
     
-    if (!albums){
+    if (!data || data.length===0){
         return (
             <div className="w-full h-full flex items-center justify-center pt-32">
                 <h4 className="font-semibold md:text-lg text-center text-zinc-300">No albums found for &quot;{searchParams.query}&quot;</h4>
@@ -28,10 +28,10 @@ const SearchAlbumPage = async({
     return (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-2 gap-y-4 md:gap-y-8 py-10">
             {
-                albums.map((album : Album)=>(
+                data.map(({id, payload})=>(
                     <AlbumCard
-                        album={album}
-                        key={album.id}
+                        album={payload as Album}
+                        key={id}
                         className="w-full h-full"
                     />
                 ))

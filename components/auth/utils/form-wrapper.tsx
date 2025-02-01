@@ -78,13 +78,6 @@ export const FormWrapper = ({
             <footer className="h-40 flex w-full items-end">
                 <div className="flex items-center justify-center w-full gap-x-3">
                     <Link
-                        href="/policies/terms-of-use"
-                        className="text-sm select-none text-zinc-200 hover:text-white transition-all"
-                    >
-                        Terms of Use
-                    </Link>
-                    <div className="h-4 w-0.5 bg-zinc-200 rounded-full" />
-                    <Link
                         href="/policies/privacy-policy"
                         className="text-sm select-none text-zinc-200 hover:text-white transition-all"
                     >   

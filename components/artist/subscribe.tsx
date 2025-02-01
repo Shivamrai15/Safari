@@ -10,16 +10,18 @@ import { useSession } from "next-auth/react";
 
 interface SubscribeProps {
     artistId : string;
-    followers : number;
+    followers ?: number;
+    className ?: string;
 }
 
 export const Subscribe = ({
     artistId,
-    followers
+    followers,
+    className
 } : SubscribeProps ) => {
 
     const session = useSession();
-    const [ subscribers, setSubscribers ] = useState(followers)
+    const [ subscribers, setSubscribers ] = useState(followers||0)
     const [loading, setLoading] = useState(false);
 
     const  { data, isLoading, mutate } = useSubscribers();
@@ -55,14 +57,23 @@ export const Subscribe = ({
         <Button
             variant="outline"
             className={cn(
-                "rounded-full hover:border-white font-semibold border-red-600 text-red-600 cursor-default md:cursor-pointer",
-                isFollowing && "text-zinc-100 border-zinc-100"
+                "rounded-full hover:border-white font-semibold border-zinc-200 text-zinc-200 cursor-default md:cursor-pointer gap-x-2",
+                isFollowing && "text-zinc-100 border-zinc-100",
+                className
             )}
             disabled = { session.status === "unauthenticated" || loading || isLoading }
-            onClick={handleSubscribe}
+            onClick={(e)=>{
+                e.stopPropagation();
+                handleSubscribe();
+            }}
+            type="button"
         >
-            <span>{ isFollowing ? "Unsubscribe" : "Subscribe" }</span>
-            <span className="pl-2">{ subscriber(subscribers) }</span>
+            <span className="block" >{ isFollowing ? "Unsubscribe" : "Subscribe" }</span>
+            {
+                followers && (
+                    <span className="pl-2">{ subscriber(subscribers) }</span>
+                )
+            }
         </Button>
     )
 }

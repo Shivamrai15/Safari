@@ -1,6 +1,7 @@
 "use client";
 
 import {
+    MutableRefObject,
     useEffect,
     useMemo,
     useRef,
@@ -40,6 +41,8 @@ import { useSocketEvents } from "@/hooks/use-socket-events";
 import { DEQUEUE, PAUSE, PLAY, POP, SEEK } from "@/lib/events";
 import { usePlay } from "@/hooks/use-play";
 import Hls from "hls.js";
+import { Ad, Album, Song } from "@prisma/client";
+import { getRandomAd } from "@/server/ad";
 
 
 export const Player = () => {
@@ -48,6 +51,7 @@ export const Player = () => {
     const audioRef = useRef<HTMLAudioElement|null>(null);
     const [ metadataLoading, setMetadataLoading ] = useState(true);
     const [isAdPlaying, setIsAdPlaying] = useState(false);
+    const [ad, setAd] = useState<Ad|null>(null);
 
     const { onOpen } = useSheet();
     const { current, deQueue, pop, shuffle } = useQueue();
@@ -137,30 +141,38 @@ export const Player = () => {
         }
     }
 
+
+    const hlsPlayer = ( song : Song & { album: Album }, audio: MutableRefObject<HTMLAudioElement|null>)=> {
+        if (!audio.current){
+            return ;
+        }
+
+        setMetadataLoading(true);
+        setAlbumId( song.albumId );
+        setSongId( song.id );
+                        
+        if (Hls.isSupported()) {
+            const hls = new Hls();
+            hls.loadSource(song.url);
+            hls.attachMedia(audio.current);
+            hls.on(Hls.Events.MANIFEST_PARSED, ()=>{
+                audio.current?.play();
+            });
+        } else if (audio.current.canPlayType('application/vnd.apple.mpegurl')) {
+            audio.current.src = song.url;
+            audio.current.addEventListener('loadedmetadata', () => {
+                audio.current?.play();
+            });
+        }
+    }
+
     useEffect(() => {
 
-        const updateData = () => {
+        const updateData = async() => {
             try {
                 if ( data?.isActive ) {
                     if (current && audioRef.current) {
-                        setMetadataLoading(true);
-                        setAlbumId( current.albumId );
-                        setSongId( current.id );
-                        
-                        if (Hls.isSupported()) {
-                            const hls = new Hls();
-                            hls.loadSource(current.url);
-                            hls.attachMedia(audioRef.current);
-                            hls.on(Hls.Events.MANIFEST_PARSED, ()=>{
-                                audioRef.current?.play();
-                            });
-                        } else if (audioRef.current.canPlayType('application/vnd.apple.mpegurl')) {
-                            audioRef.current.src = current.url;
-                            audioRef.current.addEventListener('loadedmetadata', () => {
-                                audioRef.current?.play();
-                            });
-                        }
-
+                        hlsPlayer(current, audioRef);
                         if ( !isLoading && !data.privateSession ) {
                             updateHistory();
                         }
@@ -174,24 +186,7 @@ export const Player = () => {
     
                 if ( prevAdTimeStamp && ( (Date.now() - prevAdTimeStamp)/60000 < 30 ) ) {
                     if (current && audioRef.current) {
-                        setMetadataLoading(true);
-                        setAlbumId( current.albumId );
-                        setSongId( current.id );
-                        
-                        if (Hls.isSupported()) {
-                            const hls = new Hls();
-                            hls.loadSource(current.url);
-                            hls.attachMedia(audioRef.current);
-                            hls.on(Hls.Events.MANIFEST_PARSED, ()=>{
-                                audioRef.current?.play();
-                            });
-                        } else if (audioRef.current.canPlayType('application/vnd.apple.mpegurl')) {
-                            audioRef.current.src = current.url;
-                            audioRef.current.addEventListener('loadedmetadata', () => {
-                                audioRef.current?.play();
-                            });
-                        }
-
+                        hlsPlayer(current, audioRef);
                         if ( !isLoading && !data.privateSession ) {
                             updateHistory();
                         }
@@ -201,7 +196,21 @@ export const Player = () => {
     
                 if ( audioRef.current ) {
                     setIsAdPlaying(true);
-                    audioRef.current.src = "https://res.cloudinary.com/dkaj1swfy/video/upload/Shivam_Rai_s_Video_-_Jun_11_2024_1_mndvk3.mp3"
+                    const randomAd = await getRandomAd();
+                    if (Hls.isSupported() && randomAd) {
+                        const hls = new Hls();
+                        hls.loadSource(randomAd.url);
+                        hls.attachMedia(audioRef.current);
+                        hls.on(Hls.Events.MANIFEST_PARSED, ()=>{
+                            audioRef.current?.play();
+                        });
+                    } else if (audioRef.current.canPlayType('application/vnd.apple.mpegurl')) {
+                        audioRef.current.src = randomAd?.url||"";
+                        audioRef.current.addEventListener('loadedmetadata', () => {
+                            audioRef.current?.play();
+                        });
+                    }
+                    setAd(randomAd);
                     setPrevAdTimeStamp();
                     setSongId("");
                 }
@@ -210,11 +219,9 @@ export const Player = () => {
             }
 
         }
-
-
         updateData();
-        
     }, [current, isAdPlaying]);
+
 
     useEffect(()=>{
         if (audioRef.current) {
@@ -314,7 +321,7 @@ export const Player = () => {
                         <div className="w-full h-11">
                             {
                                 isAdPlaying ? (
-                                    <AdInfo />
+                                    <AdInfo ad={ad} />
                                 ) : (
                                     <PlayerSongInfo song={current} />  
                                 )
@@ -402,18 +409,18 @@ export const Player = () => {
                 <div
                     onClick={()=>onOpen()}
                     className="w-full h-full bg-neutral-900 rounded-lg overflow-hidden relative"
-                    style={{background : isAdPlaying? "#47102d":`${current?.album.color}`}}
+                    style={{background : isAdPlaying? `${ad?.image}` :`${current?.album.color}`}}
                 >
                     <Slider
                         value={[currentTime]}
                         step={1}
-                        max={isAdPlaying ? 16 : (current?.duration||1)}
+                        max={isAdPlaying ? (ad?.duration||1) : (current?.duration||1)}
                     />
                     <div className="flex items-center h-full px-4">
                         <div className="w-[calc(100%-3.5rem)] h-8">
                             {
                                 isAdPlaying ? (
-                                    <AdInfo />
+                                    <AdInfo ad={ad} />
                                 ) : (
                                     <PlayerSongInfo song={current} />
                                 )
@@ -470,6 +477,7 @@ export const Player = () => {
                 play = { play }
                 handleOnEnd = { handleOnEnd }
                 isAdPlaying = { isAdPlaying }
+                ad = {ad}
             />
             <PlayerShortCutProvider
                 onClick = {togglePlay}

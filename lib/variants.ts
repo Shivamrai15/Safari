@@ -10,7 +10,7 @@ export const thumbnailVariants = {
             duration: 0.6,
             ease: "easeInOut",
             delay: 0.3
-        }
+        },
     }
 };
 

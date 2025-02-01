@@ -78,16 +78,17 @@ model Album {
 }
 
 model Song {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
   name      String
   image     String
   url       String
   duration  Int
-  albumId   String   @db.ObjectId
-  album     Album    @relation(fields: [albumId], references: [id])
-  artistIds String[] @db.ObjectId
-  artists   Artist[] @relation(fields: [artistIds], references: [id])
+  albumId   String    @db.ObjectId
+  album     Album     @relation(fields: [albumId], references: [id])
+  artistIds String[]  @db.ObjectId
+  artists   Artist[]  @relation(fields: [artistIds], references: [id])
   view      View[]
+  history   History[]
 
   @@index([albumId, name])
 }
@@ -150,6 +151,7 @@ model History {
   songId    String   @db.ObjectId
   userId    String   @db.ObjectId
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  song      Song     @relation(fields: [songId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -173,6 +175,7 @@ model Genre {
   name  String
   image String
   color String
+  video String?
   songs GenreSong[]
 }
 
@@ -283,4 +286,15 @@ model Label {
   image String?
   color String
   album Album[]
+}
+
+model Ad {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  color     String
+  image     String
+  url       String
+  duration  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

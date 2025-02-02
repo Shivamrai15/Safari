@@ -59,6 +59,7 @@ export const LikeButton = ({
                 toggleLikeButton();
             }}
             disabled = {disabled}
+            className="focus:outline-none"
         >
             {
                 isLiked ? (

@@ -142,7 +142,7 @@ export const SmallDevicesSongOptions = ({
                     <div className="flex flex-col space-y-5 p-4 px-8">
                         <DrawerClose>
                             <button 
-                                className="flex items-center"
+                                className="flex items-center w-full"
                                 disabled = { session.status === "unauthenticated" }
                                 onClick={()=>{
                                     enQueue([song]);
@@ -157,7 +157,7 @@ export const SmallDevicesSongOptions = ({
                         </DrawerClose>
                         <DrawerClose>
                             <button 
-                                className="flex items-center"
+                                className="flex items-center w-full"
                                 disabled = { session.status === "unauthenticated" || queue.length === 0 }
                                 onClick={()=>{
                                     playNext(song);
@@ -181,6 +181,7 @@ export const SmallDevicesSongOptions = ({
                                         <button
                                             disabled={ session.status === "unauthenticated" }
                                             onClick={()=>handleOpenPlaylistModal()}
+                                            className="w-full"
                                         >
                                             <span className="font-medium text-base ml-8" >New playlist</span>
                                         </button>
@@ -194,6 +195,7 @@ export const SmallDevicesSongOptions = ({
                                                     e.stopPropagation();
                                                     handleAddSongInPlaylist(playlist.id, playlist.name)
                                                 }}
+                                                className="w-full"
                                             >
                                                 <div className="line-clamp-1 font-medium text-base ml-8">
                                                     {playlist.name}
@@ -205,24 +207,24 @@ export const SmallDevicesSongOptions = ({
                             </AccordionItem>
                         </Accordion>
                         <DrawerClose>
-                            <button className="flex items-center" disabled = { session.status === "unauthenticated" } >
+                            <button className="flex items-center w-full" disabled = { session.status === "unauthenticated" } >
                                 <LikeButton id={song.id} className="h-5 w-5" label={true} />
                             </button>
                         </DrawerClose>
                         <DrawerClose>
-                            <button className="flex items-center" onClick={()=>share(`/track?id=${song.id}`, "song")} >
+                            <button className="flex items-center w-full" onClick={()=>share(`/track?id=${song.id}`, "song")} >
                                 <PiShareFat className="mr-3 h-5 w-5" />
                                 <span className="font-medium" >Share</span>
                             </button>
                         </DrawerClose>
                         <DrawerClose>
-                            <button className="flex items-center" onClick={()=>router.push(`/track?id=${song.id}`)} >
+                            <button className="flex items-center w-full" onClick={()=>router.push(`/track?id=${song.id}`)} >
                                 <Radio className="mr-3 h-5 w-5" />
                                 <span className="font-medium" >Go to song radio</span>
                             </button>
                         </DrawerClose>
                         <DrawerClose>
-                            <button className="flex items-center" onClick={()=>router.push(`/album/${song.albumId}`)} >
+                            <button className="flex items-center w-full" onClick={()=>router.push(`/album/${song.albumId}`)} >
                                 <Disc3 className="mr-3 h-5 w-5" />
                                 <span className="font-medium" >Go to Album</span>
                             </button>

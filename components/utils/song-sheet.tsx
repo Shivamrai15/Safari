@@ -189,7 +189,7 @@ export const SongSheet = ({
                                                 )}
                                                 disabled = { active===false }
                                             />
-                                            <span className="w-10 text-sm block font-semibold text-center select-none" >{songLength(isAdPlaying ? 16 : (current?.duration||1))}</span>
+                                            <span className="w-10 text-sm block font-semibold text-center select-none" >{songLength(isAdPlaying ?  (ad?.duration||1) : (current?.duration||1))}</span>
                                         </div>
                                     </BlurFade>
                                 </div>
@@ -200,6 +200,7 @@ export const SongSheet = ({
                                             <button
                                                 onClick={pop}
                                                 disabled = { active===false }
+                                                className="focus:outline-none"
                                             >
                                                 <FaBackwardStep
                                                     className={cn(
@@ -215,6 +216,7 @@ export const SongSheet = ({
                                             <button
                                                 onClick={handleOnEnd}
                                                 disabled = {isAdPlaying}
+                                                className="focus:outline-none"
                                             >
                                                 <FaForwardStep
                                                     className="size-8 lg:size-10 text-zinc-300 hover:text-white cursor-pointer"
@@ -313,7 +315,7 @@ export const SongSheet = ({
                                     />
                                     <div className="flex items-center justify-between">
                                         <span className="text-sm text-zinc-200 select-none ">{songLength(Math.floor(currentTime))}</span>
-                                        <span className="text-sm text-zinc-200 select-none">{songLength(isAdPlaying ? 16 : (current?.duration||1))}</span>
+                                        <span className="text-sm text-zinc-200 select-none">{songLength(isAdPlaying ? (ad?.duration||1) : (current?.duration||1))}</span>
                                     </div>
                                 </div>
                                 <div className="grid grid-cols-5 w-full items-center justify-items-center">
@@ -324,6 +326,7 @@ export const SongSheet = ({
                                         <button 
                                             disabled ={active===false}
                                             onClick={pop}
+                                            className="focus:outline-none"
                                         >
                                             <FaBackwardStep
                                                 className="h-8 w-8 hover:text-white"
@@ -338,6 +341,7 @@ export const SongSheet = ({
                                         <button
                                             onClick={handleOnEnd}
                                             disabled = { isAdPlaying }
+                                            className="focus:outline-none"
                                         >
                                             <FaForwardStep
                                                 className="h-8 w-8 hover:text-white"
@@ -413,9 +417,9 @@ export const SongSheet = ({
                                     <div className="md:hidden h-full absolute top-0 w-full z-10 bg-gradient-to-b from-neutral-800 via-transparent to-neutral-800"/>
                                     {
                                         active === false && (
-                                            <div className="w-full h-full absolute flex items-center justify-center z-20">
+                                            <div className="w-full h-full absolute flex items-center justify-center z-20 px-6">
                                                 <div 
-                                                    className="max-w-xl w-full rounded-xl bg-neutral-800 shadow-2xl overflow-hidden"
+                                                    className="max-w-xl w-full rounded-xl bg-neutral-900 shadow-2xl overflow-hidden"
                                                 >
                                                     <div 
                                                         className="w-full h-full p-6 flex flex-col items-center py-10 space-y-10"
@@ -442,7 +446,7 @@ export const SongSheet = ({
                             )
                         }
                     </div>
-                    <div className="w-full space-y-4">
+                    <div className="w-full space-y-4 pb-10">
                         <ArtistCard songId={current?.id||""}/>
                     </div>
                 </div>

@@ -30,7 +30,7 @@ export const ListItem = ({
                             className="object-cover"
                         />
                     </div>
-                    <h3 className="font-medium">{artist.name}</h3>
+                    <h3 className="font-medium select-none">{artist.name}</h3>
                 </div>
                 <Subscribe artistId={artist.id} className="h-9 border-zinc-200 bg-transparent text-zinc-200" />
             </div>

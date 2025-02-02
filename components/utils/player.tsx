@@ -311,7 +311,7 @@ export const Player = () => {
                         )}
                         value={[currentTime]}
                         step={1}
-                        max={isAdPlaying ? 16 : (current?.duration||1)}
+                        max={isAdPlaying ? (ad?.duration||1) : (current?.duration||1)}
                         onValueChange={(e)=>seekTime(e[0])}
                         disabled = {data?.isActive === false}
                     />
@@ -337,6 +337,7 @@ export const Player = () => {
                                     }
                                 }}
                                 disabled = {data?.isActive === false}
+                                className="focus:outline-none"
                             >
                                 <FaBackwardStep
                                     className={cn(
@@ -358,12 +359,13 @@ export const Player = () => {
                             <button
                                 onClick={handleOnEnd}
                                 disabled = {isAdPlaying}
+                                className="focus:outline-none"
                             >
                                 <FaForwardStep
                                     className="h-5 w-5 text-zinc-300 hover:text-white cursor-pointer"
                                 />
                             </button>
-                            <span className="text-sm text-zinc-300" >{ songLength(isAdPlaying ? 16 : (current?.duration||1))}</span>
+                            <span className="text-sm text-zinc-300" >{ songLength(isAdPlaying ? (ad?.duration||1) : (current?.duration||1))}</span>
                         </div>
                         <div className="w-full flex items-center justify-end gap-x-3 lg:gap-x-6">
                             <LikeButton id = { current?.id } className="h-6 w-6" disabled = {isAdPlaying} />

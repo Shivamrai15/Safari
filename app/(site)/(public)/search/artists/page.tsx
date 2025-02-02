@@ -1,10 +1,6 @@
-"use client";
-
-import { useQuery } from "@tanstack/react-query";
 import { ArtistCard } from "@/components/search/artist-card";
 import { getArtistSearches } from "@/server/search";
 import { Artist } from "@prisma/client";
-import { SyncLoader } from "react-spinners";
 
 interface ArtistsSearchPageProps { 
     searchParams : {
@@ -12,30 +8,16 @@ interface ArtistsSearchPageProps {
     };
 }
 
-const ArtistsSearchPage = ({
+const ArtistsSearchPage = async({
     searchParams
 } : ArtistsSearchPageProps ) => {
-
-    const { data, isPending, error } = useQuery({
-        queryFn : async()=>{
-            return await getArtistSearches(searchParams.query);
-        },
-        queryKey : [searchParams.query],
-        enabled: !!searchParams.query,
-    });
 
     if (!searchParams.query)
         return null;
 
-    if (isPending) {
-        return (
-            <div className="w-full h-full flex items-center justify-center pt-32">
-                <SyncLoader color="#252525" />
-            </div>
-        )
-    }
+    const data = await getArtistSearches(searchParams.query);
 
-    if (!data || data.length===0 || error){
+    if (!data || data.length===0){
         return (
             <div className="w-full h-full flex items-center justify-center pt-32">
                 <h4 className="font-semibold md:text-lg text-center text-zinc-300">No albums found for &quot;{searchParams.query}&quot;</h4>

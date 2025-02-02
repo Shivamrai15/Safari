@@ -1,12 +1,8 @@
-"use client";
-
-import { useQuery } from "@tanstack/react-query";
 import { Albums } from "@/components/search/albums";
 import { ArtistCarousel } from "@/components/search/artist-carousel";
 import { TopResult } from "@/components/search/top-result";
 import { SongItem } from "@/components/song/song-item";
 import { getTopSearches } from "@/server/search";
-import { SyncLoader } from "react-spinners";
 
 interface SearchPageProps {
     searchParams : {
@@ -14,31 +10,16 @@ interface SearchPageProps {
     }
 }
 
-const SearchPage = ({
+const SearchPage = async({
     searchParams
 } : SearchPageProps ) => {
     
-
-    const { data, isPending, error } = useQuery({
-        queryFn : async()=>{
-            return await getTopSearches(searchParams.query);
-        },
-        queryKey : [searchParams.query],
-        enabled: !!searchParams.query,
-    });
-
     if (!searchParams.query)
         return null;
 
-    if (isPending) {
-        return (
-            <div className="w-full h-full flex items-center justify-center pt-32">
-                <SyncLoader color="#252525" />
-            </div>
-        )
-    }
+    const responses = await getTopSearches(searchParams.query);    
 
-    if ( !data?.topResult || error  ) {
+    if ( !responses?.topResult  ) {
         return (
             <div className="w-full h-full flex items-center justify-center pt-32">
                 <h4 className="font-semibold md:text-lg text-center text-zinc-300 select-none">No results found for &quot;{searchParams.query}&quot;</h4>
@@ -46,7 +27,7 @@ const SearchPage = ({
         )
     }
 
-    const { albums, artists, songs, topResult } = data;
+    const { albums, artists, songs, topResult } = responses;
 
 
     return (

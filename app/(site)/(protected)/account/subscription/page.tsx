@@ -1,13 +1,48 @@
 "use client";
 
 import Link from "next/link";
-import { SubscribeBtn } from "@/components/account/subscribe-btn";
-import { SubscriptionCard } from "@/components/account/subscription-card"
+import { useState } from "react";
+import { useSession } from "next-auth/react";
+import { toast } from "sonner";
 import { FaCircleCheck } from "react-icons/fa6";
 import { FaMinus } from "react-icons/fa";
+import { postData } from "@/lib/helpers";
+import { getStripe } from "@/lib/stripe-client";
+import { SubscribeBtn } from "@/components/account/subscribe-btn";
+import { SubscriptionCard } from "@/components/account/subscription-card";
 
 
 const SubscriptionPage = () => {
+
+    const session = useSession();
+    const [ loading, setLoading ] = useState(false);
+
+    const handleCheckout = async () => {
+        try {
+            setLoading(true)
+            if ( session.status === "unauthenticated" ) {
+                toast.error("Login is required");
+                return;
+            }
+
+            const { sessionId } = await postData({
+                url : "/api/create-checkout-session",
+                data : {
+                    price : "price_1PLVX8SF9kH75ipGU9rTB5HC"
+                }
+            });
+            const stripe = await getStripe();
+            stripe?.redirectToCheckout({ sessionId });
+            
+        } catch (error) {
+            console.error(error);
+            toast.error("Error occurred while creating checkout session");
+        } finally {
+            setLoading(false)
+        }
+    }
+
+
     return (
         <div className="pb-20 md:pb-10 bg-neutral-900 min-h-full space-y-10 md:space-y-20 scroll-smooth" >
             <header className="px-6 flex justify-center md:pr-32 bg-gradient-to-b from-[#a6655f92] to-50% to-neutral-900 py-20">
@@ -20,7 +55,12 @@ const SubscriptionPage = () => {
                             <span className="font-semibold md:text-lg text-zinc-400 block select-none">Cancel anytime*</span>
                         </div>
                         <div className="w-full flex items-center gap-x-6 md:gap-x-10">
-                            <SubscribeBtn onClick={()=>{}} label="Get Premium" className="max-w-64 w-full bg-[#ff9e95] hover:bg-[#ffccc7]" />
+                            <SubscribeBtn
+                                onClick={handleCheckout}
+                                label="Get Premium"
+                                className="max-w-64 w-full bg-[#ff9e95] hover:bg-[#ffccc7]"
+                                disabled={loading}
+                            />
                             <Link 
                                 href="/account/subscription#plans" 
                                 className="text-base font-semibold hover:underline duration-300 transition-all select-none"
@@ -36,8 +76,8 @@ const SubscriptionPage = () => {
                     <header>
                         <h2 className="text-2xl md:text-4xl font-bold text-center select-none">Feel the Premium</h2>
                     </header>
-                    <table className="w-full space-y-4">
-                        <thead>
+                    <table className="w-full space-y-4 relative">
+                        <thead className="sticky top-0 bg-neutral-900">
                             <tr className="grid grid-cols-5 text-lg font-semibold py-3 border-b-2 border-zinc-400 select-none">
                                 <th className="col-span-3"></th>
                                 <th>Free Plan</th>

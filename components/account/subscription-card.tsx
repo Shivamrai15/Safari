@@ -40,13 +40,9 @@ export const SubscriptionCard = ({
                     price : priceId
                 }
             });
-
-            console.log("sessionId", sessionId)
-
             const stripe = await getStripe();
-            stripe?.redirectToCheckout({ sessionId })
-
-
+            stripe?.redirectToCheckout({ sessionId });
+            
         } catch (error) {
             console.error(error);
             toast.error("Error occurred while creating checkout session");

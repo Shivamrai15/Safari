@@ -53,13 +53,29 @@ export const getTopSearches =  async( query: string ) => {
             }
         });
 
-        const topResult = (albumData[0].score > songData[0].score)
-                            ? (albumData[0].score > artistData[0].score ? albumData[0].payload as Album  : artistData[0].payload as Artist )
-                            : (songData[0].score > artistData[0].score ? songs[0] : artistData[0].payload as Artist )
-        
         const albums = albumData.map((album)=>album.payload as Album);
         const artists = artistData.map((artist)=>artist.payload as Artist);
+        
+        let topResult;
 
+        if (albumData.length === 0 && songData.length === 0 && artistData.length === 0) {
+            topResult = null;
+        }
+
+        const albumScore = albumData.length > 0 ? albumData[0].score : -Infinity;
+        const songScore = songData.length > 0 ? songData[0].score : -Infinity;
+        const artistScore = artistData.length > 0 ? artistData[0].score : -Infinity;
+
+        if (albumScore >= songScore && albumScore >= artistScore) {
+            topResult = albumData[0].payload as Album;
+        } else if (songScore >= albumScore && songScore >= artistScore) {
+            topResult = songs[0];
+        } else {
+            topResult = artistData[0].payload as Artist;
+        }
+        
+
+        console.log(topResult)
         return { albums, artists, songs, topResult }
         
     } catch (error) {

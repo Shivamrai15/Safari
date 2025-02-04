@@ -175,8 +175,16 @@ model Genre {
   name  String
   image String
   color String
-  video String?
+  video Video?
   songs GenreSong[]
+}
+
+model Video {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  url     String
+  image   String
+  genreId String @unique @db.ObjectId
+  genre   Genre  @relation(fields: [genreId], references: [id], onDelete: Cascade)
 }
 
 model Remix {

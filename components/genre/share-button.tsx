@@ -25,7 +25,7 @@ export const ShareButton = ({
             variant="ghost"
             size="icon"
             className="focus:outline-none hover:bg-transparent"
-            onClick={()=>share(`/browse/genre/${genreId}`, "playlist")}
+            onClick={(e)=>{e.stopPropagation(); share(`/browse/genre/${genreId}`, "playlist"); }}
         >
             <PiShareFatFill className="h-8 w-8 md:h-10 md:w-10 text-white" />
         </Button>

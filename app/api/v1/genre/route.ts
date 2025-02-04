@@ -4,7 +4,11 @@ import { NextResponse } from "next/server";
 export async function GET () {
     try {
         
-        const genre = await db.genre.findMany();
+        const genre = await db.genre.findMany({
+            include : {
+                video : true
+            }
+        });
         return NextResponse.json(genre);
 
     } catch (error) {

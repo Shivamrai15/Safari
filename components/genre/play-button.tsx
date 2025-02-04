@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo, useState } from "react";
+import { MouseEvent, useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
 
 import { cn } from "@/lib/utils";
@@ -43,8 +43,9 @@ export const PlayButton = ({
         return data.every((song)=>(stack.includes(song) || queue.includes(song))&&data.includes(current));
     }, [current, data, queue, stack]);
 
-    const handlePlayGenre = async () => {
+    const handlePlayGenre = async (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
         try {
+            e.stopPropagation();
             setLoading(true);
             const response = await axios.get(`/api/v1/genre/tracks?id=${genreId}`);
             const response_data : (Song & { album : Album })[] = response.data;

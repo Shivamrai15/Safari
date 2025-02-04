@@ -1,19 +1,19 @@
 "use client";
+
 import { Genre } from "@/components/genre/genre";
 import { GenreSkeleton } from "@/components/genre/genre-skeleton";
 import { useSWRQuery } from "@/hooks/use-swr-query";
-import { Genre as GenreType } from "@prisma/client";
+import { Genre as GenreType, Video } from "@prisma/client";
 
 const BrowsePage = () => {
 
-    const  { data, isLoading } : { data : GenreType[] , isLoading: boolean }  = useSWRQuery("/api/v1/genre");
+    const  { data, isLoading } : { data : (GenreType &{ video : Video|null })[] , isLoading: boolean }  = useSWRQuery("/api/v1/genre");
 
-    
 
     return (
-        <div className="px-4 md:px-10 pb-20 md:pb-10 pt-10 md:pt-20 space-y-10 md:pr-32">
+        <div className="px-6 md:px-10 pb-20 md:pb-10 pt-10 md:pt-20 space-y-10 md:pr-32">
             <h2 className="text-2xl md:text-3xl font-bold select-none">Moods & genres</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7 gap-4 md:gap-6">
+            <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-10 lg:gap-16">
                 {
                     isLoading ? (
                         <>
@@ -34,6 +34,7 @@ const BrowsePage = () => {
                             id={genre.id}
                             image={genre.image}
                             name={genre.name}
+                            video={genre.video}
                         />
                     ))
                 }

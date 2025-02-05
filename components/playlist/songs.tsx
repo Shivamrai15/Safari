@@ -2,11 +2,13 @@
 
 import { useQuery } from "@/hooks/use-query";
 import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import { useInView } from "react-intersection-observer";
 import { SyncLoader } from "react-spinners";
 import { List } from "./list";
 import { Album, Artist, Song } from "@prisma/client";
-import { useSession } from "next-auth/react";
+import { SearchSongs } from "./search-songs";
+
 
 interface SongsProps {
     id : string;
@@ -18,8 +20,10 @@ export const Songs = ({
     userId
 } : SongsProps ) => {
 
-    const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } = useQuery({ url : "/api/v1/user/playlist/songs", paramKey : "id" , paramValue : id, queryKey:id });
     const session = useSession();
+    const [findSongs, setFindSongs] = useState(false);
+
+    const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } = useQuery({ url : "/api/v1/user/playlist/songs", paramKey : "id" , paramValue : id, queryKey:`playlist:${id}` });
     const [playlistSongs, setPlaylistSongs ] = useState<(Song & {
         artists : Artist[],
         album : Album
@@ -79,7 +83,7 @@ export const Songs = ({
     }
 
     return (
-        <div className="mt-10 md:pb-10">
+        <div className="mt-10 md:pb-20">
             <List
                 songs={ playlistSongs || []}
                 isAuth = { session.data?.user?.id === userId }
@@ -94,6 +98,23 @@ export const Songs = ({
                 )
             }
             <div className="h-4 w-full" ref = {ref} />
+            <div className="w-full space-y-8 px-4 md:px-20 lg:pr-36 pt-10">
+                {
+                    findSongs
+                    ? (<SearchSongs playlistId={id} onClose={()=>setFindSongs(false)} />)
+                    : (
+                        <div className="flex items-center justify-end">
+                            <div
+                                className="text-base select-none font-semibold md:cursor-pointer text-zinc-200 hover:text-white transition-all"
+                                onClick={()=>setFindSongs(true)}
+                                role="button"
+                            >
+                                Find more songs
+                            </div>
+                        </div>
+                    )
+                }
+            </div>
         </div>
     )
 }

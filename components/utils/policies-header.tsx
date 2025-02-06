@@ -71,7 +71,7 @@ export const PoliciesHeader = ({
                     <div className="flex items-center gap-x-6">
                         <Link
                             href="/account/subscription"
-                            className="font-semibold text-zinc-300 hover:text-white transition-all"
+                            className="font-semibold text-zinc-300 hover:text-white transition-all select-none"
                         >
                             Premium
                         </Link>
@@ -80,14 +80,14 @@ export const PoliciesHeader = ({
                                 <>
                                     <Link
                                         href="/login"
-                                        className="font-semibold text-zinc-300 hover:text-white transition-all"
+                                        className="font-semibold text-zinc-300 hover:text-white transition-all select-none"
                                     >
                                         Log in
                                     </Link>
                                     <div className="h-5 w-0.5 rounded-full bg-zinc-300" />
                                     <Link
                                         href="/sign-up"
-                                        className="font-semibold text-zinc-300 hover:text-white transition-all"
+                                        className="font-semibold text-zinc-300 hover:text-white transition-all select-none"
                                     >
                                         Sign up
                                     </Link>

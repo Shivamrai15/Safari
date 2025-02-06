@@ -15,7 +15,7 @@ const LikedMusicPage = async() => {
     return (
         <div className="min-h-full pb-10 md:pb-0 bg-gradient-to-b from-[#111] from-70% to-[#B207105a] to-100%">
             <Header/>
-            <LikedSongsList songs = {likedSongs} />
+            <LikedSongsList likedSongs = {likedSongs} />
         </div>
     )
 }

@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
-import { Album, Artist, PlaylistSong, Song } from "@prisma/client";
+import { PlaylistSong } from "@/types";
 import { NextResponse } from "next/server";
 
 const SONGS_BATCH = 10;
@@ -25,7 +25,8 @@ export async function GET (req : Request) {
             select : {
                 id : true,
                 userId : true,
-                private : true
+                private : true,
+                isArchived : true
             }
         });
 
@@ -33,16 +34,11 @@ export async function GET (req : Request) {
             return new NextResponse("Playlist not found", { status: 404 });
         }
 
-        if (playlist.private && playlist.userId !== session?.user?.id ) {
+        if ((playlist.private && playlist.userId !== session?.user?.id)|| playlist.isArchived ) {
             return new NextResponse("Unauthorized Access", { status: 401 });
         } 
 
-        let songs : (Song & {
-            artists : Artist[],
-            album : Album
-        })[] = [] ;
-
-        let playlistSongs : PlaylistSong[] = [] 
+        let playlistSongs : PlaylistSong[]
 
         if (cursor) {
             playlistSongs = await db.playlistSong.findMany({
@@ -54,26 +50,24 @@ export async function GET (req : Request) {
                 cursor : {
                     id : cursor
                 },
+                include :{
+                    song : {
+                        include : {
+                            album : true,
+                            artists : {
+                                select :{
+                                    id : true,
+                                    name : true,
+                                    image : true
+                                }
+                            }
+                        }
+                    }
+                },
                 orderBy : {
                     createdAt : "desc"
                 }
             });
-
-            const playlistSongIds = playlistSongs.map((song)=>song.songId);
-    
-            songs = await db.song.findMany({
-                where : {
-                    id : {
-                        in : playlistSongIds
-                    }
-                },
-                include : {
-                    album : true,
-                    artists : true
-                }
-            });
-            
-            songs.sort((a, b)=>playlistSongIds.indexOf(a.id)-playlistSongIds.indexOf(b.id));
 
         } else {
                 
@@ -82,26 +76,25 @@ export async function GET (req : Request) {
                     playlistId : playlist.id
                 },
                 take : SONGS_BATCH,
+                include :{
+                    song : {
+                        include : {
+                            album : true,
+                            artists : {
+                                select :{
+                                    id : true,
+                                    name : true,
+                                    image : true
+                                }
+                            }
+                        }
+                    }
+                },
                 orderBy : {
                     createdAt : "desc"
                 }
             });
-
-            const playlistSongIds = playlistSongs.map((song)=>song.songId);
-    
-            songs = await db.song.findMany({
-                where : {
-                    id : {
-                        in : playlistSongIds
-                    }
-                },
-                include : {
-                    album : true,
-                    artists : true
-                }
-            });
             
-            songs.sort((a, b)=>playlistSongIds.indexOf(a.id)-playlistSongIds.indexOf(b.id));
         }
 
         let nextCursor = null;
@@ -111,7 +104,7 @@ export async function GET (req : Request) {
         }
 
         return NextResponse.json({
-            items : songs,
+            items : playlistSongs,
             nextCursor
         });
 

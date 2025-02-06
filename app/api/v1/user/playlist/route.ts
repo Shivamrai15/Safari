@@ -44,7 +44,8 @@ export async function GET () {
 
         const playlists = await db.playList.findMany({
             where : {
-                userId : session.user.id
+                userId : session.user.id,
+                isArchived : false
             },
             orderBy : {
                 createdAt : "desc"

@@ -1,11 +1,11 @@
 "use client";
 
-import { Album, Artist, Song } from "@prisma/client";
+import { Song } from "@/types";
 import { ListItem } from "./list-item";
 import { Clock3 } from "lucide-react";
 
 interface ListProps {
-    songs : ( Song & { album : Album, artists : Artist[] } )[],
+    songs : Song[],
     playlistId? : string;
     isAuth? : boolean;
     mutate? : ( songId : string )=>void;

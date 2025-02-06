@@ -1,33 +1,32 @@
 "use client";
 
-
-import { Album, Song } from "@prisma/client";
 import { List } from "../playlist/list";
 import { LuMusic3 } from "react-icons/lu";
 import { useEffect, useState } from "react";
 import { useLikedSongs } from "@/hooks/use-liked-songs";
+import { LikedSong } from "@/types";
 
 
 interface LikedSongsListProps  {
-    songs : ( Song & { album : Album, artists : ({ id: string, name: string, image: string })[] }  )[];
+    likedSongs : LikedSong[]
 }
 
 export const LikedSongsList = ({
-    songs
+    likedSongs
 } : LikedSongsListProps ) => {
 
 
-    const [ songRefs, setSongRefs ] = useState(songs);
+    const [ songRefs, setSongRefs ] = useState(likedSongs);
     const { songIds } = useLikedSongs();
 
     useEffect(()=>{
-
-        const filteredSongs = songs.filter((song)=>songIds.includes(song.id));
+        const filteredSongs = likedSongs.filter((song)=>songIds.includes(song.songId));
         setSongRefs(filteredSongs);
-
     }, [songIds]);
 
-    if (songs.length === 0) {
+    const songs = songRefs.map((data)=>data.song);
+
+    if (likedSongs.length === 0) {
         return (
             <div className="flex-1 flex flex-col items-center justify-center mt-16 space-y-10">
                 <div className="flex items-center justify-center">
@@ -42,7 +41,7 @@ export const LikedSongsList = ({
         <div className="pt-14 pb-10">
             {
                 // @ts-ignore
-                <List songs={songRefs} />
+                <List songs={songs} />
             }
         </div>
     )

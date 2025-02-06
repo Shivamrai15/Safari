@@ -6,8 +6,8 @@ import { useSession } from "next-auth/react";
 import { useInView } from "react-intersection-observer";
 import { SyncLoader } from "react-spinners";
 import { List } from "./list";
-import { Album, Artist, Song } from "@prisma/client";
 import { SearchSongs } from "./search-songs";
+import { PlaylistSong, Song } from "@/types";
 
 
 interface SongsProps {
@@ -24,10 +24,7 @@ export const Songs = ({
     const [findSongs, setFindSongs] = useState(false);
 
     const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } = useQuery({ url : "/api/v1/user/playlist/songs", paramKey : "id" , paramValue : id, queryKey:`playlist:${id}` });
-    const [playlistSongs, setPlaylistSongs ] = useState<(Song & {
-        artists : Artist[],
-        album : Album
-    })[] | null>(null);
+    const [playlistSongs, setPlaylistSongs ] = useState<Song[]>([]);
 
     const { ref, inView } = useInView();
 
@@ -41,19 +38,16 @@ export const Songs = ({
 
     useEffect(()=>{
         data?.pages.map((group, i)=>(
-            group.items.map((song : (Song & {
-                artists : Artist[],
-                album : Album
-            })) => {
+            group.items.map((playlistSong : PlaylistSong ) => {
                 setPlaylistSongs((prev)=>{
                     if (prev) {
-                        const isExist = prev.find((item)=> item.id === song.id);
+                        const isExist = prev.find((item)=> item.id === playlistSong.songId);
                         if ( isExist ) {
                             return prev;
                         }
-                        return [...prev, song];
+                        return [...prev, playlistSong.song];
                     }
-                    return [song];
+                    return [playlistSong.song];
                 });
             })
         ))
@@ -85,7 +79,7 @@ export const Songs = ({
     return (
         <div className="mt-10 md:pb-20">
             <List
-                songs={ playlistSongs || []}
+                songs={playlistSongs}
                 isAuth = { session.data?.user?.id === userId }
                 playlistId={id}
                 mutate={mutate} 

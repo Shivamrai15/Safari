@@ -28,7 +28,7 @@ const AccountHistoryPage = () => {
 
     return (
         <>
-            <main className="min-h-full w-full px-6 py-20 flex justify-center bg-neutral-900/80 md:pr-32">
+            <main className="min-h-full w-full px-6 py-20 flex justify-center bg-[#111] md:pr-32">
                 <div className="max-w-4xl w-full space-y-10">
                     <header className="space-y-16 md:space-y-20">
                         <PreviousButton/>

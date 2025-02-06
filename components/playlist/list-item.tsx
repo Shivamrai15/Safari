@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Album, Artist, Song } from "@prisma/client";
 import { songLength } from "@/lib/utils";
 import { SongOptions } from "@/components/song/song-options";
 import { useQueue } from "@/hooks/use-queue";
@@ -16,9 +15,10 @@ import { usePlaylist } from "@/hooks/use-playlist";
 import { useSocket } from "@/hooks/use-socket";
 import { useSocketEvents } from "@/hooks/use-socket-events";
 import { PRIORITY_ENQUEUE } from "@/lib/events";
+import { Song } from "@/types";
 
 interface ListItemProps {
-    song : Song & { album : Album , artists : Artist[] };
+    song : Song
     index : number;
     playlistId? : string;
     isAuth? : boolean;

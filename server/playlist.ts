@@ -22,6 +22,7 @@ export const getPlaylistById = async( id: string )=>{
                 name : true,
                 userId : true,
                 color : true,
+                isArchived : true
             }
         });
         

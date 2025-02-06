@@ -156,13 +156,17 @@ export async function DELETE (
             return new NextResponse("Playlist Not Found", { status : 404 });
         }
 
-        if ( playlist.userId !== session.user.id ) {
+        if ( playlist.userId !== session.user.id || playlist.isArchived ) {
             return new NextResponse("Unauthorized", { status : 401 });
         }
 
-        await db.playList.delete({
+        await db.playList.update({
             where : {
                 id : params.playlistId
+            },
+            data : {
+                isArchived : true,
+                archivedAt : new Date()
             }
         });
 

@@ -2,7 +2,7 @@
 
 const Page = () => {
     return (
-        <main className="py-28">
+        <main className="py-28 selection:bg-white selection:text-zinc-900 transition-all">
             <div className="max-w-4xl mx-auto px-6 space-y-28">
                 <div className="space-y-8">
                     <p className="text-center">Updated: January 14, 2025</p>

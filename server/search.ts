@@ -2,7 +2,7 @@
 
 import Fuse from "fuse.js";
 import { db } from "@/lib/db";
-import { Album, Song } from "@prisma/client";
+import { Album } from "@prisma/client";
 import { qdrant } from "@/lib/qdrant";
 import { generateEmbeddings } from "@/lib/embedding";
 
@@ -74,8 +74,6 @@ export const getTopSearches =  async( query: string ) => {
             topResult = artistData[0].payload as Artist;
         }
         
-
-        console.log(topResult)
         return { albums, artists, songs, topResult }
         
     } catch (error) {

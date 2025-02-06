@@ -78,17 +78,19 @@ model Album {
 }
 
 model Song {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
-  image     String
-  url       String
-  duration  Int
-  albumId   String    @db.ObjectId
-  album     Album     @relation(fields: [albumId], references: [id])
-  artistIds String[]  @db.ObjectId
-  artists   Artist[]  @relation(fields: [artistIds], references: [id])
-  view      View[]
-  history   History[]
+  id            String         @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  image         String
+  url           String
+  duration      Int
+  albumId       String         @db.ObjectId
+  album         Album          @relation(fields: [albumId], references: [id])
+  artistIds     String[]       @db.ObjectId
+  artists       Artist[]       @relation(fields: [artistIds], references: [id])
+  likedSongs    LikedSongs[]
+  playlistSongs PlaylistSong[]
+  view          View[]
+  history       History[]
 
   @@index([albumId, name])
 }
@@ -96,6 +98,7 @@ model Song {
 model LikedSongs {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   songId    String   @db.ObjectId
+  song      Song     @relation(fields: [songId], references: [id], onDelete: Cascade)
   userId    String   @db.ObjectId
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
@@ -122,6 +125,7 @@ model Artist {
 model PlayList {
   id          String         @id @default(auto()) @map("_id") @db.ObjectId
   name        String
+  isArchived  Boolean        @default(false)
   image       String?
   description String?
   color       String?
@@ -129,8 +133,10 @@ model PlayList {
   private     Boolean        @default(true)
   user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   songs       PlaylistSong[]
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
+
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  archivedAt DateTime?
 
   @@index([userId, name])
 }
@@ -138,6 +144,7 @@ model PlayList {
 model PlaylistSong {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
   songId     String   @db.ObjectId
+  song       Song     @relation(fields: [songId], references: [id], onDelete: Cascade)
   playlistId String   @db.ObjectId
   playlist   PlayList @relation(fields: [playlistId], references: [id], onDelete: Cascade)
   createdAt  DateTime @default(now())

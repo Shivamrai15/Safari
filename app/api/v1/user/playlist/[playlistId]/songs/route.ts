@@ -36,7 +36,8 @@ export async function POST (
                     select : {
                         songs : true
                     }
-                }
+                },
+                isArchived : true
             }
         });
 
@@ -44,7 +45,7 @@ export async function POST (
             return new NextResponse("Playlist not found", { status: 404 });
         }
 
-        if ( playlist.userId  !== session.user.id ) {
+        if ( playlist.userId  !== session.user.id || playlist.isArchived ) {
             return new NextResponse("Unauthorized", { status : 401 });
         }
 

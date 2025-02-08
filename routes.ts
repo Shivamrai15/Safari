@@ -12,7 +12,8 @@ export const protectedRoutes = [
     "/account/following",
     "/track",
     "/queue",
-    "/listen-with-friends"
+    "/listen-with-friends",
+    "/account/recover-playlists",
 ];
 
 export const authRoutes = [

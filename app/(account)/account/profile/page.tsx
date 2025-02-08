@@ -16,9 +16,9 @@ const ProfilePage = async() => {
     const subscription = await getUserSubscription();
 
     return (
-        <main className="w-full pt-20 pb-20 md:pb-10 md:pr-32 min-h-full space-y-10 md:space-y-20 scroll-smooth">
-            <div className="w-full h-full flex justify-center items-center px-6">
-                <div className="max-w-3xl w-full space-y-20">
+        <main className="w-full pt-20 pb-20 md:pb-10 min-h-full space-y-10 md:space-y-20 scroll-smooth">
+            <div className="w-full h-full flex justify-center items-center">
+                <div className="w-full space-y-20">
                     <header className="w-full flex items-center gap-x-6 md:gap-x-10">
                         <div className="h-28 shrink-0 w-28 md:h-40 md:w-40 rounded-full overflow-hidden relative">
                             <Image

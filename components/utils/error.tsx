@@ -1,17 +1,22 @@
-import Image from "next/image"
+import { cn } from "@/lib/utils";
+import { CircleAlert } from "lucide-react";
 
+interface ErrorProps {
+    className ?: string 
+}
 
-export const Error = () => {
+export const Error = ({
+    className
+}: ErrorProps ) => {
+    
     return (
-        <div className="h-full w-full flex items-center justify-center">
-            <div className="max-w-sm w-full aspect-square relative">
-                <Image
-                    src="/assets/Error.svg"
-                    alt="Error"
-                    fill
-                    className="object-contain"
-                />
-            </div>
+        <div className={cn(
+                "h-full w-full flex flex-col items-center justify-center py-4 space-y-2",
+                className             
+            )}
+        >
+            <CircleAlert className="size-7" />
+            <p className="text-base font-semibold text-zinc-300 select-none">Something went wrong</p>
         </div>
     )
 }

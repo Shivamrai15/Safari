@@ -58,7 +58,7 @@ export const SearchSongs = ({
             
             setLoading(true);
             await axios.post(`/api/v1/user/playlist/${playlistId}/songs`, { songIds: selectedSongs});
-            queryClient.invalidateQueries({ queryKey : [`playlist:${playlistId}`], type:"all" })
+            await queryClient.invalidateQueries({ queryKey : [`playlist:${playlistId}`], type:"all" })
             mutate();
             setSelectedSongs([]);
             onClose();

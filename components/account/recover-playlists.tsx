@@ -40,7 +40,7 @@ export const RecoverPlaylist = () => {
 
     if (error && (!data || !data?.success)) {
         return (
-            <div className="w-full flex items-center justify-center py-32 font-semibold text-zinc-300">
+            <div className="w-full flex items-center justify-center py-32 font-semibold text-zinc-300 select-none">
                 Something went wrong
             </div>
         )
@@ -54,7 +54,7 @@ export const RecoverPlaylist = () => {
 
     if (data.data.length === 0 ) {
         return (
-            <div className="text-zinc-300 font-medium bg-neutral-800 p-2 px-3 rounded-md">
+            <div className="text-zinc-300 font-medium bg-neutral-800 p-2 px-3 rounded-md select-none">
                 You haven’t deleted any playlists
             </div>
         )
@@ -74,7 +74,7 @@ export const RecoverPlaylist = () => {
                 {
                     data.data.map((playlist)=>(
                         <>
-                            <div className="w-full hidden md:grid md:grid-cols-4 gap-x-4 items-center">
+                            <div className="w-full hidden md:grid md:grid-cols-4 gap-x-4 items-center" key={playlist.id}>
                                 <p className="text-zinc-400 font-medium truncate">{playlist.name}</p>
                                 <p className="text-zinc-400 font-medium">{playlist._count.songs}</p>
                                 <p className="text-zinc-400 font-medium">{ playlist.archivedAt && format(playlist.archivedAt, "dd/MM/yy")}</p>
@@ -87,7 +87,7 @@ export const RecoverPlaylist = () => {
                                     Restore
                                 </Button>
                             </div>
-                            <div className="w-full flex items-end gap-x-4 md:hidden">
+                            <div className="w-full flex items-end gap-x-4 md:hidden" key={playlist.id}>
                                 <div className="flex-1">
                                     <div className="flex flex-col">
                                         <p className="text-zinc-400 font-medium truncate">{playlist.name}</p>
@@ -104,7 +104,7 @@ export const RecoverPlaylist = () => {
                                     Restore
                                 </Button>
                             </div>
-                            <div className="h-[1px] bg-neutral-700/90 rounded-md block" />
+                            <div className="h-[1px] bg-neutral-700/90 rounded-md block" key={playlist.id} />
                         </>
                     ))
                 }

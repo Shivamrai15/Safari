@@ -84,7 +84,7 @@ export const AccountOptions = () => {
                 </DropdownMenuItem>
                 <DropdownMenuItem 
                     className="px-3 hover:bg-neutral-700 focus:bg-neutral-700 py-2 rounded-none md:cursor-pointer"
-                    onClick={()=>router.push("/account/subscription")}
+                    onClick={()=>router.push("/subscription")}
                     disabled = {data?.isActive}
                 >
                     Upgrade to Premium

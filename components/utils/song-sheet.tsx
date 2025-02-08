@@ -430,7 +430,7 @@ export const SongSheet = ({
                                                         <Button
                                                             className="rounded-full font-bold hover:scale-105 transition-transform duration-300"
                                                             onClick={() => {
-                                                                    router.push('/account/subscription');
+                                                                    router.push('/subscription');
                                                                     onClose();
                                                                 }
                                                             }

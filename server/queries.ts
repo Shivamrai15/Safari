@@ -4,9 +4,6 @@ import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { cache } from "react";
 
-
-const DAYS_IN_MS = 86_400_000;
-
 export const getUserSubscription = cache(async()=>{
     const session = await auth();
     if ( !session || !session.user || !session.user.id )
@@ -17,15 +14,19 @@ export const getUserSubscription = cache(async()=>{
             userId : session.user.id
         },
         orderBy : {
-            createdAt : 'desc'
+            stripeCurrentPeriodEnd : 'desc'
+        },
+        select : {
+            stripePriceId : true,
+            stripeCurrentPeriodEnd : true
         }
     });
 
-    const isActive = data?.stripePriceId && data.stripeCurrentPeriodEnd?.getTime()! + DAYS_IN_MS > Date.now();
+    const isActive = data && (new Date(data.stripeCurrentPeriodEnd) > new Date());
 
     return {
         ...data,
-        isActive : !!isActive
+        isActive
     }
 
 });

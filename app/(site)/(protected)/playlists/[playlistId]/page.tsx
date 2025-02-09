@@ -28,6 +28,10 @@ const PlaylistPage = async ({
         }
     }
 
+    if (playlist.isArchived) {
+        return redirect("/");
+    }
+
     return (
         <div className="min-h-full pb-10 md:pb-0 bg-[#111]">
             <Header

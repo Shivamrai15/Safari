@@ -1,9 +1,11 @@
 import Image from "next/image";
 import { redirect } from "next/navigation";
+
 import { auth } from "@/auth";
-import { AccountInfo } from "@/components/account/account-info";
-import { SubscriptionDetails } from "@/components/account/subscription-details";
 import { getUserSubscription } from "@/server/queries";
+import { SubscriptionDetails } from "@/components/account/subscription-details";
+import { AccountInfo } from "@/components/account/account-info";
+import { Playlists } from "@/components/account/playlists";
 
 
 const ProfilePage = async() => {
@@ -38,10 +40,10 @@ const ProfilePage = async() => {
                             <AccountInfo/>
                         </div>
                     </header>
-                    <SubscriptionDetails
-                        subscription={subscription ? subscription.stripePriceId || "free" : "free" }
-                        expire={subscription?.stripeCurrentPeriodEnd}
-                    />
+                    <div className="w-full">
+                        <SubscriptionDetails subscription={subscription} />
+                    </div>
+                    <Playlists/>
                 </div>
             </div>
         </main>

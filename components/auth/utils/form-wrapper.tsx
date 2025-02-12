@@ -1,10 +1,10 @@
-import { cn } from "@/lib/utils";
-import { FaGoogle, FaFacebookSquare, FaGithub } from "react-icons/fa";
-import { toast } from "sonner";
-import { signIn } from "next-auth/react";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useState } from "react";
+import { signIn } from "next-auth/react";
+
+import { toast } from "sonner";
+import { FaGoogle, FaGithub } from "react-icons/fa";
+import { Button } from "@/components/ui/button";
 
 
 interface FromWrapperProps {
@@ -23,7 +23,7 @@ export const FormWrapper = ({
 
     const [ loading, setLoading ] = useState(false);
 
-    const handleLogIn = async( provider : "github" | "google" | "facebook" ) => {
+    const handleLogIn = async( provider : "github" | "google" ) => {
         try {
             setLoading(true);
             await signIn(provider, {

@@ -51,7 +51,7 @@ export const Playlists = () => {
                         {data.map((playlist)=>(
                             <SavedPlaylistCard
                                 key={playlist.id}
-                                image={playlist.image || ""}
+                                image={playlist.image || "/assets/playlist.png"}
                                 url={`/playlists/${playlist.id}`}
                                 name={playlist.name}
                                 tracks={playlist._count.songs}

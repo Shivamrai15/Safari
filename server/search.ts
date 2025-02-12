@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 import { Album } from "@prisma/client";
 import { qdrant } from "@/lib/qdrant";
 import { generateEmbeddings } from "@/lib/embedding";
+import { cache } from "react";
 
 
 const fuseOptions = {
@@ -19,7 +20,7 @@ type Artist = {
     image: string;
 }
 
-export const getTopSearches =  async( query: string ) => {
+export const getTopSearches =  cache(async( query: string ) => {
     try {
 
         const queryVector = await generateEmbeddings(query);
@@ -80,9 +81,10 @@ export const getTopSearches =  async( query: string ) => {
         console.error("TOP SEARCH API ERROR", error);
         return null;
     }
-}
+});
 
-export const getAlbumSearches = async( query: string ) => {
+
+export const getAlbumSearches = cache(async( query: string ) => {
     try {
 
         if (!query) {
@@ -103,9 +105,10 @@ export const getAlbumSearches = async( query: string ) => {
         console.error("ALBUM SEARCH API ERROR", error);
         return null;
     }
-}
+});
 
-export const getSongSearches = async( query: string ) => {
+
+export const getSongSearches = cache(async( query: string ) => {
     try {
         
         const queryVector = await generateEmbeddings(query);
@@ -140,9 +143,10 @@ export const getSongSearches = async( query: string ) => {
         console.error("SONGS SEARCH API ERROR", error);
         return null;
     }
-}
+});
 
-export const getArtistSearches = async( query: string ) => {
+
+export const getArtistSearches = cache(async( query: string ) => {
     try {
 
         if (!query) {
@@ -160,10 +164,10 @@ export const getArtistSearches = async( query: string ) => {
         console.error("SONGS SEARCH API ERROR", error);
         return null;
     }
-}
+});
 
 
-export const getPlaylistSearches = async ( query : string ) => {
+export const getPlaylistSearches = cache(async( query : string ) => {
     try {
         
         const playlists = await db.playList.findMany({
@@ -187,4 +191,4 @@ export const getPlaylistSearches = async ( query : string ) => {
         console.error("PLAYLIST SEARCH API ERROR", error);
         return null;
     }
-}
+})

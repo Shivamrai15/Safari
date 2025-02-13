@@ -39,7 +39,7 @@ export const SubscriptionDetails = ({
     }
 
     return (
-        <div className="w-full bg-neutral-800 p-3 md:p-6 md:px-8 rounded-lg hover:-translate-y-2 transition-all duration-300 space-y-8">
+        <div className="w-full bg-neutral-900 p-3 md:p-6 md:px-8 rounded-lg hover:-translate-y-2 transition-all duration-300 relative overflow-hidden">
             <div className="w-full flex flex-col gap-y-3 md:gap-y-5">
                 <div className="flex items-center justify-between gap-x-4">
                     <span className="font-semibold select-none">Your plan</span>
@@ -58,7 +58,7 @@ export const SubscriptionDetails = ({
                     }
                 </h2>
             </div>
-            <div className="w-full flex items-center justify-end">
+            <div className="w-full flex items-center justify-end mt-8">
                 {
                     !subscription?.isActive
                     ? (
@@ -76,6 +76,13 @@ export const SubscriptionDetails = ({
                     ) 
                 }
             </div>
+            <div
+                className="absolute inset-0 w-full h-full transform opacity-10 [mask-image:radial-gradient(#fff,transparent,75%)]"
+                style={{
+                    backgroundImage: "url(/assets/noise.webp)",
+                    backgroundSize: "20%",
+                }}
+            />
         </div>
     )
 }

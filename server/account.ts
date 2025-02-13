@@ -46,3 +46,34 @@ export const getArchivedPlaylists = async()=>{
         }
     }
 }
+
+
+export const getAccountDetails = async()=>{
+    try {
+        
+        const session = await auth();
+        if (!session || !session.user || !session.user.id) {
+            return null;
+        }
+
+        const user = await db.user.findUnique({
+            where : {
+                id : session.user.id
+            },
+            select : {
+                accountVerified : true,
+                accounts : {
+                    select : {
+                        provider : true
+                    }
+                }
+            }
+        });
+
+        return user;
+
+    } catch (error) {
+        console.log("GET ACCOUNT API ERROR");
+        return null;
+    }
+}

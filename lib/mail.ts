@@ -1,5 +1,6 @@
-"use server"
+"use server";
 import nodemailer from "nodemailer";
+import { emailVerificationTemplate, forgetPasswordTemplate } from "./mail-templates";
 
 const transporter = nodemailer.createTransport({
     service : "gmail",
@@ -17,17 +18,15 @@ export const sendVerificationEmail = async( email : string, name : string, token
         await transporter.sendMail({
             from : process.env.EMAIL_USERNAME,
             to : email,
-            subject : "Verify your account",
-            html : `<p>Hello ${name}</p>
-                    <p>Verify your account by clicking here</p>
-                    <a href="${verificationUrl}">Link</a>
-            `
+            subject : "Verify your email",
+            html : emailVerificationTemplate(verificationUrl)
         });
 
     } catch (error) {
         console.error("NODEMAILER VERIFICATION EMAIL ERROR", email);
     }
 }
+
 
 export const sendForgetPasswordEmail = async( email : string, name : string, token : string ) => {
     try {
@@ -36,11 +35,8 @@ export const sendForgetPasswordEmail = async( email : string, name : string, tok
         await transporter.sendMail({
             from : process.env.EMAIL_USERNAME,
             to : email,
-            subject : "Forget your password",
-            html : `<p>Hello ${name}</p>
-                    <p>Reset your password by clicking here</p>
-                    <a href="${verificationUrl}">Link</a>
-            `
+            subject : "Reset Your Password - Action Required",
+            html : forgetPasswordTemplate(verificationUrl)
         });
 
     } catch (error) {

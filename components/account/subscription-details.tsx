@@ -60,7 +60,7 @@ export const SubscriptionDetails = ({
             </div>
             <div className="w-full flex items-center justify-end mt-8">
                 {
-                    !subscription?.isActive
+                    subscription?.isActive
                     ? (
                         <div className="font-medium text-sm select-none">
                             Expires on {format(subscription?.stripeCurrentPeriodEnd!, "dd MMM yyyy")}

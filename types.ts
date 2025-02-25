@@ -14,12 +14,16 @@ export interface User {
 }
 
 
+export type Artist = {
+    id: string;
+    name: string;
+    image: string;
+}
+
+
 export type Song = S & {
     album : Album ,
-    artists : {
-        id : string,
-        name : string,
-        image: string}[]
+    artists : Artist[]
 }
 
 

@@ -14,6 +14,8 @@ export const protectedRoutes = [
     "/queue",
     "/listen-with-friends",
     "/account/recover-playlists",
+    "/account/manage-subscriptions",
+    "/account/edit-login-methods"
 ];
 
 export const authRoutes = [

@@ -157,7 +157,15 @@ export const SongSheet = ({
                                         src={isAdPlaying ? (ad?.image||"") : (current?.image || "")}
                                         alt={current?.name || "Image"}
                                         fill
-                                        className="object-cover select-none"
+                                        className="object-cover select-none z-10"
+                                    />
+                                    <span
+                                        className="absolute inset-x-0 top-0 h-0.5 w-4/5 mx-auto z-10"
+                                        style={{ background : `linear-gradient(to right, transparent, ${current?.album.color}, transparent)` }}
+                                    />
+                                    <span
+                                        className="absolute inset-x-0 top-0 h-3 mx-auto blur-md"
+                                        style={{ background : `linear-gradient(to right, transparent, ${current?.album.color}, transparent)` }}
                                     />
                                 </motion.div>
                             </div>

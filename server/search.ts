@@ -6,6 +6,7 @@ import { Album } from "@prisma/client";
 import { qdrant } from "@/lib/qdrant";
 import { generateEmbeddings } from "@/lib/embedding";
 import { cache } from "react";
+import { Artist } from "@/types";
 
 
 const fuseOptions = {
@@ -14,11 +15,7 @@ const fuseOptions = {
 }
 
 
-type Artist = {
-    id: string;
-    name: string;
-    image: string;
-}
+
 
 export const getTopSearches =  cache(async( query: string ) => {
     try {

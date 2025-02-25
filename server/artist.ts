@@ -20,6 +20,11 @@ export const getArtist = async(id :string) => {
                         artists : true,
                         album : true
                     },
+                    orderBy : {
+                        view : {
+                            _count : "desc"
+                        }
+                    },
                     take : 5
                 },
                 _count : {

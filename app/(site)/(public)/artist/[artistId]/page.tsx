@@ -106,7 +106,7 @@ const ArtistPage = async({
                 </div>
                 <div>
                     <Link
-                        className="px-4 my-4 rounded-full py-3 flex items-center justify-center border hover:bg-neutral-900 select-none"
+                        className="px-4 my-4 rounded-full py-3 flex items-center justify-center border border-neutral-900 hover:bg-neutral-900 select-none"
                         href={`/artist/${artist.id}/songs`}
                     >
                         Show All

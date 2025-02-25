@@ -60,13 +60,13 @@ export const Genre = ({
                     />
                 </div>
                 <div className="space-y-2">
-                    <h1 className="text-2xl md:text-xl lg:text-2xl xl:text-3xl text-white font-bold">
+                    <h1 className="text-xl lg:text-2xl text-white font-bold">
                         {name}
                     </h1>
                     <div className="flex items-center gap-x-4">
                         <PlayButton
                             genreId={id}
-                            className="size-9 lg:size-10 bg-white p-0"
+                            className="size-9 bg-white p-0"
                         />
                         <ShareButton genreId={id} />
                     </div>

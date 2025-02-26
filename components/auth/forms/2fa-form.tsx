@@ -25,6 +25,7 @@ import { REGEXP_ONLY_DIGITS } from "input-otp"
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { TwoFactorAuthSchema } from "@/schemas/two-factor.schema";
+import { useTwoFactorModal } from "@/hooks/use-two-factor-modal";
 
 
 interface TwoFactorAuthFormProps {
@@ -36,6 +37,7 @@ export const TwoFactorAuthForm = ({
 }: TwoFactorAuthFormProps) => {    
     
     const queryClient = useQueryClient();
+    const { onOpen } = useTwoFactorModal();
 
     const form = useForm<z.infer<typeof TwoFactorAuthSchema>>({
         resolver : zodResolver(TwoFactorAuthSchema),
@@ -50,7 +52,7 @@ export const TwoFactorAuthForm = ({
             await queryClient.invalidateQueries({
                 queryKey : ["two-factor-authentication"]
             });
-            toast.success("OTP verified successfully");
+            onOpen();
         } catch (error) {
             console.log("Verify OTP error", error);
             toast.error("Failed to verify OTP. Please try again.");

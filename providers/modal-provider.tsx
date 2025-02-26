@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { PlaylistModal } from "@/components/modals/playlist-modal";
 import { JoinPremiumModal } from "@/components/modals/join-premium-modal";
+import { TwoFactorEnableModal } from "@/components/modals/2fa-enable-modal";
 
 export const ModalProvider = () => {
     
@@ -20,6 +21,7 @@ export const ModalProvider = () => {
         <>
             <PlaylistModal/>
             <JoinPremiumModal/>
+            <TwoFactorEnableModal/>
         </>
     )
 }

@@ -35,6 +35,7 @@ export const TwoFactorAuthentication = () => {
             const response = await axios.post("/api/v1/user/account/2fa/setup", {password});
             const { secret } = response.data;
             setOpen(false);
+            setPassword("");
             setSecretUrl(secret);
         } catch (error) {
             console.log("Enable 2FA error", error);
@@ -53,6 +54,7 @@ export const TwoFactorAuthentication = () => {
                 queryKey : ["two-factor-authentication"]
             });
             setOpen(false);
+            setPassword("");
         } catch (error) {
             console.log("Disable 2FA error", error);
             toast.error("Failed to disable two factor authentication");

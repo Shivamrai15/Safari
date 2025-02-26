@@ -10,7 +10,7 @@ const SubscriptionsPage = () => {
     return (
         <main className="min-h-full w-full py-20">
             <div className="space-y-16 w-full">
-                <h2 className="text-3xl md:text-5xl font-extrabold select-none" >Transaction history</h2>
+                <h2 className="text-3xl md:text-4xl font-extrabold select-none" >Transaction history</h2>
                 <Subscriptions/>
             </div>
         </main>

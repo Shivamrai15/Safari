@@ -3,6 +3,7 @@
 import { TbUserEdit } from "react-icons/tb";
 import { MdOutlinePrivacyTip } from "react-icons/md";
 import { SectionItem } from "./section-item";
+import { FingerprintIcon } from "lucide-react";
 
 
 
@@ -10,7 +11,8 @@ export const PrivacyAndSecurity = () => {
 
     const routes = [
         { title: "Edit Login Methods", Icon: TbUserEdit, route: "/account/edit-login-methods" },
-        { title: "Privacy Policy", Icon: MdOutlinePrivacyTip, route: "/policies/privacy-policy" }
+        { title: "Privacy Policy", Icon: MdOutlinePrivacyTip, route: "/policies/privacy-policy" },
+        { title: "Two Factor Authentication", Icon: FingerprintIcon, route: "/account/2fa" }
     ]
 
     return (

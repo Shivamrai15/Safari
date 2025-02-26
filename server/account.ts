@@ -2,6 +2,7 @@
 
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
+import speakeasy from "speakeasy";
 
 export const getArchivedPlaylists = async()=>{
     try {
@@ -74,6 +75,36 @@ export const getAccountDetails = async()=>{
 
     } catch (error) {
         console.log("GET ACCOUNT API ERROR");
+        return null;
+    }
+}
+
+
+export const get2FAStatus = async()=>{
+    try {
+        
+        const session = await auth();
+        if (!session || !session.user || !session.user.id) {
+            return null;
+        }
+
+        const twoFactor = await db.user.findUnique({
+            where : {
+                id  : session.user.id
+            },
+            select : {
+                twoFactorEnabled : true,
+                password : true
+            }
+        });
+        
+        return {
+            twoFactorEnabled : twoFactor?.twoFactorEnabled,
+            isAuthorized : twoFactor?.password ? true : false
+        };
+
+    } catch (error) {
+        console.log("GET 2FA STATUS API ERROR");
         return null;
     }
 }

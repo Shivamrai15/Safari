@@ -30,7 +30,7 @@ const AccountHistoryPage = () => {
         <>
             <main className="min-h-full w-full py-20 flex justify-center">
                 <div className="space-y-10">
-                    <h2 className="text-3xl md:text-5xl font-extrabold select-none" >Delete Your History</h2>
+                    <h2 className="text-3xl md:text-4xl font-extrabold select-none" >Delete Your History</h2>
                     <div className="space-y-12">
                         <p className="font-medium select-none cursor-default">Deleting your listening history is irreversible and may impact your song recommendations and other personalized features. To listen anonymously, consider using Private Sessions. If you are sure you want to proceed, click the button below.</p>
                         <ButtonWrapper

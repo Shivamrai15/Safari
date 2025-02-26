@@ -8,23 +8,25 @@ datasource db {
 }
 
 model User {
-  id              String          @id @default(auto()) @map("_id") @db.ObjectId
-  name            String?
-  email           String          @unique
-  password        String?
-  image           String?
-  accountVerified DateTime?
-  emailVerified   DateTime?
-  history         History[]
-  accounts        Account[]
-  privateSession  Boolean         @default(false)
-  sessions        Session[]
-  playlists       PlayList[]
-  likedSongs      LikedSongs[]
-  followingIds    String[]        @db.ObjectId
-  following       Artist[]        @relation(fields: [followingIds], references: [id])
-  customer        Customer?
-  Authenticator   Authenticator[]
+  id               String          @id @default(auto()) @map("_id") @db.ObjectId
+  name             String?
+  email            String          @unique
+  password         String?
+  image            String?
+  accountVerified  DateTime?
+  emailVerified    DateTime?
+  twoFactorEnabled Boolean @default(false)
+  twoFactorSecret  String?
+  history          History[]
+  accounts         Account[]
+  privateSession   Boolean         @default(false)
+  sessions         Session[]
+  playlists        PlayList[]
+  likedSongs       LikedSongs[]
+  followingIds     String[]        @db.ObjectId
+  following        Artist[]        @relation(fields: [followingIds], references: [id])
+  customer         Customer?
+  Authenticator    Authenticator[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

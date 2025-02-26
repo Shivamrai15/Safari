@@ -76,7 +76,7 @@ export const TwoFactorAuthentication = () => {
                     <div className="max-w-md w-full bg-neutral-800/80 p-4 rounded-lg shadow-md space-y-5">
                         <div className="space-y-2">
                             <h2 className="font-semibold select-none">Two factor authentication</h2>
-                            <p className="text-sm text-zinc-400 select-none text-pretty">Two-factor authentication is enabled on your account. You'll need a verification code from your authenticator app when logging in.</p>
+                            <p className="text-sm text-zinc-400 select-none text-pretty">Two-factor authentication is enabled on your account. You&apos;ll need a verification code from your authenticator app when logging in.</p>
                         </div>
                         <div className="w-full flex items-center justify-end">
                             <Button
@@ -112,7 +112,7 @@ export const TwoFactorAuthentication = () => {
                     <div className="max-w-md w-full bg-neutral-800/80 p-4 rounded-lg shadow-md space-y-5">
                         <div className="space-y-2">
                             <h2 className="font-semibold select-none">Enable two factor authentication</h2>
-                            <p className="text-sm text-zinc-400 select-none text-pretty">Add an extra layer of security to your account with two-factor authentication. You'll need a verification code from your authenticator app when logging in.</p>
+                            <p className="text-sm text-zinc-400 select-none text-pretty">Add an extra layer of security to your account with two-factor authentication. You&apos;ll need a verification code from your authenticator app when logging in.</p>
                         </div>
                         <div className="w-full flex items-center justify-end">
                             <Button

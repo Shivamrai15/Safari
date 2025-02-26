@@ -6,5 +6,6 @@ export const LoginSchema = z.object({
     }),
     password : z.string().min(1, {
         message : "Your password is required"
-    })
+    }),
+    token : z.string().optional(),
 });

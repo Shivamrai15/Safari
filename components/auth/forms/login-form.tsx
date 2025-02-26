@@ -1,6 +1,7 @@
 "use client";
 
 import * as z from "zod";
+import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,15 +19,14 @@ import { LoginSchema } from "@/schemas/login.schema";
 import { FormWrapper } from "@/components/auth/utils/form-wrapper";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { login } from "@/server/login";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { TokenForm } from "./token-form";
 
 export const LoginForm = () => {
 
     const [ loading, setLoading ] = useState(false);
-    const router = useRouter();
+    const [ open, setOpen ] = useState(false);
     
     const form = useForm<z.infer<typeof LoginSchema>>({
         resolver : zodResolver(LoginSchema),
@@ -38,11 +38,15 @@ export const LoginForm = () => {
 
     const handleLogin = async (values : z.infer<typeof LoginSchema>) => {
         try {
-            
+            console.log("Login values", values);
             setLoading(true);
             const response = await login(values);
             if (response.error) {
                 toast.error(response.error);
+            }
+            if (response.twoFactor) {
+                setOpen(true);
+                return;
             }
             if (response.info) {
                 toast.info(response.info);
@@ -104,6 +108,12 @@ export const LoginForm = () => {
                                 </FormItem>
                             )}
                         />
+                        <TokenForm
+                            form={form}
+                            open={open}
+                            disabled={loading}
+                            handleLogin={handleLogin}
+                        />
                     </div>
                     <Button
                         type="submit"
@@ -119,6 +129,7 @@ export const LoginForm = () => {
                     </div>
                 </form>
             </Form>
+            
         </FormWrapper>
     )
 }

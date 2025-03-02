@@ -1,4 +1,5 @@
 import { AccountSection } from "@/components/account/account-section";
+import { HelpSection } from "@/components/account/help-section";
 import { PaymentSection } from "@/components/account/payment-section";
 import { PrivacyAndSecurity } from "@/components/account/privacy-and-security";
 import { Metadata } from "next";
@@ -16,6 +17,7 @@ const AccountPage = () => {
                 <AccountSection/>
                 <PaymentSection/>
                 <PrivacyAndSecurity/>
+                <HelpSection/>
             </div>
         </main>
     )

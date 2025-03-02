@@ -29,7 +29,8 @@ export async function GET (req: Request) {
                 skip : 1,
                 orderBy : {
                     createdAt : "desc"
-                }
+                },
+                distinct : "stripeCurrentPeriodEnd"
             });
         } else {
             orders = await db.subscription.findMany({
@@ -39,7 +40,8 @@ export async function GET (req: Request) {
                 take : BATCH,
                 orderBy : {
                     createdAt : "desc"
-                }
+                },
+                distinct : "stripeCurrentPeriodEnd"
             });
         }
 

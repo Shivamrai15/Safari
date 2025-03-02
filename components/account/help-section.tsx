@@ -1,22 +1,17 @@
 "use client";
-
-
-import { FaRegUser } from "react-icons/fa6";
-import { RiHistoryFill } from "react-icons/ri";
+import { CircleHelp } from "lucide-react";
 import { SectionItem } from "./section-item";
-import { ListRestart } from "lucide-react";
 
-export const AccountSection = () => {
+
+export const HelpSection = () => {
 
     const routes = [
-        { title: "Your profile", Icon: FaRegUser, route: "/account/profile" },
-        { title: "Delete history", Icon: RiHistoryFill, route: "/account/history" },
-        { title: "Recover playlists", Icon: ListRestart, route: "/account/recover-playlists" }
-    ];
+        { title : "Safari support", Icon : CircleHelp, route : "/help" }
+    ]
 
     return (
         <section className="p-3 bg-neutral-800/80 rounded-lg space-y-6">
-            <h3 className="font-bold text-2xl md:text-3xl px-2 select-none">Account</h3>
+            <h3 className="font-bold text-2xl md:text-3xl px-2 select-none">Help</h3>
             <ul>
                 {
                     routes.map((item)=>(
@@ -29,6 +24,6 @@ export const AccountSection = () => {
                     ))
                 }
             </ul>
-        </section>  
+        </section>
     )
 }

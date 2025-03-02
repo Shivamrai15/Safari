@@ -2,7 +2,6 @@
 
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
-import speakeasy from "speakeasy";
 
 export const getArchivedPlaylists = async()=>{
     try {

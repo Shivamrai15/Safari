@@ -1,8 +1,9 @@
 "use client";
 
-import { Album, Artist, Song } from "@prisma/client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import axios from "axios";
+import { Song } from "@/types";
 import { SmallDevicesSongOptions } from "./small-devices-song-options";
 import { SongOptions } from "./song-options";
 import { useQueue } from "@/hooks/use-queue";
@@ -11,7 +12,7 @@ import { useSocketEvents } from "@/hooks/use-socket-events";
 import { PRIORITY_ENQUEUE } from "@/lib/events";
 
 interface SongCardProps {
-    song : Song & { album : Album , artists : Artist[] }
+    song : Song;
 }
 
 export const SongCard = ({
@@ -19,19 +20,32 @@ export const SongCard = ({
 } : SongCardProps ) => {
     
     const router = useRouter();
-    const { priorityEnqueue } = useQueue();
+    const { priorityEnqueue, queue, enQueue } = useQueue();
     const socket = useSocket();
     const { connected, roomId } = useSocketEvents();
+
+    const handlePlay = async ()=>{
+        priorityEnqueue([song]);
+        if ( connected ) {
+            socket.emit(PRIORITY_ENQUEUE, { roomId, songs:[song] });
+        }
+
+        if (queue.length==0){
+            try {
+                const response = await axios.get(`/api/v1/song/recommendations?id=${song.id}`);
+                const recommendations = response.data as Song[];
+                enQueue(recommendations);
+            } catch (error) {
+               console.log(error); 
+            }
+        }
+    }
+
 
     return (
         <div
             className="w-full bg-neutral-900 hover:bg-neutral-800/90 transition-all rounded-sm group p-2 md:cursor-pointer"
-            onClick={()=>{
-                priorityEnqueue([song]);
-                if ( connected ) {
-                    socket.emit(PRIORITY_ENQUEUE, { roomId, songs:[song] });
-                }
-            }}
+            onClick={handlePlay}
         >
             <div className="flex items-center gap-x-4">
                 <div className="h-12 w-12 shrink-0 overflow-hidden relative">

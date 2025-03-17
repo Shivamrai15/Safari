@@ -94,6 +94,7 @@ model Song {
   playlistSongs PlaylistSong[]
   view          View[]
   history       History[]
+  embedding     Embedding?
 
   @@index([albumId, name])
 }
@@ -330,4 +331,13 @@ model Authenticator {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, credentialID])
+}
+
+
+model Embedding {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  vector Float[]
+  pointId String @unique
+  songId String @unique @db.ObjectId
+  song Song @relation(fields: [songId], references: [id], onDelete: Cascade)
 }

@@ -70,7 +70,7 @@ export const PoliciesHeader = ({
                     </Link>
                     <div className="flex items-center gap-x-6">
                         <Link
-                            href="/account/subscription"
+                            href="/subscription"
                             className="font-semibold text-zinc-300 hover:text-white transition-all select-none"
                         >
                             Premium

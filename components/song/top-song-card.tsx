@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 import { useSocket } from "@/hooks/use-socket";
 import { useSocketEvents } from "@/hooks/use-socket-events";
 import { PRIORITY_ENQUEUE } from "@/lib/events";
+import axios from "axios";
 
 interface TopSongCardProps {
     song : ( Song & { album : Album } );
@@ -24,10 +25,31 @@ export const TopSongCard = ({
 
     const router = useRouter();
     const session = useSession();
-    const { priorityEnqueue, current } = useQueue();
+    const { priorityEnqueue, current, queue, enQueue } = useQueue();
     const { isPlaying } = usePlayer();
     const socket = useSocket();
     const { connected, roomId } = useSocketEvents();
+
+    const handlePlay = async() => {
+        if(session.status === "unauthenticated") {
+            router.push("/login");
+            return;
+        }
+        priorityEnqueue([song]);
+        if ( connected ) {
+            socket.emit(PRIORITY_ENQUEUE, { roomId, songs:[song] });
+        }
+        if (queue.length==0){
+            try {
+                const response = await axios.get(`/api/v1/song/recommendations?id=${song.id}`);
+                const recommendations = response.data as (Song & { album: Album })[];
+                enQueue(recommendations);
+            } catch (error) {
+               console.log(error); 
+            }
+        }
+    }
+
 
     return (
         <div className="h-40 md:h-44 flex items-center group">
@@ -36,17 +58,7 @@ export const TopSongCard = ({
             </span>
             <div
                 className="aspect-[3/4] h-40 md:h-44 w-full space-y-2 md:space-y-4 md:cursor-pointer"
-                onClick={()=>{
-                    if(session.status === "unauthenticated") {
-                        router.push("/login");
-    
-                    } else {
-                        priorityEnqueue([song]);
-                        if ( connected ) {
-                            socket.emit(PRIORITY_ENQUEUE, { roomId, songs:[song] });
-                        }
-                    }
-                }}
+                onClick={handlePlay}
             >
                 <div className="aspect-[15/16] relative overflow-hidden">
                     <Image

@@ -1,10 +1,11 @@
 "use client";
+
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Audio } from "react-loader-spinner";
+import axios from "axios";
 
 import { songLength } from "@/lib/utils";
-import { Album, Song } from "@prisma/client"
 import { SongOptions } from "./song-options";
 import { SmallDevicesSongOptions } from "./small-devices-song-options";
 import { useQueue } from "@/hooks/use-queue";
@@ -12,14 +13,14 @@ import { usePlayer } from "@/hooks/use-player";
 import { useSocket } from "@/hooks/use-socket";
 import { useSocketEvents } from "@/hooks/use-socket-events";
 import { PRIORITY_ENQUEUE } from "@/lib/events";
+import { Song } from "@/types";
 
 interface ListItemProps {
-    song : Song & {
-        artists : {id : string, name : string, image: string}[],
-        album : Album
-    };
+    song : Song
     index : number
+
 }
+
 
 export const ListItem = ({
     song,
@@ -28,29 +29,39 @@ export const ListItem = ({
 
     const router = useRouter();
     const session = useSession();
-    const { priorityEnqueue, current } = useQueue();
-    const { isPlaying } = usePlayer();
     const socket = useSocket();
+    const { priorityEnqueue, current, queue, enQueue } = useQueue();
+    const { isPlaying } = usePlayer();
     const { connected, roomId } = useSocketEvents();
+
+    const handlePlay = async ()=>{
+        if ( !session.data ) {
+            router.push("/login");
+            return;
+        }
+        priorityEnqueue([song]);
+        if ( connected ) {
+            socket.emit(PRIORITY_ENQUEUE, { roomId, songs:[song] });
+        }
+        if (queue.length==0){
+            try {
+                const response = await axios.get(`/api/v1/song/recommendations?id=${song.id}`);
+                const recommendations = response.data as Song[];
+                enQueue(recommendations);
+            } catch (error) {
+                console.log(error); 
+            }
+        }
+    }
 
     return (
         <div
             className="w-full h-full px-4 gap-4 md:gap-6 py-3 group hover:bg-neutral-800/70 rounded-sm transition-all md:cursor-pointer select-none"
-            onClick={()=>{
-                if(session.status === "unauthenticated") {
-                    router.push("/login");
-
-                } else {
-                    priorityEnqueue([song]);
-                    if ( connected ) {
-                        socket.emit(PRIORITY_ENQUEUE, { roomId, songs:[song] });
-                    }
-                }
-            }}
+            onClick={handlePlay}
         >
             <div className="flex items-center gap-4 md:gap-6 font-semibold text-lg">
                 <h4 className="w-8 text-base shrink-0">
-                    { (current?.id===song.id && isPlaying ) ? <Audio color="#ef4444" height={25} /> : index}
+                    {(current?.id===song.id && isPlaying ) ? <Audio color="#ef4444" height={25} /> : index}
                 </h4>
                 <div className="w-full flex-1 shrink overflow-hidden">
                     <p className="text-base line-clamp-1" >{song.name.trim()}</p>

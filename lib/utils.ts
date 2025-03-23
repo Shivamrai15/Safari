@@ -128,3 +128,8 @@ export const getMax = ( data : string[] ) => {
 
     return mostRepeatedId;
 }
+
+export const getShortName = (name: string)=>{
+    const words = name.split(" ");
+    return words.map(word=>word[0].toUpperCase()).join("");
+}

@@ -29,8 +29,7 @@ export const SongCard = ({
         if ( connected ) {
             socket.emit(PRIORITY_ENQUEUE, { roomId, songs:[song] });
         }
-
-        if (queue.length==0){
+        else if (queue.length==0){
             try {
                 const response = await axios.get(`/api/v1/song/recommendations?id=${song.id}`);
                 const recommendations = response.data as Song[];

@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { nanoid } from "nanoid";
 import { useSession } from "next-auth/react";
@@ -8,25 +7,28 @@ import { useSession } from "next-auth/react";
 import { useSocket } from "@/hooks/use-socket";
 import { useSocketEvents } from "@/hooks/use-socket-events";
 
+import axios from "axios";
+import JoinRoom from "./join-room";
 import { cn } from "@/lib/utils";
-import { Rabbit } from 'lucide-react';
-import { MonitorSmartphone } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { END_ROOM, JOIN_ROOM, LEAVE_ROOM } from "@/lib/events";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { RoomUser } from "@/types";
+import { Loader } from "@/components/utils/loader";
 
 
 export const CreateRoomCard = () => {
 
     const searchParams = useSearchParams();
     const roomIdParam = searchParams.get("room");
+    const queryClient = useQueryClient();
 
     const socket = useSocket();
     const session = useSession();
     const { connected, currentUser, roomId } = useSocketEvents();
 
 
-    const onHandleJoin = ( roomId: string, isHost: boolean ) => {
+    const handleJoinRoom = ( roomId: string, isHost: boolean ) => {
         socket.emit(JOIN_ROOM, { 
             name : session.data?.user?.name|| "",
             email : session.data?.user?.email|| "",
@@ -38,84 +40,102 @@ export const CreateRoomCard = () => {
 
     const handleLeaveRoom = () => {
         socket.emit(LEAVE_ROOM);
+        queryClient.invalidateQueries({
+            queryKey : ["room", roomId]
+        });
     }
 
     const handleEndRoom = () => {
         socket.emit(END_ROOM, {roomId});
     }
 
-    useEffect(()=>{
-        if ( roomIdParam && !connected ) {
-            onHandleJoin(roomIdParam, false);
-        }
-    }, [roomIdParam]);
-
+    const { data, isPending } : { data : { roomId: string, users: RoomUser[] }|undefined|null, isPending: boolean } = useQuery({
+        queryFn : async()=>{
+            const res = await axios.get(`${process.env.NEXT_PUBLIC_SOCKET_API}/api/v1/room/${roomIdParam}`);
+            return res.data;
+        },
+        queryKey : ["room", roomIdParam],
+        enabled : !!roomIdParam
+    })
 
 
     return (
-        <header className={cn(
-            "max-w-xl w-full p-6 py-8 md:py-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-red-800/20 to-neutral-900/80  rounded-lg md:rounded-3xl space-y-10 transition-all duration-700",
-            connected && "from-emerald-800/20"
-        )}>
-            <div className="flex items-center gap-x-6">
-                <MonitorSmartphone className="h-8 w-8 md:h-10 md:w-10" />
-                <h2 className="text-2xl sm:text-2xl md:text-4xl font-bold" >
+        <div className="w-full overflow-hidden relative bg-gradient-to-b from-neutral-950/80 bg-neutral-900/60 max-w-4xl mx-auto rounded-3xl">
+            <svg className="pointer-events-none absolute inset-[unset] text-zinc-900 [mask-image:linear-gradient(transparent,black_40%)]" width="100%" height="100%"><defs><pattern id="grid-«r1c»" x="-1" y="-1" width="50" height="50" patternUnits="userSpaceOnUse"><path d="M 80 0 L 0 0 0 80" fill="transparent" stroke="currentColor" strokeWidth="1"></path></pattern></defs><rect fill="url(#grid-«r1c»)" width="100%" height="100%"></rect></svg>
+            <div className="w-full p-6 space-y-10 z-10 relative">
+                <div className="pt-10 space-y-8">
+                    <h1 className="text-center text-xl font-semibold md:text-4xl select-none">Start a group session</h1>
+                    <p className="max-w-xl w-full text-center text-zinc-300 mx-auto select-none">Create a room, invite friends, and simultaneously listen to shared playlists, fostering real-time musical connection.</p>
+                </div>
+                <div className="flex items-center justify-center">
                     {
-                        connected ? "Connected" : "Disconnected"
-                    }
-                </h2>
-            </div>
-            <Separator className="w-full bg-neutral-700"/>
-            <div>
-                {
-                    connected ? (
-                        <div className="flex items-center space-x-4">
+                        !connected && !roomIdParam ? (
                             <Button
-                                className="bg-transparent border-2 border-zinc-600 rounded-full"
-                                variant="outline"
-                                size="lg"
-                                onClick={async()=>{
-                                    await navigator.share({
-                                        title : "Listen with your friends",
-                                        url : `/listen-with-friends?room=${roomId}`
-                                    })
-                                }}
+                                className="rounded-full select-none"
+                                variant="secondary"
+                                size="sm"
+                                onClick={()=>handleJoinRoom(nanoid(), true)}
                             >
-                                Invite
+                                Create Room
                             </Button>
-                            {
-                                currentUser?.isHost ? (
+                            
+                        ) : (
+                            !connected && roomIdParam && isPending ? (
+                                <div className="w-full flex items-center justify-between py-4">
+                                    <Loader/>
+                                </div>
+                            ) : !connected && roomIdParam && data ? (
+                                <JoinRoom
+                                    joinRoom={handleJoinRoom}
+                                    roomId={data.roomId}
+                                    users={data.users}                         
+                                />
+                            )
+                            : (
+                                <div className="flex items-center justify-center gap-x-4">
                                     <Button
-                                        className="bg-transparent border-2 border-zinc-600 rounded-full"
-                                        variant="outline"
-                                        size="lg"
-                                        onClick={handleEndRoom}
+                                        className="rounded-full select-none"
+                                        size="sm"
+                                        onClick={async()=>{
+                                            await navigator.share({
+                                                title : "Listen with your friends",
+                                                url : `/listen-with-friends?room=${roomId}`
+                                            })
+                                        }}
                                     >
-                                        End
+                                        Invite Friends
                                     </Button>
-                                ) : (
                                     <Button
-                                        className="bg-transparent border-2 border-zinc-600 rounded-full"
-                                        variant="outline"
-                                        size="lg"
-                                        onClick={handleLeaveRoom}
+                                        className="rounded-full select-none"
+                                        variant="secondary"
+                                        size="sm"
+                                        onClick={()=>{
+                                            if (currentUser?.isHost) {
+                                                handleEndRoom();
+                                            } else {
+                                                handleLeaveRoom();
+                                            }
+                                        }}
                                     >
-                                        Leave
-                                    </Button>
-                                )
-                            }
-                        </div>
-                    ) : (
-                        <Button 
-                            className="h-12 px-8 rounded-full bg-red-600 hover:bg-red-600/80 text-white font-semibold text-base"
-                            onClick={()=>onHandleJoin(nanoid(), true)}
-                        >
-                            <Rabbit className="h-6 w-6 mr-3" />
-                            Create Room
-                        </Button>
-                    )
-                }
+                                        { currentUser?.isHost ? "End Room" : "Leave Room" }
+                                    </Button> 
+                                </div>
+                            )
+                        )
+                    }
+                </div>
             </div>
-        </header>
+            <div className="absolute top-0 right-0">
+                <div className="p-4 flex items-center justify-center gap-x-2">
+                    <div className={cn(
+                        "size-3 animate-pulse bg-neutral-500 rounded-full",
+                        connected && "bg-green-500"
+                    )} />
+                    <h4 className="text-sm font-medium text-zinc-300 select-none">
+                        { connected ? "Connected" : "Disconnected" }
+                    </h4>
+                </div>
+            </div>
+        </div>
     )
 }

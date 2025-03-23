@@ -2,6 +2,7 @@
 
 import { useSocketEvents } from "@/hooks/use-socket-events";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import UserCard from "./user-card";
 
 
 export const Connections = () => {
@@ -13,18 +14,11 @@ export const Connections = () => {
     }
 
     return (
-        <div className="max-w-xl w-full space-y-10">
-            <h2 className="text-xl md:text-3xl font-semibold" >Connections</h2>
-            <ul className="space-y-2" >
+        <div className="max-w-4xl w-full space-y-6 mx-auto">
+            <h2 className="text-lg md:text-2xl font-semibold select-none" >Friends</h2>
+            <ul className="grid sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3" >
                 { remainingUsers.map((user)=>(
-                    <li key={user.socketId} className="w-full flex items-center space-x-6 px-6 py-3 hover:bg-neutral-900/80 transition-all rounded-md">
-                        <Avatar>
-                            <AvatarImage src={user?.image||"/assets/user.png"} alt="@user" />
-                        </Avatar>
-                        <div className="w-full group">
-                            <p className="line-clamp-1 text-zinc-300">{user.name}</p>
-                        </div>
-                    </li>
+                    <UserCard key={user.socketId} user={user} />
                 )) }
             </ul>
         </div>

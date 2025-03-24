@@ -50,7 +50,7 @@ export const Providers = ({ current, provider }: ProvidersProps) => {
                 ? (<FaGoogle className="size-5" />)
                 : (<FaGithub className="size-5" />)
             }
-            <span className="font-medium" >{provider[0].toUpperCase()+provider.slice(1)}</span>
+            <span className="font-medium select-none" >{provider[0].toUpperCase()+provider.slice(1)}</span>
         </Button>
     )
 }

@@ -25,7 +25,8 @@ export async function POST ( req: Request ) {
             },
             select : {
                 twoFactorEnabled : true,
-                password : true
+                password : true,
+                email : true
             }
         });
 
@@ -43,7 +44,7 @@ export async function POST ( req: Request ) {
         }
 
         const secret = speakeasy.generateSecret({
-            name : "Safari Music"
+            name : `Safari Music ${user.email}`
         });
 
         await db.user.update({

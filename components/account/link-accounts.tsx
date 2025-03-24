@@ -17,7 +17,7 @@ export const LinkAccounts = async() => {
     return (
         <div className="space-y-10">
             <div className="w-full space-y-4">
-                <h2 className="font-semibold">Current Login methods</h2>
+                <h2 className="font-semibold select-none">Current Login methods</h2>
                 <div className="flex flex-col gap-y-3">
                     {
                         account.accountVerified && (
@@ -39,7 +39,7 @@ export const LinkAccounts = async() => {
                 </div>
             </div>
             <div className="w-full space-y-4">
-                <h2 className="font-semibold">Available Login methods</h2>
+                <h2 className="font-semibold select-none">Available Login methods</h2>
                 <div className="flex flex-col gap-y-3">
                     {
                         !account.accountVerified && (

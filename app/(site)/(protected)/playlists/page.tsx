@@ -7,7 +7,7 @@ const PlaylistsPage = () => {
             <div className="md:pr-32 space-y-16">
                 <div className="space-y-10">
                     <header className="flex justify-between items-center">
-                        <h1 className="text-2xl md:text-3xl font-extrabold">Your Library</h1>
+                        <h1 className="text-2xl md:text-3xl font-extrabold select-none">Your Library</h1>
                     </header>
                     <SavedPalylists/>
                 </div>

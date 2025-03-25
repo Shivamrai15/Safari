@@ -1,7 +1,6 @@
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
-import { qdrant } from "@/lib/qdrant";
-import { Album, Artist, Song, History } from "@prisma/client";
+import { Album, Song, History } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 const SONGS_BATCH = 10;

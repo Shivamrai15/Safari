@@ -40,3 +40,13 @@ export type RoomUser = {
     isHost : boolean;
     image : string|undefined|null
 }
+
+
+export type HistoryItem = {
+    id: string;
+    songId: string;
+    userId: string;
+    createdAt: Date | string;
+    updatedAt: Date | string;
+    song: Song;
+};

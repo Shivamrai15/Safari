@@ -1,7 +1,8 @@
 import { Album, Artist, Song } from "@prisma/client";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { format } from "date-fns";
+import { format, isSameDay, isYesterday, differenceInCalendarDays } from "date-fns";
+import { HistoryItem } from "@/types";
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs))
@@ -32,68 +33,65 @@ export const subscriber = ( num : number ) => {
 }
 
 
-export const differnceBtwHistory = ( h1 : Date, h2 : Date ) => {
-    try {
-        const hist1 = new Date(h1);
-        const hist2 = new Date(h2);
-    
-        if ( hist1.getDate() === hist2.getDate() && hist1.getMonth() === hist2.getMonth() && hist1.getFullYear() === hist2.getFullYear() ) {
-            return null;
-        } 
-    
-        if ( hist1.getDate()-hist2.getDate() > 0 &&  hist1.getMonth() === hist2.getMonth()  &&  hist1.getFullYear() === hist2.getFullYear() ){
-            
-            if ( new Date().getDate() === (hist2.getDate() + 1) ) {
-                return "Yesterday";
-            }
-            if ( (new Date().getDate()-hist2.getDate()) < 6 ) {
-                return format(hist2, "eeee");
-            }
-        }
-    
-        if ( hist1.getFullYear() === hist2.getFullYear() ) {
-            return format(hist2, "dd MMMM");
-        }
-    
-        return format(hist2, "dd MMMM yyyy");
-    } catch (error) {
+export const differenceBetweenHistory = (date1: Date|string, date2: Date|string) => {
+    const d1 = new Date(date1);
+    const d2 = new Date(date2);
+  
+    if (isSameDay(d1, d2)) {
         return null;
     }
-}
+  
+    const diff = differenceInCalendarDays(d1, d2);
+    const currentDiff = differenceInCalendarDays(new Date(), d2);
+  
+    if (diff === 1 && isYesterday(d2) && currentDiff === 1) {
+        return "Yesterday";
+    }
+    if (diff >= 1 && currentDiff <= 6) {
+        return format(d2, "eeee");
+    }
+    if (d1.getFullYear() === d2.getFullYear()) {
+        return format(d2, "dd MMMM");
+    }
+    return format(d2, "dd MMMM yyyy");
+};
+
+
+export type HistoryPage = {
+    items: HistoryItem[];
+    nextCursor?: string;
+};
+
 
 export const historyPartition = ( 
-    pages : any[], 
-    i : number, 
-    group : ( Song & {
-        artists : Artist[],
-        album : Album ,
-        history : Date
-    })[],
+    pages : HistoryPage[], 
+    pageIndex : number, 
+    group : HistoryItem[],
     idx : number
 ) => {
 
     try {
-        if ( i === 0 && idx < group.length-1 ) {
-            const h1 = group[idx].history;
-            const h2 = group[idx+1].history;
-            const diff  = differnceBtwHistory(h1, h2);
+        if (pageIndex === 0 && idx < group.length - 1) {
+            const h1 = new Date(group[idx].createdAt);
+            const h2 = new Date(group[idx + 1].createdAt);
+            const diff = differenceBetweenHistory(h1, h2);
             return diff;
         }
-    
-        if ( pages.length > 1 && idx === group.length-1 && i < pages.length-1 ) {
-            const h1 = group[idx].history;
-            const h2 = pages[i+1]['items'][0]['history'];
-            const diff  = differnceBtwHistory(h1, h2);
+      
+        if (pages.length > 1 && idx === group.length - 1 && pageIndex < pages.length - 1) {
+            const h1 = new Date(group[idx].createdAt);
+            const h2 = new Date(pages[pageIndex + 1].items[0].createdAt);
+            const diff = differenceBetweenHistory(h1, h2);
             return diff;
         }
-    
-        if ( idx < group.length-1 ) {
-            const h1 = group[idx].history;
-            const h2 = group[idx+1].history;
-            const diff  = differnceBtwHistory(h1, h2);
+      
+        if (idx < group.length - 1) {
+            const h1 = new Date(group[idx].createdAt);
+            const h2 = new Date(group[idx + 1].createdAt);
+            const diff = differenceBetweenHistory(h1, h2);
             return diff;
         }
-    
+      
         return null;
     } catch (error) {
         return null;

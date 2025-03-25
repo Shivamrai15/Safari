@@ -1,5 +1,10 @@
+import { Metadata } from "next";
 import { HistoryList } from "@/components/history/history-list";
 
+
+export const metadata: Metadata = {
+    title : "History",
+}
 
 const HistoryPage = () => {
     return (

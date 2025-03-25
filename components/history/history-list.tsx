@@ -2,13 +2,13 @@
 
 import { Fragment, useEffect } from "react";
 import { useInView } from "react-intersection-observer";
-import { format } from "date-fns"
+import { format , isSameDay} from "date-fns"
 
 import { useQuery } from "@/hooks/use-query";
 import { SyncLoader } from "react-spinners";
 import { Album, Song, History } from "@prisma/client";
 import { SongItem } from "../song/song-item";
-import { differnceBtwHistory, historyPartition } from "@/lib/utils";
+import { differenceBetweenHistory, historyPartition } from "@/lib/utils";
 import { HistoryHeader } from "./history-header";
 
 export const revalidate = 0;
@@ -55,6 +55,8 @@ export const HistoryList = () => {
             </div>
         )
     }
+
+    console.log(data?.pages);
     
     return (
         <div className="flex flex-col items-center mb-8">
@@ -64,9 +66,9 @@ export const HistoryList = () => {
                         { group.items.map((history : ItemType, idx : number ) => (
                             <>
                                 {
-                                    idx===0 && i===0 && ((new Date(history.createdAt).getDate() === new Date().getDate()) ? 
+                                    idx===0 && i===0 && ( isSameDay(new Date(history.createdAt), new Date()) ? 
                                         (<HistoryHeader label="Today" />):
-                                        (<HistoryHeader label={differnceBtwHistory(new Date(), history.createdAt)} />)
+                                        (<HistoryHeader label={differenceBetweenHistory(new Date(), new Date(history.createdAt))} />)
                                     )
                                 }
                                 <div className="w-full flex items-center justify-start gap-x-6 md:gap-x-10" key={history.song.id} >

@@ -13,6 +13,7 @@ import { FaPause, FaPlay } from "react-icons/fa6";
 import { useSocket } from "@/hooks/use-socket";
 import { useSocketEvents } from "@/hooks/use-socket-events";
 import { PRIORITY_ENQUEUE } from "@/lib/events";
+import { motion } from "framer-motion";
 
 interface CardProps {
     song : (Song & { album: Album });
@@ -37,7 +38,12 @@ export const Card = ({
             className="w-full bg-neutral-900 p-3 rounded-md hover:bg-neutral-800/80 group space-y-4 md:cursor-pointer select-none transition-colors"
             onClick={()=>router.push(`/track?id=${song.id}`)}
         >
-            <div className="w-full aspect-square rounded-md relative overflow-hidden">
+            <motion.div
+                className="w-full aspect-square rounded-md relative overflow-hidden"
+                initial={{ filter: "blur(10px)" }}
+                animate={{ filter: "blur(0px)" }}
+                transition={{ duration: 0.3 }}
+            >
                 <Image
                     src={song.image}
                     alt={song.name}
@@ -73,7 +79,7 @@ export const Card = ({
                         </Button>                        
                     </div>
                 </div>
-            </div>
+            </motion.div>
             <div className="pb-2">
                 <h2 className="line-clamp-1 font-medium select-none">{song.name}</h2>
             </div>

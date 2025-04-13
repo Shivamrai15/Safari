@@ -50,3 +50,12 @@ export type HistoryItem = {
     updatedAt: Date | string;
     song: Song;
 };
+
+
+export type AccountResponse = {
+    name: string | null;
+    id: string;
+    privateSession: boolean;
+    isActive : boolean;
+    showRecommendations: boolean;
+}

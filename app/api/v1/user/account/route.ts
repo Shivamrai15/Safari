@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
+import { AccountSchema } from "@/schemas/account.schema";
 import { getUserSubscription } from "@/server/queries";
 import { NextResponse } from "next/server";
 
@@ -19,6 +20,7 @@ export async function GET ( req : Request ) {
                 id : true,
                 name : true,
                 privateSession : true,
+                showRecommendations : true,
             }
         });
 
@@ -45,14 +47,19 @@ export async function PATCH ( req : Request ) {
             return new NextResponse("Unauthorized", { status : 401 });
         }
 
-        const { privateSession } : { privateSession : boolean } = await req.json();
+        const body = await req.json();
+        const validatedData = await AccountSchema.safeParseAsync(body);
+
+        if (!validatedData.success) {
+            return new NextResponse("Invalid data", { status : 400 });
+        }
 
         await db.user.update({
             where : {
                 id : session.user.id,
             },
             data : {
-                privateSession
+                ...validatedData.data,
             }
         });
 

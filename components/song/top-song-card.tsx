@@ -12,6 +12,8 @@ import { useSocket } from "@/hooks/use-socket";
 import { useSocketEvents } from "@/hooks/use-socket-events";
 import { PRIORITY_ENQUEUE } from "@/lib/events";
 import axios from "axios";
+import { AccountResponse } from "@/types";
+import { useAccount } from "@/hooks/use-account";
 
 interface TopSongCardProps {
     song : ( Song & { album : Album } );
@@ -29,6 +31,7 @@ export const TopSongCard = ({
     const { isPlaying } = usePlayer();
     const socket = useSocket();
     const { connected, roomId } = useSocketEvents();
+    const { data, isLoading } : { data: AccountResponse, isLoading: boolean } = useAccount();
 
     const handlePlay = async() => {
         if(session.status === "unauthenticated") {
@@ -39,7 +42,7 @@ export const TopSongCard = ({
         if ( connected ) {
             socket.emit(PRIORITY_ENQUEUE, { roomId, songs:[song] });
         }
-        else if (queue.length==0){
+        else if (queue.length==0 && !isLoading && data && data.showRecommendations){
             try {
                 const response = await axios.get(`/api/v1/song/recommendations?id=${song.id}`);
                 const recommendations = response.data as (Song & { album: Album })[];

@@ -13,7 +13,8 @@ import { usePlayer } from "@/hooks/use-player";
 import { useSocket } from "@/hooks/use-socket";
 import { useSocketEvents } from "@/hooks/use-socket-events";
 import { PRIORITY_ENQUEUE } from "@/lib/events";
-import { Song } from "@/types";
+import { AccountResponse, Song } from "@/types";
+import { useAccount } from "@/hooks/use-account";
 
 interface ListItemProps {
     song : Song
@@ -31,6 +32,7 @@ export const ListItem = ({
     const session = useSession();
     const socket = useSocket();
     const { priorityEnqueue, current, queue, enQueue } = useQueue();
+    const { data, isLoading } : { data: AccountResponse, isLoading: boolean } = useAccount();
     const { isPlaying } = usePlayer();
     const { connected, roomId } = useSocketEvents();
 
@@ -43,7 +45,7 @@ export const ListItem = ({
         if ( connected ) {
             socket.emit(PRIORITY_ENQUEUE, { roomId, songs:[song] });
         } 
-        else if (queue.length==0){
+        else if (queue.length==0 && !isLoading && data && data.showRecommendations){
             try {
                 const response = await axios.get(`/api/v1/song/recommendations?id=${song.id}`);
                 const recommendations = response.data as Song[];

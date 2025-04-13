@@ -6,6 +6,7 @@ import { getUserSubscription } from "@/server/queries";
 import { SubscriptionDetails } from "@/components/account/subscription-details";
 import { AccountInfo } from "@/components/account/account-info";
 import { Playlists } from "@/components/account/playlists";
+import { SettingsForm } from "@/components/forms/settings-form";
 
 
 const ProfilePage = async() => {
@@ -43,6 +44,7 @@ const ProfilePage = async() => {
                     <div className="w-full">
                         <SubscriptionDetails subscription={subscription} />
                     </div>
+                    <SettingsForm/>
                     <Playlists/>
                 </div>
             </div>

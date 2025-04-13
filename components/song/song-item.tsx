@@ -13,7 +13,8 @@ import { useSession } from "next-auth/react";
 import { useSocket } from "@/hooks/use-socket";
 import { useSocketEvents } from "@/hooks/use-socket-events";
 import { PRIORITY_ENQUEUE } from "@/lib/events";
-import { Song } from "@/types";
+import { AccountResponse, Song } from "@/types";
+import { useAccount } from "@/hooks/use-account";
 
 
 interface SongItemProps {
@@ -28,6 +29,7 @@ export const SongItem = ({
     const session = useSession();
     const { priorityEnqueue, current, queue, enQueue } = useQueue();
     const { isPlaying } = usePlayer();
+    const { data, isLoading } : { data: AccountResponse, isLoading: boolean } = useAccount();
 
     const socket = useSocket();
     const { connected, roomId } = useSocketEvents();
@@ -41,7 +43,7 @@ export const SongItem = ({
         if ( connected ) {
             socket.emit(PRIORITY_ENQUEUE, { roomId, songs:[song] });
         }
-        else if (queue.length==0){
+        else if (queue.length==0 && !isLoading && data && data.showRecommendations){
             try {
                 const response = await axios.get(`/api/v1/song/recommendations?id=${song.id}`);
                 const recommendations = response.data as Song[];

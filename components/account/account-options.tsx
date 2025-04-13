@@ -1,5 +1,10 @@
 "use client";
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { signOut } from "next-auth/react";
+
+import axios from "axios";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -8,15 +13,12 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAccount } from "@/hooks/use-account";
-import axios from "axios";
 import { Check } from "lucide-react";
-import { signOut } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
 
 import { FaUser } from "react-icons/fa6";
 import { toast } from "sonner";
 import { KeyedMutator } from "swr";
+import { AccountResponse } from "@/types";
 
 
 export const AccountOptions = () => {
@@ -24,12 +26,7 @@ export const AccountOptions = () => {
     const router =  useRouter();
     const [ loading, setLoading ] = useState(false);
     const { data , isLoading, mutate } : { 
-        data : { 
-            name: string | null,
-            id: string,
-            privateSession: boolean,
-            isActive : boolean
-        },
+        data : AccountResponse,
         isLoading: boolean,
         mutate : KeyedMutator<any>
     } = useAccount();
@@ -37,8 +34,8 @@ export const AccountOptions = () => {
     const togglePrivateSession = async () => {
         try {
             setLoading(true);
-            await axios.patch("/api/v1/user/account", { privateSession : !data.privateSession });
-            mutate({ ...data, privateSession : !data.privateSession  });
+            await axios.patch("/api/v1/user/account", { privateSession : !data.privateSession, showRecommendations : data.showRecommendations });
+            mutate();
         } catch (error) {
             console.error(error);
             toast.error("Something went wrong");

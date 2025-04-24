@@ -37,6 +37,8 @@ export const SettingsForm = () => {
         },
     });
 
+    const { data : accountData } : { data : AccountResponse|undefined } = useAccount();    
+
     const { isSubmitting } = form.formState;
 
     useEffect(()=>{
@@ -81,7 +83,7 @@ export const SettingsForm = () => {
                                     <Switch
                                         checked={field.value}
                                         onCheckedChange={field.onChange}
-                                        disabled={isSubmitting||isLoading}
+                                        disabled={isSubmitting||isLoading|| !accountData?.isActive}
                                         type="submit"
                                     />
                                 </FormControl>
@@ -105,7 +107,7 @@ export const SettingsForm = () => {
                                     <Switch
                                         checked={field.value}
                                         onCheckedChange={field.onChange}
-                                        disabled={isSubmitting||isLoading}
+                                        disabled={isSubmitting||isLoading|| !accountData?.isActive}
                                         type="submit"
                                     />
                                 </FormControl>

@@ -54,6 +54,11 @@ export async function PATCH ( req : Request ) {
             return new NextResponse("Invalid data", { status : 400 });
         }
 
+        const subscriptionData = await getUserSubscription();
+        if (!subscriptionData || !subscriptionData.isActive) {
+            return new NextResponse("Subscription is not active", { status : 403 });
+        }
+
         await db.user.update({
             where : {
                 id : session.user.id,
@@ -62,6 +67,7 @@ export async function PATCH ( req : Request ) {
                 ...validatedData.data,
             }
         });
+
 
         return NextResponse.json({ success : true },  { status : 200 });
 

@@ -28,6 +28,8 @@ model User {
   following           Artist[]        @relation(fields: [followingIds], references: [id])
   customer            Customer?
   Authenticator       Authenticator[]
+  autoPlaylists       AutoPlaylist[]
+  dailyMixes          DailyMix[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -82,20 +84,22 @@ model Album {
 }
 
 model Song {
-  id            String         @id @default(auto()) @map("_id") @db.ObjectId
-  name          String
-  image         String
-  url           String
-  duration      Int
-  albumId       String         @db.ObjectId
-  album         Album          @relation(fields: [albumId], references: [id])
-  artistIds     String[]       @db.ObjectId
-  artists       Artist[]       @relation(fields: [artistIds], references: [id])
-  likedSongs    LikedSongs[]
-  playlistSongs PlaylistSong[]
-  view          View[]
-  history       History[]
-  embedding     Embedding?
+  id                String             @id @default(auto()) @map("_id") @db.ObjectId
+  name              String
+  image             String
+  url               String
+  duration          Int
+  albumId           String             @db.ObjectId
+  album             Album              @relation(fields: [albumId], references: [id])
+  artistIds         String[]           @db.ObjectId
+  artists           Artist[]           @relation(fields: [artistIds], references: [id])
+  likedSongs        LikedSongs[]
+  playlistSongs     PlaylistSong[]
+  view              View[]
+  history           History[]
+  embedding         Embedding?
+  autoPlaylistSongs AutoPlaylistSong[]
+  dailyMixSongs     DailyMixSong[]
 
   @@index([albumId, name])
 }
@@ -340,4 +344,64 @@ model Embedding {
   pointId String  @unique
   songId  String  @unique @db.ObjectId
   song    Song    @relation(fields: [songId], references: [id], onDelete: Cascade)
+}
+
+model AutoPlaylist {
+  id     String             @id @default(auto()) @map("_id") @db.ObjectId
+  name   String
+  color  String
+  image  String
+  userId String             @db.ObjectId
+  user   User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  songs  AutoPlaylistSong[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([name, userId])
+  @@index([userId])
+}
+
+model AutoPlaylistSong {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  songId         String       @db.ObjectId
+  autoPlaylistId String       @db.ObjectId
+  autoPlaylist   AutoPlaylist @relation(fields: [autoPlaylistId], references: [id], onDelete: Cascade)
+  song           Song         @relation(fields: [songId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([songId, autoPlaylistId])
+  @@index([autoPlaylistId])
+}
+
+model DailyMix {
+  id     String         @id @default(auto()) @map("_id") @db.ObjectId
+  name   String
+  color  String
+  image  String
+  userId String         @db.ObjectId
+  user   User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  songs  DailyMixSong[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([name, userId])
+  @@index([userId])
+}
+
+model DailyMixSong {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  songId     String   @db.ObjectId
+  dailyMixId String   @db.ObjectId
+  dailyMix   DailyMix @relation(fields: [dailyMixId], references: [id], onDelete: Cascade)
+  song       Song     @relation(fields: [songId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([songId, dailyMixId])
+  @@index([dailyMixId])
 }

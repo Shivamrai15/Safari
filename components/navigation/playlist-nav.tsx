@@ -34,7 +34,7 @@ export const PlaylistNav = () => {
 
     return (
         <TooltipProvider>
-            <div className="space-y-4 overflow-y-auto flex-1">
+            <div className="space-y-4">
                 {
                     data.map((playlist)=>(
                         <div  key={playlist.id}>

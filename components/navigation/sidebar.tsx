@@ -77,7 +77,7 @@ export const Sidebar = () => {
                     ))
                 }
             </div>
-            <div className="space-y-6">
+            <div className="space-y-6 flex flex-col items-center justify-center w-full">
                 <div className="flex items-center justify-center">
                     <TbSquareRoundedPlus
                         className="h-8 w-8 md:cursor-pointer"
@@ -95,6 +95,8 @@ export const Sidebar = () => {
                         className="object-cover"
                     />
                 </div>
+            </div>
+            <div className="flex-1 w-full overflow-y-auto flex flex-col items-center playlist-scroll ">
                 {
                     session.status === "authenticated" && (
                         <PlaylistNav/>

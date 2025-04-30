@@ -23,6 +23,10 @@ body,
 }
 
 
+.playlist-scroll::-webkit-scrollbar{
+  width: 0px;
+}
+
 @media screen and (min-width: 720px) {
   ::-webkit-scrollbar{
     background: #00000000;

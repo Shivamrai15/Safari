@@ -94,6 +94,7 @@ model Song {
   artistIds         String[]           @db.ObjectId
   artists           Artist[]           @relation(fields: [artistIds], references: [id])
   likedSongs        LikedSongs[]
+  tag               Tag?
   playlistSongs     PlaylistSong[]
   view              View[]
   history           History[]
@@ -344,6 +345,16 @@ model Embedding {
   pointId String  @unique
   songId  String  @unique @db.ObjectId
   song    Song    @relation(fields: [songId], references: [id], onDelete: Cascade)
+}
+
+model Tag {
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  songId       String @unique @db.ObjectId
+  song         Song   @relation(fields: [songId], references: [id], onDelete: Cascade)
+  danceability Float
+  energy       Float
+  tempo        Float
+  loudness     Float
 }
 
 model AutoPlaylist {

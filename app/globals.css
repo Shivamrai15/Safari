@@ -71,13 +71,17 @@ body,
     background: #5f5f5f;
     background-clip: content-box;
   }
+
+  .lyrics-scrollbar::-webkit-scrollbar{
+    width: 12px;
+  }
+
+  .lyrics-scrollbar::-webkit-scrollbar-thumb {
+    background: #414141;
+  }
+
 }
 
-
-.lryics_container::-webkit-scrollbar{
-  width: 0;
-  display: none;
-}
 
 .text-border {
   

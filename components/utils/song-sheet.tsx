@@ -1,10 +1,10 @@
 "use client";
 
-import axios from "axios";
+
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
 
 import {
     Sheet,
@@ -16,23 +16,17 @@ import { useSheet } from "@/hooks/use-sheet";
 import { cn, songLength } from "@/lib/utils";
 import { Slider } from "@/components/ui/slider";
 import { FaBackwardStep, FaForwardStep, FaCirclePlay } from "react-icons/fa6";
-import { GiMusicalNotes } from "react-icons/gi";
 import { BsFillPauseCircleFill } from "react-icons/bs";
 import { IconType } from "react-icons";
-import { LibraryBig, List, LucideIcon, Rows4, Share, Share2, ShuffleIcon } from "lucide-react";
+import { LibraryBig, List, LucideIcon, Rows4, Share2, ShuffleIcon } from "lucide-react";
 import { LikeButton } from "./like-button";
-import { SyncLoader } from "react-spinners";
 import { Button } from "@/components/ui/button";
 import { thumbnailVariants } from "@/lib/variants";
 import { BlurFade } from "../ui/blur-fade";
-import Link from "next/link";
 import { ArtistCard } from "../artist/artist-card";
 import { Ad } from "@prisma/client";
+import { LyricsComponent } from "./lyrics";
 
-interface LyricLine {
-    time: number;
-    text: string;
-}
 
 interface SongSheet {
     seekTime : ( num:number ) => void;
@@ -47,6 +41,7 @@ interface SongSheet {
     isAdPlaying : boolean;
     ad : Ad|null;
 }
+
 
 export const SongSheet = ({
     seekTime,
@@ -65,12 +60,7 @@ export const SongSheet = ({
     const { isOpen, onClose } = useSheet();
     const { current, pop, shuffle } = useQueue();
     const [ smOptions, setSmOptions ] = useState(false)
-    const [error, setError] = useState("");
-    const [loading, setLoading] = useState(false);
-    const [lyrics, setLyrics] = useState<LyricLine[]>([]);
-    const [currentLineIndex, setCurrentLineIndex] = useState<number>(-1);
-    const lyricsContainerRef = useRef<HTMLDivElement | null>(null);
-    const router = useRouter();
+    
 
     const PlayIcon = play ? BsFillPauseCircleFill : FaCirclePlay;
 
@@ -79,54 +69,6 @@ export const SongSheet = ({
             onClose();
         }
     }
-
-    const fetchLyrics = async( songId : string ) => {
-        try {
-            setLoading(true);
-            setLyrics([]);
-            setError("");
-            const response = await axios.get(`/api/v1/lyrics?songId=${songId}`);
-            setLyrics(response.data.lyrics.lyrics);
-        } catch (error) {
-            console.log(error);
-            setError("Lyrics Not Found");
-        } finally {
-            setLoading(false);
-        }
-    }
-
-    useEffect(()=>{
-        if (current) {
-            fetchLyrics(current.id);
-        }
-    }, [current]);
-
-
-    useEffect(()=>{
-        if ( (lyrics.length > 0) && currentTime && active ) {
-            const nextLineIndex = lyrics.findIndex(line => line.time > currentTime) - 1;
-
-                if (nextLineIndex !== currentLineIndex) {
-                    setCurrentLineIndex(nextLineIndex);
-                    const element = document.getElementById(`lry${nextLineIndex}`);
-                    if (element && lyricsContainerRef.current && nextLineIndex>2) {
-
-                        const containerHeight = lyricsContainerRef.current.clientHeight;
-                        const elementOffset = element.offsetTop;
-                        const elementHeight = element.offsetHeight;
-
-                        const scrollTo = elementOffset - (containerHeight - elementHeight) / 2;
-
-                        lyricsContainerRef.current.scrollTo({
-                            top:  scrollTo,
-                            behavior: 'smooth'
-                        })
-                    }
-                }
-            
-        }
-    }, [lyrics, currentTime]);
-
 
     const share = async ( url: string , type : "song"|"album"|"artist"|"playlist" ) => {
         if ( navigator ) {
@@ -378,81 +320,13 @@ export const SongSheet = ({
                         isAdPlaying && "hidden"
                     )}
                 >
-                    <div className="w-full h-[80vh] lg:col-span-2 bg-neutral-800 rounded-2xl">
-                        {
-                            loading ? (
-                                <div className="h-full flex items-center justify-center">
-                                    <SyncLoader color="#9e9e9e" />
-                                </div>
-                            ) : error ? (
-                                <div className="h-full flex items-center justify-center">
-                                    <div className="text-xl md:text-3xl font-bold text-white">
-                                        {error}
-                                    </div>
-                                </div>
-                            ) : (
-                                <div
-                                    className="w-full h-full overflow-hidden relative bg-neutral-800 py-10 rounded-2xl"
-                                >
-                                    <div 
-                                        ref={lyricsContainerRef}
-                                        className="absolute inset-0 overflow-y-auto lryics_container py-4"
-                                    >
-                                        <div className="flex flex-col items-start gap-y-4 md:gap-y-8 px-4 md:px-6">
-                                            <div className="h-28 w-full" />
-                                            {lyrics.map((line, index) => (
-                                                <p
-                                                    id={`lry${index}`}
-                                                    key={index}
-                                                    className={cn(
-                                                        "my-2 transition-all text-2xl md:text-3xl lg:text-4xl font-bold duration-500 select-none text-left",
-                                                        index === currentLineIndex ? 'text-white'
-                                                        : 'text-gray-300'
-                                                    )}
-                                                    style={{
-                                                        opacity: index === currentLineIndex ? 1 : 0.6,
-                                                    }}
-                                                >
-                                                    {line.text === "" ? <GiMusicalNotes className="h-8 w-8 md:h-12 md:w-12"/> : line.text}
-                                                </p>
-                                            ))}
-                                            <div className="h-28 w-full" />
-                                        </div>
-                                    </div>
-                                    <div 
-                                        className="hidden md:block h-full absolute top-0 w-full z-10 bg-gradient-to-b from-neutral-800 via-transparent to-neutral-800"
-                                    />
-                                    <div className="md:hidden h-full absolute top-0 w-full z-10 bg-gradient-to-b from-neutral-800 via-transparent to-neutral-800"/>
-                                    {
-                                        active === false && (
-                                            <div className="w-full h-full absolute flex items-center justify-center z-20 px-6">
-                                                <div 
-                                                    className="max-w-xl w-full rounded-xl bg-neutral-900 shadow-2xl overflow-hidden"
-                                                >
-                                                    <div 
-                                                        className="w-full h-full p-6 flex flex-col items-center py-10 space-y-10"
-                                                    > 
-                                                        <p className="text-center text-3xl md:text-4xl lg:text-5xl font-extrabold md:leading-snug lg:leading-snug">
-                                                            Enjoy Lyrics only<br />on Safari Premium
-                                                        </p>
-                                                        <Button
-                                                            className="rounded-full font-bold hover:scale-105 transition-transform duration-300"
-                                                            onClick={() => {
-                                                                    router.push('/subscription');
-                                                                    onClose();
-                                                                }
-                                                            }
-                                                        >
-                                                            Explore Premium
-                                                        </Button> 
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        )
-                                    }
-                                </div>
-                            )
-                        }
+                    <div className="w-full h-[90vh] lg:col-span-2 bg-neutral-800 rounded-2xl overflow-hidden">
+                        <LyricsComponent
+                            active={active}
+                            songId={current?.id||""}
+                            currentTime={currentTime}
+                            seekTime={seekTime}
+                        />
                     </div>
                     <div className="w-full space-y-4 pb-10">
                         <ArtistCard songId={current?.id||""}/>

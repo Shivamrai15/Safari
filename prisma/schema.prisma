@@ -303,6 +303,7 @@ model Lyrics {
   id     String @id @default(auto()) @map("_id") @db.ObjectId
   songId String @unique @db.ObjectId
   lyrics Json
+  synced Boolean
 }
 
 model Label {

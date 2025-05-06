@@ -51,6 +51,8 @@ export const getTopSearches =  cache(async( query: string ) => {
             }
         });
 
+        songs.sort((a, b)=>ids.indexOf(a.id)-ids.indexOf(b.id));
+
         const albums = albumData.map((album)=>album.payload as Album);
         const artists = artistData.map((artist)=>artist.payload as Artist);
         

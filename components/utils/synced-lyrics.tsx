@@ -75,7 +75,7 @@ export const SyncedLyrics = ({
                             id={`lry${index}`}
                             key={index}
                             className={cn(
-                                "my-2 transition-all text-xl md:text-3xl lg:text-4xl font-semibold md:font-bold duration-500 select-none text-left md:cursor-pointer",
+                                "my-2 transition-all text-2xl md:text-3xl lg:text-4xl font-semibold md:font-bold duration-500 select-none text-left md:cursor-pointer",
                                 index === currentLineIndex ? 'text-white'
                                 : 'text-gray-300'
                             )}

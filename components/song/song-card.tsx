@@ -11,13 +11,16 @@ import { useSocket } from "@/hooks/use-socket";
 import { useSocketEvents } from "@/hooks/use-socket-events";
 import { PRIORITY_ENQUEUE } from "@/lib/events";
 import { useAccount } from "@/hooks/use-account";
+import { cn } from "@/lib/utils";
 
 interface SongCardProps {
     song : Song;
+    className? : string;
 }
 
 export const SongCard = ({
-    song
+    song,
+    className
 } : SongCardProps ) => {
     
     const router = useRouter();
@@ -45,7 +48,10 @@ export const SongCard = ({
 
     return (
         <div
-            className="w-full bg-neutral-900 hover:bg-neutral-800/90 transition-all rounded-sm group p-2 md:cursor-pointer"
+            className={cn(
+                "w-full bg-neutral-900 hover:bg-neutral-800/90 transition-all rounded-sm group p-2 md:cursor-pointer",
+                className
+            )}
             onClick={handlePlay}
         >
             <div className="flex items-center gap-x-4">

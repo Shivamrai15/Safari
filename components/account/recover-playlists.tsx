@@ -62,9 +62,9 @@ export const RecoverPlaylist = () => {
     
     return (
         <div className="w-full space-y-8">
-            <p>You can recover a deleted playlist if it was deleted within the last 90 days. To do this, find the playlist you want to recover and click Restore.</p>
+            <p className="select-none">You can recover a deleted playlist if it was deleted within the last 90 days. To do this, find the playlist you want to recover and click Restore.</p>
             <div className="w-full flex flex-col gap-y-3">
-                <div className="w-full hidden md:grid md:grid-cols-4 px-2 gap-x-4">
+                <div className="w-full hidden md:grid md:grid-cols-4 px-2 gap-x-4 select-none">
                     <h2 className="font-bold text-zinc-400">Title</h2>
                     <h2 className="font-bold text-zinc-400">Songs</h2>
                     <h2 className="font-bold text-zinc-400">Deleted</h2>
@@ -74,7 +74,7 @@ export const RecoverPlaylist = () => {
                 {
                     data.data.map((playlist)=>(
                         <>
-                            <div className="w-full hidden md:grid md:grid-cols-4 gap-x-4 items-center" key={playlist.id}>
+                            <div className="w-full hidden md:grid md:grid-cols-4 gap-x-4 items-center select-none" key={playlist.id}>
                                 <p className="text-zinc-400 font-medium truncate">{playlist.name}</p>
                                 <p className="text-zinc-400 font-medium">{playlist._count.songs}</p>
                                 <p className="text-zinc-400 font-medium">{ playlist.archivedAt && format(playlist.archivedAt, "dd/MM/yy")}</p>
@@ -87,7 +87,7 @@ export const RecoverPlaylist = () => {
                                     Restore
                                 </Button>
                             </div>
-                            <div className="w-full flex items-end gap-x-4 md:hidden" key={playlist.id}>
+                            <div className="w-full flex items-end gap-x-4 md:hidden select-none" key={playlist.id}>
                                 <div className="flex-1">
                                     <div className="flex flex-col">
                                         <p className="text-zinc-400 font-medium truncate">{playlist.name}</p>

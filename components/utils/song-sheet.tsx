@@ -26,6 +26,7 @@ import { BlurFade } from "../ui/blur-fade";
 import { ArtistCard } from "../artist/artist-card";
 import { Ad } from "@prisma/client";
 import { LyricsComponent } from "./lyrics";
+import { RelatedSongs } from "../song/related-songs";
 
 
 interface SongSheet {
@@ -320,7 +321,7 @@ export const SongSheet = ({
                         isAdPlaying && "hidden"
                     )}
                 >
-                    <div className="w-full h-[90vh] lg:col-span-2 bg-neutral-800 rounded-2xl overflow-hidden">
+                    <div className="w-full h-[90vh] lg:col-span-2 bg-neutral-800 rounded-2xl overflow-hidden ring-1 ring-neutral-700/60">
                         <LyricsComponent
                             active={active}
                             songId={current?.id||""}
@@ -328,8 +329,9 @@ export const SongSheet = ({
                             seekTime={seekTime}
                         />
                     </div>
-                    <div className="w-full space-y-4 pb-10">
+                    <div className="w-full h-[90vh] flex flex-col gap-y-4 max-md:pb-10">
                         <ArtistCard songId={current?.id||""}/>
+                        <RelatedSongs songId={current?.id||""} />
                     </div>
                 </div>
             </SheetContent>

@@ -47,7 +47,7 @@ export const LyricsComponent = ({
     if (error) {
         return (
             <div className="h-full flex items-center justify-center">
-                <div className="text-xl md:text-3xl font-bold text-white">
+                <div className="text-xl md:text-3xl font-bold text-white select-none">
                     Something went wrong
                 </div>
             </div>
@@ -57,7 +57,7 @@ export const LyricsComponent = ({
     if (!data) {
         return (
             <div className="h-full flex items-center justify-center">
-                <div className="text-xl md:text-3xl font-bold text-white">
+                <div className="text-xl md:text-3xl font-bold text-white select-none">
                     No Lyrics Found
                 </div>
             </div>

@@ -58,7 +58,7 @@ export const MobileMenu = () => {
                 <div className="flex items-center justify-center h-full w-full">
                     <Avatar className="h-7 w-7 ring-2 ring-neutral-900" onClick={()=>router.push("/account")} >
                         <AvatarImage  src={session.data?.user?.image || ""} />
-                        <AvatarFallback className="text-xs bg-red-800" >
+                        <AvatarFallback className="text-xs bg-red-800 pointer-events-none select-none" >
                             { session.data?.user?.name?.charAt(0).toUpperCase() || "S" }
                         </AvatarFallback>
                     </Avatar>

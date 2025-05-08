@@ -1,9 +1,10 @@
 "use client";
-import { Artist } from "@prisma/client";
-import { useQuery } from "@tanstack/react-query";
+
 import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
 import { ListItem } from "./list-item";
 import { SyncLoader } from "react-spinners";
+import { Song } from "@/types";
 
 
 interface ArtistCardProps {
@@ -11,7 +12,7 @@ interface ArtistCardProps {
 }
 
 type Response = {
-    data : {id: string; name: string; image: string}[]|undefined;
+    data : Song[]|undefined;
     error : Error|null;
     isPending : boolean;
 }
@@ -28,8 +29,8 @@ export const ArtistCard = ({ songId }: ArtistCardProps) => {
     });
     
     return (
-        <div className="w-full p-4 space-y-4 bg-neutral-800 rounded-2xl">
-            <h1 className="md:text-lg font-semibold">Artists</h1>
+        <div className="w-full p-4 space-y-4 bg-neutral-800 rounded-2xl ring-1 ring-neutral-700/60">
+            <h1 className="md:text-lg font-semibold select-none">Artists</h1>
             <ul className="flex flex-col gap-y-1">
                 {
                     (error || isPending || (!data)) ? (

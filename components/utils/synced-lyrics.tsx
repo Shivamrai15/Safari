@@ -62,10 +62,11 @@ export const SyncedLyrics = ({
         <div
             className="w-full h-full relative bg-neutral-800 py-2 rounded-2xl"
         >
-            <div className="inset-px absolute bg-gradient-to-b z-10 from-neutral-800 via-transparent to-neutral-800 pointer-events-none"/>
+            <div className="h-32 md:hidden absolute top-0 w-full bg-gradient-to-b from-neutral-900/70 to-transparent"/>
+            <div className="max-md:hidden inset-px absolute bg-gradient-to-b z-10 from-neutral-800 via-transparent to-neutral-800 pointer-events-none"/>
             <div 
                 ref={lyricsContainerRef}
-                className="w-full h-full relative overflow-y-auto lyrics-scrollbar py-4 pointer-events-auto"
+                className="w-full h-full relative overflow-y-auto lyrics-scrollbar py-4 md:pointer-events-auto"
             >
                 <div className="flex flex-col items-start gap-y-4 md:gap-y-8 px-4 md:px-6">
                     <div className="h-28 w-full" />
@@ -74,7 +75,7 @@ export const SyncedLyrics = ({
                             id={`lry${index}`}
                             key={index}
                             className={cn(
-                                "my-2 transition-all text-2xl md:text-3xl lg:text-4xl font-bold duration-500 select-none text-left md:cursor-pointer",
+                                "my-2 transition-all text-xl md:text-3xl lg:text-4xl font-semibold md:font-bold duration-500 select-none text-left md:cursor-pointer",
                                 index === currentLineIndex ? 'text-white'
                                 : 'text-gray-300'
                             )}
@@ -89,7 +90,7 @@ export const SyncedLyrics = ({
                     <div className="h-28 w-full" />
                 </div>
             </div>
-            <div className="md:hidden h-full absolute top-0 w-full z-20 bg-gradient-to-b from-neutral-800 via-transparent to-neutral-800 pointer-events-auto"/>
+            <div className="h-32 md:hidden absolute top-0 w-full bg-gradient-to-b from-neutral-900/70 to-transparent"/>
             {
                 active === false && (
                     <div className="w-full h-full absolute flex items-center justify-center z-20 px-6">

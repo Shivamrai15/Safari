@@ -1,10 +1,9 @@
 "use client";
-
-import axios from "axios";
+import { Artist } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 import { ListItem } from "./list-item";
 import { SyncLoader } from "react-spinners";
-import { Song } from "@/types";
 
 
 interface ArtistCardProps {
@@ -12,7 +11,7 @@ interface ArtistCardProps {
 }
 
 type Response = {
-    data : Song[]|undefined;
+    data : {id: string; name: string; image: string}[]|undefined;
     error : Error|null;
     isPending : boolean;
 }

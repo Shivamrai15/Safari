@@ -64,7 +64,7 @@ export const SongCard = ({
                         
                     />
                 </div>
-                <div className="w-full relative">
+                <div className="relative flex-1">
                     <h4 className="font-semibold text-base line-clamp-1 select-none" >{song.name}</h4>
                     <div className="text-sm text-zinc-300 line-clamp-1 font-normal overflow-hidden space-x-2" >
                         {

@@ -30,7 +30,7 @@ export const RelatedSongs = ({
 
     return (
         <div className="bg-neutral-800 flex flex-col flex-1 w-full rounded-2xl overflow-hidden py-4 gap-y-4 ring-1 ring-neutral-700/60">
-            <div className="h-full relative overflow-y-auto lyrics-scrollbar">
+            <div className="h-full w-full relative overflow-y-auto lyrics-scrollbar">
                 <h1 className="px-4 sticky top-0 md:text-lg font-semibold pb-4 z-10 bg-gradient-to-b from-neutral-800 via-neutral-800 to-transparent select-none">Related Songs</h1>
                 <ul className="px-4 flex-1 flex flex-col gap-y-2 w-full">
                 {
@@ -43,7 +43,7 @@ export const RelatedSongs = ({
                                 <SongCard
                                     song={song}
                                     key={song.id}
-                                    className="bg-neutral-800 hover:bg-neutral-700/80 w-full"
+                                    className="bg-neutral-800 hover:bg-neutral-700/80 w-auto"
                                 /> 
                             ))
                         )

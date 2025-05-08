@@ -57,7 +57,7 @@ const SongPage = async({
 
 
     return (
-        <main className="h-full" style={{background :  `linear-gradient(180deg, #111 80%,  ${song.album.color}5a 100%)` }} >
+        <main className="min-h-full max-md:pb-20" style={{background :  `linear-gradient(180deg, #111 80%,  ${song.album.color}5a 100%)` }} >
             <Header
                 song={song}
             />

@@ -68,7 +68,7 @@ const AlbumPage = async({
     }
 
     return (
-        <div className="min-h-full" style={{background :  `linear-gradient(180deg, #111 80%,  ${album.color}5a 100%)` }}  >
+        <div className="min-h-full max-md:pb-10" style={{background :  `linear-gradient(180deg, #111 80%,  ${album.color}5a 100%)` }}  >
             <Header
                 id={album.id}
                 color = {album.color}

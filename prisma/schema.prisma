@@ -101,6 +101,7 @@ model Song {
   embedding         Embedding?
   autoPlaylistSongs AutoPlaylistSong[]
   dailyMixSongs     DailyMixSong[]
+  metadata          Metadata?
 
   @@index([albumId, name])
 }
@@ -119,15 +120,16 @@ model LikedSongs {
 }
 
 model Artist {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   image       String
   thumbnail   String?
-  about       String   @db.String
-  songIds     String[] @db.ObjectId
-  songs       Song[]   @relation(fields: [songIds], references: [id])
-  followerIds String[] @db.ObjectId
-  followers   User[]   @relation(fields: [followerIds], references: [id])
+  about       String     @db.String
+  songIds     String[]   @db.ObjectId
+  songs       Song[]     @relation(fields: [songIds], references: [id])
+  followerIds String[]   @db.ObjectId
+  followers   User[]     @relation(fields: [followerIds], references: [id])
+  metadata    Metadata[]
 
   @@index([name])
 }
@@ -300,8 +302,8 @@ model Customer {
 }
 
 model Lyrics {
-  id     String @id @default(auto()) @map("_id") @db.ObjectId
-  songId String @unique @db.ObjectId
+  id     String  @id @default(auto()) @map("_id") @db.ObjectId
+  songId String  @unique @db.ObjectId
   lyrics Json
   synced Boolean
 }
@@ -341,11 +343,12 @@ model Authenticator {
 }
 
 model Embedding {
-  id      String  @id @default(auto()) @map("_id") @db.ObjectId
-  vector  Float[]
-  pointId String  @unique
-  songId  String  @unique @db.ObjectId
-  song    Song    @relation(fields: [songId], references: [id], onDelete: Cascade)
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  vector    Float[]
+  embedding Float[]
+  pointId   String  @unique
+  songId    String  @unique @db.ObjectId
+  song      Song    @relation(fields: [songId], references: [id], onDelete: Cascade)
 }
 
 model Tag {
@@ -416,4 +419,20 @@ model DailyMixSong {
 
   @@unique([songId, dailyMixId])
   @@index([dailyMixId])
+}
+
+model Metadata {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  songId          String   @unique @db.ObjectId
+  song            Song     @relation(fields: [songId], references: [id], onDelete: Cascade)
+  language        String
+  genre           String
+  explicit        Boolean
+  directorId      String   @db.ObjectId
+  director        Artist   @relation(fields: [directorId], references: [id])
+  lyricist        String
+  tempo           String
+  description     String
+  mood            String[]
+  instrumentation String[]
 }

@@ -2,12 +2,13 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 
 import { songLength } from '@/lib/utils';
-import { Album, Song } from '@prisma/client'
-import { Dot } from 'lucide-react';
+import { Album, Metadata, Song } from '@prisma/client'
+import { Dot, InfoIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { usePlayer } from '@/hooks/use-player';
 import { useQueue } from '@/hooks/use-queue';
@@ -16,13 +17,19 @@ import { SongOptions } from '@/components/song/song-options';
 import { useSocket } from '@/hooks/use-socket';
 import { useSocketEvents } from '@/hooks/use-socket-events';
 import { PRIORITY_ENQUEUE } from '@/lib/events';
+import { MetadataModal } from '../modals/metadata';
 
 
 interface HeaderProps {
     song: Song & { 
         album: Album,
         artists: {id: string, name: string, image: string}[],
-        _count : { view : number }
+        _count : { view : number },
+        metadata : Metadata & {
+            director : {
+                name : string
+            }
+        } | null;
     };
 }
 
@@ -32,6 +39,7 @@ export const Header = ({
 
     const router = useRouter();
     const session = useSession();
+    const [isOpen, setIsOpen] = useState(false);
     const { current, priorityEnqueue } = useQueue();
     const { isPlaying } = usePlayer();
     const socket = useSocket();
@@ -101,11 +109,29 @@ export const Header = ({
                                         )
                                     }
                                 </Button>
-                                <SongOptions song={song} />
+                                <SongOptions 
+                                    song={song}
+                                    className="size-12"
+                                />
+                                <InfoIcon
+                                    className='size-12 md:cursor-pointer'
+                                    onClick={() => setIsOpen(true)}
+                                />
                             </div>
                         </div>
                     </div>    
             </div>
+
+            {
+                song.metadata && 
+                (
+                    <MetadataModal
+                        metadata={song.metadata}
+                        isOpen={isOpen}
+                        closeModal={() => setIsOpen(false)}
+                    />
+                )
+            }
         </header>
     )
 }

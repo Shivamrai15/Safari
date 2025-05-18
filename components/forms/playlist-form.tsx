@@ -67,7 +67,7 @@ export const PlaylistForm = () => {
 
     return (
         <div className="w-full space-y-4 mt-4">
-            <h2 className="text-lg font-semibold">
+            <h2 className="text-lg font-semibold select-none">
                 { data ? "Edit Playlist" : "Create Playlist" }
             </h2>
             <Form {...form}>

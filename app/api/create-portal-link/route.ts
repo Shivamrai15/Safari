@@ -23,6 +23,8 @@ export async function POST ( req: Request ) {
             return_url : `${getUrl()}account`
         });
 
+        console.log("PORTAL URL", url);
+
         return NextResponse.json({url});
 
     } catch (error) {

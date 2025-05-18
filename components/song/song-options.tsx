@@ -39,6 +39,7 @@ import { useAccount } from "@/hooks/use-account";
 import { useSocket } from "@/hooks/use-socket";
 import { useSocketEvents } from "@/hooks/use-socket-events";
 import { ENQUEUE, PLAYNEXT } from "@/lib/events";
+import { cn } from "@/lib/utils";
 
 interface SongOptionsProps {
     song : (Song & {
@@ -48,13 +49,15 @@ interface SongOptionsProps {
     playlistId? : string;
     isAuth? : boolean;
     onDelete? : ()=>void;
+    className? : string;
 }
 
 export const SongOptions = ({
     song,
     playlistId,
     isAuth,
-    onDelete
+    onDelete,
+    className
 } : SongOptionsProps ) => {
 
     const router = useRouter();
@@ -107,7 +110,12 @@ export const SongOptions = ({
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild onClick={(e)=>e.stopPropagation()} >
-                <EllipsisVertical className="md:cursor-pointer" />
+                <EllipsisVertical
+                    className={cn(
+                        "md:cursor-pointer",
+                        className
+                    )}
+                />
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56 p-1 rounded-sm shadow-lg bg-neutral-800 " align="end" onClick={(e)=>e.stopPropagation()} >
                 <DropdownMenuGroup>

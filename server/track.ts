@@ -20,6 +20,15 @@ export const getTrackById = async( id: string ) => {
                         label : true
                     }
                 },
+                metadata : {
+                    include : {
+                        director : {
+                            select : {
+                                name : true
+                            }
+                        }
+                    }
+                },
                 artists : {
                     select : {
                         id : true,

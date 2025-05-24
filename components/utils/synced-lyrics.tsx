@@ -57,16 +57,25 @@ export const SyncedLyrics = ({
         }
     }, [lyrics, currentTime]);
 
-    
+    console.log("Current Line Index:", active);
+
     return (
         <div
             className="w-full h-full relative bg-neutral-800 py-2 rounded-2xl"
         >
             <div className="h-32 md:hidden absolute top-0 w-full bg-gradient-to-b from-neutral-900/70 to-transparent"/>
-            <div className="max-md:hidden inset-px absolute bg-gradient-to-b z-10 from-neutral-800 via-transparent to-neutral-800 pointer-events-none"/>
+            <div 
+                className={cn(
+                    "max-md:hidden inset-px absolute bg-gradient-to-b z-10 from-neutral-800 via-transparent to-neutral-800 pointer-events-none",
+                    active && "pointer-events-none"
+                )}
+            />
             <div 
                 ref={lyricsContainerRef}
-                className="w-full h-full relative overflow-y-auto lyrics-scrollbar py-4 md:pointer-events-auto"
+                className={cn(
+                    "w-full h-full relative overflow-y-auto lyrics-scrollbar py-4",
+                    active && "md:pointer-events-auto"
+                )}
             >
                 <div className="flex flex-col items-start gap-y-4 md:gap-y-8 px-4 md:px-6">
                     <div className="h-28 w-full" />
@@ -75,9 +84,10 @@ export const SyncedLyrics = ({
                             id={`lry${index}`}
                             key={index}
                             className={cn(
-                                "my-2 transition-all text-2xl md:text-3xl lg:text-4xl font-semibold md:font-bold duration-500 select-none text-left md:cursor-pointer",
+                                "my-2 transition-all text-2xl md:text-3xl lg:text-4xl font-semibold md:font-bold duration-500 select-none text-left",
                                 index === currentLineIndex ? 'text-white'
-                                : 'text-gray-300'
+                                : 'text-gray-300',
+                                active && "md:cursor-pointer"
                             )}
                             style={{
                                 opacity: index === currentLineIndex ? 1 : 0.6,
@@ -93,14 +103,14 @@ export const SyncedLyrics = ({
             <div className="h-32 md:hidden absolute top-0 w-full bg-gradient-to-b from-neutral-900/70 to-transparent"/>
             {
                 active === false && (
-                    <div className="w-full h-full absolute flex items-center justify-center z-20 px-6">
+                    <div className="w-full h-full absolute inset-px flex items-center justify-center z-[1000] px-6">
                         <div 
                             className="max-w-xl w-full rounded-xl bg-neutral-900 shadow-2xl overflow-hidden"
                         >
                             <div 
                                 className="w-full h-full p-6 flex flex-col items-center py-10 space-y-10"
                             > 
-                                <p className="text-center text-3xl md:text-4xl lg:text-5xl font-extrabold md:leading-snug lg:leading-snug">
+                                <p className="text-center select-none text-3xl md:text-4xl lg:text-5xl font-extrabold md:leading-snug lg:leading-snug">
                                     Enjoy Lyrics only<br />on Safari Premium
                                 </p>
                                 <Button

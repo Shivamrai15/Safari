@@ -24,7 +24,20 @@ export async function GET (req: Request) {
             }
         });
 
-        return NextResponse.json(artists);
+        const metadata = await db.metadata.findUnique({
+            where : {
+                songId
+            },
+            select : {
+                director : true,
+                lyricist : true,
+            }
+        })
+
+        return NextResponse.json({
+            artists,
+            metadata
+        });
 
     } catch (error) {
         console.error("SONG ARTIST API ERROR", error);

@@ -17,7 +17,7 @@ const AccountPage = () => {
                 <AccountSection/>
                 <PaymentSection/>
                 <PrivacyAndSecurity/>
-                <HelpSection/>
+                {/* <HelpSection/> */}
             </div>
         </main>
     )

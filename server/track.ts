@@ -21,9 +21,9 @@ export const getTrackById = async( id: string ) => {
                     }
                 },
                 metadata : {
-                    include : {
-                        director : {
-                            select : {
+                    include :{
+                        moods : {
+                            select :{
                                 name : true
                             }
                         }

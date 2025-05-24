@@ -26,10 +26,10 @@ interface HeaderProps {
         artists: {id: string, name: string, image: string}[],
         _count : { view : number },
         metadata : Metadata & {
-            director : {
+            moods : {
                 name : string
-            }
-        } | null;
+            }[]
+        }|null;
     };
 }
 

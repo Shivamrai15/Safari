@@ -120,16 +120,15 @@ model LikedSongs {
 }
 
 model Artist {
-  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   image       String
   thumbnail   String?
-  about       String     @db.String
-  songIds     String[]   @db.ObjectId
-  songs       Song[]     @relation(fields: [songIds], references: [id])
-  followerIds String[]   @db.ObjectId
-  followers   User[]     @relation(fields: [followerIds], references: [id])
-  metadata    Metadata[]
+  about       String   @db.String
+  songIds     String[] @db.ObjectId
+  songs       Song[]   @relation(fields: [songIds], references: [id])
+  followerIds String[] @db.ObjectId
+  followers   User[]   @relation(fields: [followerIds], references: [id])
 
   @@index([name])
 }
@@ -421,6 +420,16 @@ model DailyMixSong {
   @@index([dailyMixId])
 }
 
+model Mood {
+  id    String  @id @default(auto()) @map("_id") @db.ObjectId
+  name  String  @unique
+  color String?
+  image String?
+  metadataIds String[] @db.ObjectId
+  metadata   Metadata[] @relation(fields: [metadataIds], references: [id])
+}
+
+
 model Metadata {
   id              String   @id @default(auto()) @map("_id") @db.ObjectId
   songId          String   @unique @db.ObjectId
@@ -428,11 +437,11 @@ model Metadata {
   language        String
   genre           String
   explicit        Boolean
-  directorId      String   @db.ObjectId
-  director        Artist   @relation(fields: [directorId], references: [id])
+  director        String
   lyricist        String
   tempo           String
   description     String
-  mood            String[]
+  moodIds        String[] @db.ObjectId
+  moods          Mood[]   @relation(fields: [moodIds], references: [id])
   instrumentation String[]
 }

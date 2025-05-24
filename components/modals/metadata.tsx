@@ -18,9 +18,9 @@ import {
 
 interface MetadataProps {
     metadata : Metadata & {
-        director : {
+        moods : {
             name : string
-        }
+        }[]
     },
     isOpen : boolean;
     closeModal : () => void;
@@ -69,7 +69,7 @@ export const MetadataModal = ({
                                 <span>Director</span>
                             </div>
                             <div className="text-zinc-100 font-medium">
-                                {metadata.director.name}
+                                {metadata.director}
                             </div>
                         </div>
                         <div className="flex items-center gap-4">
@@ -98,9 +98,9 @@ export const MetadataModal = ({
                                 <span className="text-zinc-100 font-semibold">Mood</span>
                             </div>
                             <div className="text-zinc-400 text-sm text-justify flex flex-wrap gap-2">
-                                {metadata.mood.map((mood) => (
-                                    <div key={mood} className="bg-neutral-800/70 px-2.5 py-1 rounded-full">
-                                        {mood}
+                                {metadata.moods.map((mood) => (
+                                    <div key={mood.name} className="bg-neutral-800/70 px-2.5 py-1 rounded-full">
+                                        {mood.name}
                                     </div>
                                 ))} 
                             </div>

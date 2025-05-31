@@ -1,12 +1,6 @@
 "use client";
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
-import { Montserrat  } from "next/font/google"
-
-const montserrat = Montserrat({
-    subsets: ['latin'],
-    weight: ['400', '500', '600', '700', '800', '900'],
-});
 
 
 const GetStartedPage = () => {
@@ -18,8 +12,8 @@ const GetStartedPage = () => {
         <div className='h-full flex items-end bg-gradient-to-b from-transparent from-60% to-70% sm:from-50% sm:to-90% to-black/90'>
             <div className='p-6 pb-10 md:p-16 space-y-10'>
                 <div className='max-w-lg space-y-2 sm:space-y-6'>
-                    <h3 className={`${montserrat.className} text-2xl tracking-wide md:text-5xl font-semibold md:font-bold select-none`}>Enjoy here the best music with us</h3>
-                    <p className={`${montserrat.className} text-zinc-300 text-sm md:text-lg select-none`}>What do you want ot hear, enjoy here the best music with us</p>
+                    <h3 className={`text-2xl tracking-wide md:text-5xl font-bold md:font-extrabold select-none`}>Enjoy here the best music with us</h3>
+                    <p className={`text-zinc-300 text-sm md:text-lg font-medium select-none`}>What do you want ot hear, enjoy here the best music with us</p>
                 </div>
                 <Button
                     onClick={()=>router.push("/sign-up")}

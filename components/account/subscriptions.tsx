@@ -116,7 +116,7 @@ export const Subscriptions = () => {
                 }
                 {
                     isFetchingNextPage && (
-                        <div className="pt-6">
+                        <div className="pt-6 w-full flex items-center justify-center">
                             <SyncLoader color="#252525" />
                         </div>
                     )

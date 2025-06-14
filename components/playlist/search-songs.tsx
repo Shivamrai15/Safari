@@ -88,15 +88,29 @@ export const SearchSongs = ({
             <div className="flex items-start gap-x-6 justify-between w-full">
                 <div className="flex flex-col gap-y-4 w-full">
                     <h2 className="text-xl md:text-2xl font-bold select-none" >Let&apos;s find something for your playlist</h2>
-                    <div className="max-w-md w-full h-12 lg:h-14 flex items-center bg-neutral-800 rounded-full px-4 gap-x-1">
-                        <Search/>
-                        <Input
-                            className="bg-transparent outline-none focus-visible:ring-0 focus-visible:ring-offset-0 h-10 text-lg"
-                            value={query}
-                            onChange={(e)=>setQuery(e.target.value)}
-                        />
+                    <div className="w-full flex items-center justify-between gap-x-4">
+                        <div className="max-w-md border border-zinc-700/90 w-full h-12 lg:h-14 flex items-center bg-neutral-800 rounded-full px-4 gap-x-1">
+                            <Search/>
+                            <Input
+                                className="bg-transparent outline-none focus-visible:ring-0 focus-visible:ring-offset-0 h-10 text-lg"
+                                value={query}
+                                onChange={(e)=>setQuery(e.target.value)}
+                            />
+                            {
+                                query && <X className="md:cursor-pointer" onClick={()=>setQuery("")} />
+                            }
+                        </div>
                         {
-                            query && <X className="md:cursor-pointer" onClick={()=>setQuery("")} />
+                            !!selectedSongs.length && (
+                                <Button
+                                    className="h-12 md:h-14 rounded-full font-bold"
+                                    onClick={handleAddSongs}
+                                    disabled={loading}
+                                    variant="secondary"
+                                >
+                                    Add {selectedSongs.length} songs
+                                </Button>
+                            )
                         }
                     </div>
                 </div>
@@ -170,7 +184,7 @@ export const SearchSongs = ({
             }
             {
                 !!selectedSongs.length && (
-                    <div className="w-full bg-gradient-to-b from-transparent via-[#11111198] to-[#111] pt-6 pb-3 sticky bottom-0 flex items-center justify-center">
+                    <div className="w-full md:hidden bg-gradient-to-b from-transparent via-[#11111198] to-[#111] pt-6 pb-3 sticky bottom-0 flex items-center justify-center">
                         <Button
                             className="w-full max-w-sm h-12 md:h-14 rounded-full font-bold md:text-lg"
                             onClick={handleAddSongs}

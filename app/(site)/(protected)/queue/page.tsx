@@ -13,11 +13,12 @@ import { PlayerSongInfo } from "@/components/utils/player-song-info";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { DeleteMiniModal } from "@/components/queue/delete-mini-modal";
+import { Button } from "@/components/ui/button";
 
 const QueuePage = () => {
 
     const router = useRouter();
-    const { current, queue, replace } = useQueue();
+    const { current, queue, replace, clear } = useQueue();
     const [ select, setSelect ] = useState<string[]>([]);
     const [open, setOpen] = useState(false)
 
@@ -51,10 +52,17 @@ const QueuePage = () => {
                     setOpen(false);
                 }}
             />
-            <header className="w-full p-6 flex items-center justify-start sticky top-0 bg-neutral-950 z-30">
+            <header className="w-full p-6 flex items-center justify-between sticky top-0 bg-neutral-950 z-30">
                 <button onClick={()=>router.back()} >
                     <ArrowLeft/>
                 </button> 
+                <Button
+                    variant="secondary"
+                    className="rounded-full"
+                    onClick={()=>clear()}
+                >
+                    Clear
+                </Button>
             </header>
             <section className="px-6 w-full space-y-8 pb-20">
                 <div className="w-full space-y-4">

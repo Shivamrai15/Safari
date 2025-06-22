@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import { Metadata, ResolvingMetadata } from "next";
 
 import { Albums } from "@/components/artist/albums";
@@ -12,6 +13,7 @@ import { ShareProfileButton } from "@/components/artist/share-profile";
 import { artistMetaData } from "@/server/meta";
 import { Profile } from "@/components/artist/profile";
 import { Error } from "@/components/utils/error";
+import { Loader } from "@/components/utils/loader";
 
 interface ArtistPageProps {
     params : { artistId: string }
@@ -65,7 +67,18 @@ const ArtistPage = async({
     params
 } : ArtistPageProps ) => {
     
-    const artist = await getArtist(params.artistId);
+    return (
+        <Suspense fallback={<Loader className="h-full"/>}>
+            <ServerComponent artistId={params.artistId} />
+        </Suspense>
+    )
+}
+
+export default ArtistPage;
+
+
+async function ServerComponent({ artistId } : { artistId : string }) {
+    const artist = await getArtist(artistId);
 
     if (!artist) {
         return (
@@ -127,5 +140,3 @@ const ArtistPage = async({
         </div>
     );
 }
-
-export default ArtistPage;

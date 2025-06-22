@@ -20,4 +20,4 @@ const LikedMusicPage = async() => {
     )
 }
 
-export default LikedMusicPage
+export default LikedMusicPage;

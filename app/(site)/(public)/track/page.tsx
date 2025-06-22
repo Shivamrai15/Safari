@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { Suspense } from "react";
 
 import { trackMetaData } from "@/server/meta";
 import { Header } from "@/components/track/header";
@@ -6,6 +7,7 @@ import { getTrackById } from "@/server/track";
 import { SongsList } from "@/components/song/songs-list";
 import { Error } from "@/components/utils/error";
 import { Copyright } from "@/components/album/copyright";
+import { Loader } from "@/components/utils/loader";
 
 interface SongLayoutProps {
     searchParams : {
@@ -45,7 +47,18 @@ const SongPage = async({
     searchParams
 } : SongLayoutProps ) => {
 
-    const song = await getTrackById(searchParams.id);
+    return (
+        <Suspense fallback={<Loader className="h-full"/>}>
+            <ServerComponent songId={searchParams.id} />
+        </Suspense>
+    )
+}
+
+export default SongPage;
+
+
+async function ServerComponent({ songId } : { songId : string }) {
+    const song = await getTrackById(songId);
 
     if ( !song ) {
         return (
@@ -68,5 +81,3 @@ const SongPage = async({
         </main>
     )
 }
-
-export default SongPage;

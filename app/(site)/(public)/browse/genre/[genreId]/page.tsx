@@ -1,7 +1,10 @@
+import { Suspense } from "react";
+
 import { getGenreById } from "@/server/genre";
 import { Header } from "@/components/genre/header";
 import { Songs } from "@/components/genre/songs";
 import { Error } from "@/components/utils/error";
+import { Loader } from "@/components/utils/loader";
 
 interface GenrePageProps {
     params : { genreId : string }
@@ -11,8 +14,18 @@ const GenrePage = async({
     params
 } : GenrePageProps ) => {
 
-    const genre = await getGenreById(params.genreId);
+    return (
+        <Suspense fallback={<Loader className="h-full"/>}>
+            <ServerComponent genreId={params.genreId} />
+        </Suspense>
+    )
+}
 
+export default GenrePage;
+
+async function ServerComponent({ genreId } : { genreId : string }) {
+    
+    const genre = await getGenreById(genreId);
     if ( !genre ) {
         return (
             <Error />
@@ -28,9 +41,7 @@ const GenrePage = async({
                 count={genre._count.songs}
                 image={genre.image}
             />
-            <Songs genreId={params.genreId} />
+            <Songs genreId={genreId} />
         </main>
     )
 }
-
-export default GenrePage;

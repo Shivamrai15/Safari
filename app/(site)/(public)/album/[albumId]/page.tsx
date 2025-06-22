@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { Metadata, ResolvingMetadata } from "next";
 
 import { Header } from "@/components/album/header";
@@ -7,6 +8,7 @@ import { albumMetaData } from "@/server/meta";
 import { Error } from "@/components/utils/error";
 import { Copyright } from "@/components/album/copyright";
 import { MoreAlbums } from "@/components/album/more-albums";
+import { Loader } from "@/components/utils/loader";
 
 interface AlbumPageProps  {
     params : { albumId : string }
@@ -58,8 +60,18 @@ export async function generateMetadata(
 const AlbumPage = async({
     params
 } : AlbumPageProps ) => {
+    return (
+        <Suspense fallback={<Loader className="h-full"/>}>
+            <ServerComponent albumId={params.albumId} />
+        </Suspense>
+    )
+}
 
-    const album = await getAlbum(params.albumId);
+export default AlbumPage;
+
+
+async function ServerComponent({ albumId } : { albumId : string }) {
+    const album = await getAlbum(albumId);
 
     if (!album) {
         return (
@@ -87,7 +99,5 @@ const AlbumPage = async({
             <Copyright label={album.label} date={album.release} />
             <MoreAlbums data={album.songs} albumId={album.id} />
         </div>
-    )
+    );
 }
-
-export default AlbumPage

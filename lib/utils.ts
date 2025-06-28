@@ -131,3 +131,21 @@ export const getShortName = (name: string)=>{
     const words = name.split(" ");
     return words.map(word=>word[0].toUpperCase()).join("");
 }
+
+
+export function addCloudinaryTransformations(
+  url: string,
+  transformation: string
+): string {
+  const uploadSegment = "/upload/";
+  const index = url.indexOf(uploadSegment);
+
+  if (index === -1) {
+    throw new Error("Invalid Cloudinary URL: missing /upload/ segment");
+  }
+
+  const prefix = url.slice(0, index + uploadSegment.length);
+  const suffix = url.slice(index + uploadSegment.length);
+
+  return `${prefix}${transformation}/${suffix}`;
+}

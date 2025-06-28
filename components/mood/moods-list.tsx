@@ -40,7 +40,7 @@ export const MoodsList = () => {
     
     return (
         <div className="w-full">
-            <div className="w-full grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-6 md:gap-8">
+            <div className="w-full grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
                 {
                     data?.pages.map((group, i)=>(
                         <Fragment key={i} >

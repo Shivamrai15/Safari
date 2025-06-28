@@ -88,20 +88,51 @@ async function ServerComponent({ artistId } : { artistId : string }) {
 
     return (
         <div className="min-h-full bg-neutral-950 pb-20 md:pb-10">
-            <div
-                className={cn(
-                    "w-full h-[30vh] md:aspect-[5/2] md:h-auto bg-no-repeat bg-cover",
-                )}
-                style={ artist.thumbnail === null ? {background : 'linear-gradient(160deg, #111 30%,  #702228 30%)'} : {backgroundImage : `url(${artist.thumbnail})`} }
-            >
-                <div className="h-full bg-gradient-to-b from-transparent to-neutral-950 relative md:pr-32">
-                    <div className="bottom-0 absolute px-4 md:px-20 md:pr-32">
-                        <h1 className="text-white text-4xl sm:text-5xl lg:text-8xl font-extrabold line-clamp-1 py-2 select-none">
-                            {artist.name}
-                        </h1>
+            {
+                artist.thumbnail ? (
+                    <div
+                        className={cn(
+                            "w-full h-[30vh] md:aspect-[5/2] md:h-auto bg-no-repeat bg-cover",
+                        )}
+                        style={{backgroundImage : `url(${artist.thumbnail})`} }
+                    >
+                        <div className="h-full bg-gradient-to-b from-transparent to-neutral-950 relative md:pr-32">
+                            <div className="bottom-0 absolute px-4 md:px-20 md:pr-32">
+                                <h1 className="text-white text-4xl sm:text-5xl lg:text-8xl font-extrabold line-clamp-1 py-2 select-none">
+                                    {artist.name}
+                                </h1>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
+                ) : (
+                    <div className="w-full h-[30vh] md:aspect-[5/2] md:h-auto relative">
+                        <div 
+                            className="w-3/5 right-0 absolute h-full bg-cover"
+                            style={{
+                                backgroundImage : `url(${artist.image})`,
+                                backgroundRepeat : "no-repeat",
+                                backgroundSize : "cover",
+                                backgroundPosition : "top",
+                                filter: "grayscale(100%)"
+                            }}
+                        />
+                        <div
+                            className="h-full absolute w-3/5 right-0 bg-gradient-to-b from-transparent from-50% to-neutral-950 "
+                        />
+                        <div
+                            className="h-full absolute w-3/5 right-0 bg-gradient-to-r from-neutral-950 to-transparent"
+                        />
+                        <div className="h-full relative md:pr-32">
+                            <div className="bottom-0 absolute px-4 md:px-20 md:pr-32">
+                                <h1 className="text-white text-4xl sm:text-5xl lg:text-8xl font-extrabold line-clamp-1 py-2 select-none">
+                                    {artist.name}
+                                </h1>
+                            </div>
+                        </div>
+                    </div>
+                )
+            }
+            
             <div className="px-4 md:px-20 mt-5 flex items-center gap-6 md:pr-32" >
                 <PlayButton songs={artist.songs} artistId={artist.id} />
                 <ShuffleButton/>

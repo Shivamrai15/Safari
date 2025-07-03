@@ -53,8 +53,8 @@ export const Card = ({
                     backgroundRepeat: 'no-repeat'
                 }}
             />
-            <div className="p-4 z-30 relative flex items-end h-full">
-                <h3 className=" text-white text-2xl lg:text-3xl font-extrabold">
+            <div className="p-4 z-10 relative flex items-end h-full">
+                <h3 className=" text-white text-2xl lg:text-3xl font-bold">
                     {mood.name}
                 </h3>
             </div>

@@ -62,7 +62,7 @@ export const LayoutWrapper = ({
             </div>
             {
                 current && (
-                    <div className="w-full h-14 absolute bottom-[4.25rem] md:bottom-0 md:relative md:h-20">
+                    <div className="w-full h-14 absolute bottom-[4.25rem] md:bottom-0 md:relative md:h-20 z-40">
                         <Player/>
                     </div>
                 )

@@ -89,6 +89,11 @@ body,
                1px 1px #b4b4b4, -1px -1px #b4b4b4, 1px -1px #b4b4b4, -1px 1px #b4b4b4;
 }
 
+.mask {
+  mask-image: linear-gradient(to bottom, black, transparent);
+  -webkit-mask-image: linear-gradient(to bottom, black, transparent);
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

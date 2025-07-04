@@ -1,5 +1,7 @@
 "use client";
 
+import { GiMusicalNotes } from "react-icons/gi";
+
 interface UnsyncedLyricsProps {
     lyrics: string[];
     active: boolean | undefined;
@@ -20,9 +22,9 @@ export const UnsyncedLyrics = ({
                         {lyrics.map((line, index) => (
                             <span
                                 key={index}
-                                className="px-4 md:px-6 my-2 text-zinc-100 transition-all text-2xl md:text-3xl font-semibold md:font-bold duration-500 select-none text-left md:pointer-events-auto"
+                                className="px-4 md:px-6 my-1 md:my-2 text-zinc-100 transition-all text-xl md:text-3xl font-bold duration-500 select-none text-left md:pointer-events-auto"
                             >
-                                {line}
+                                {line === "" ? <GiMusicalNotes className="h-8 w-8 md:h-12 md:w-12"/> : line}
                             </span>   
                         ))}
                     <div className="h-8 w-full" />

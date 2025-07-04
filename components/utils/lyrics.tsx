@@ -1,6 +1,6 @@
 "use client";
 
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { SyncLoader } from "react-spinners";
 import { Lyrics } from "@prisma/client";
@@ -34,6 +34,10 @@ export const LyricsComponent = ({
             return response.data;
         },
         queryKey : ['lyrics', songId],
+        retry : 0,
+        refetchOnWindowFocus : false,
+        refetchOnReconnect : false,
+        refetchOnMount : false,
     });
 
     if (isPending) {
@@ -45,10 +49,14 @@ export const LyricsComponent = ({
     }
 
     if (error) {
+        console.error("Error fetching lyrics:", error instanceof AxiosError);
+        console.error("Error fetching lyrics:", error instanceof AxiosError ? error.response : error   );
         return (
             <div className="h-full flex items-center justify-center">
                 <div className="text-xl md:text-3xl font-bold text-white select-none">
-                    Something went wrong
+                    {
+                        error instanceof AxiosError && error.response?.status==404 ? "No Lyrics Found" : "Something went wrong"
+                    }
                 </div>
             </div>
         );

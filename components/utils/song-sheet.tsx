@@ -316,12 +316,12 @@ export const SongSheet = ({
                     </div>
                 </div>
                 <div className={cn(
-                        "bg-neutral-950 md:bg-inherit min-h-full w-full grid lg:grid-cols-3 px-6 md:px-10 xl:px-28 gap-8",
+                        "bg-neutral-950 md:bg-inherit min-h-full w-full grid lg:grid-cols-3 px-6 md:px-10 xl:px-28 gap-8 max-md:pt-2",
                         smOptions && "hidden",
                         isAdPlaying && "hidden"
                     )}
                 >
-                    <div className="w-full h-[90vh] lg:col-span-2 bg-neutral-800 rounded-2xl overflow-hidden ring-1 ring-neutral-700/60">
+                    <div className="w-full h-[70vh] md:h-[90vh] lg:col-span-2 bg-neutral-800 rounded-2xl overflow-hidden ring-1 ring-neutral-700/60">
                         <LyricsComponent
                             active={active}
                             songId={current?.id||""}

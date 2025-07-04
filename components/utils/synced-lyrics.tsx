@@ -78,13 +78,13 @@ export const SyncedLyrics = ({
                 )}
             >
                 <div className="flex flex-col items-start gap-y-4 md:gap-y-8 px-4 md:px-6">
-                    <div className="h-28 w-full" />
+                    <div className="h-12 md:h-28 w-full" />
                     {lyrics.map((line, index) => (
                         <p
                             id={`lry${index}`}
                             key={index}
                             className={cn(
-                                "my-2 transition-all text-2xl md:text-3xl lg:text-4xl font-semibold md:font-bold duration-500 select-none text-left",
+                                "my-1 md:my-2 transition-all text-xl md:text-3xl lg:text-4xl font-bold duration-500 select-none text-left",
                                 index === currentLineIndex ? 'text-white'
                                 : 'text-gray-300',
                                 active && "md:cursor-pointer"
@@ -97,7 +97,7 @@ export const SyncedLyrics = ({
                             {line.text === "" ? <GiMusicalNotes className="h-8 w-8 md:h-12 md:w-12"/> : line.text}
                         </p>
                     ))}
-                    <div className="h-28 w-full" />
+                    <div className="h-12 md:h-28 w-full" />
                 </div>
             </div>
             <div className="h-32 md:hidden absolute top-0 w-full bg-gradient-to-b from-neutral-900/70 to-transparent"/>

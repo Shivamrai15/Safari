@@ -1,12 +1,15 @@
 "use client";
 
 import {
-    MutableRefObject,
-    useEffect,
-    useMemo,
     useRef,
-    useState
+    useMemo,
+    useState,
+    useEffect,
+    MutableRefObject,
 } from "react";
+import Hls from "hls.js";
+import axios from "axios";
+
 
 import {
     Loader2,
@@ -19,31 +22,32 @@ import {
     VolumeX
 } from "lucide-react";
 
-import { Slider } from "@/components/ui/slider";
-import { useControls } from "@/hooks/use-controls";
-import { usePlayer } from "@/hooks/use-player";
+import { useAds } from "@/hooks/use-ads";
+import { usePlay } from "@/hooks/use-play";
+import { useSheet } from "@/hooks/use-sheet";
 import { useQueue } from "@/hooks/use-queue";
+import { usePlayer } from "@/hooks/use-player";
+import { useSocket } from "@/hooks/use-socket";
+import { useAccount } from "@/hooks/use-account";
+import { useControls } from "@/hooks/use-controls";
+import { useShuffleList } from "@/hooks/use-shuffle-list";
+import { useSocketEvents } from "@/hooks/use-socket-events";
+import { useAiShuffleWorker } from "@/hooks/use-ai-shuffle-worker";
+
+import { Slider } from "@/components/ui/slider";
 import { cn, songLength } from "@/lib/utils";
 import { FaPlay, FaPause } from "react-icons/fa";
 import { FaForwardStep, FaBackwardStep } from "react-icons/fa6";
 import { PlayerSongInfo } from "./player-song-info";
 import { Range } from "@/components/ui/range";
 import { SongSheet } from "./song-sheet";
-import { useSheet } from "@/hooks/use-sheet";
 import { LikeButton } from "./like-button";
-import axios from "axios";
-import { useAccount } from "@/hooks/use-account";
 import { PlayerShortCutProvider } from "@/providers/player-shortcut-provider";
-import { useAds } from "@/hooks/use-ads";
 import { AdInfo } from "./ad-info";
-import { useSocket } from "@/hooks/use-socket";
-import { useSocketEvents } from "@/hooks/use-socket-events";
 import { DEQUEUE, PAUSE, PLAY, POP, SEEK } from "@/lib/events";
-import { usePlay } from "@/hooks/use-play";
-import Hls from "hls.js";
 import { Ad, Album, Song } from "@prisma/client";
 import { getRandomAd } from "@/server/ad";
-
+import { AiShuffleButton } from "./ai-shuffle-button";
 
 export const Player = () => {
 
@@ -54,11 +58,13 @@ export const Player = () => {
     const [ad, setAd] = useState<Ad|null>(null);
 
     const { onOpen } = useSheet();
-    const { current, deQueue, pop, shuffle } = useQueue();
-    const { repeat, setRepeat, mute, setMute, volume, setVolume } = useControls();
+    const { play, setPlay } = usePlay();
+    const { visited, setVisited } = useShuffleList();
     const { setAlbumId, setSongId , setIsPlaying } = usePlayer();
     const { prevAdTimeStamp, setPrevAdTimeStamp } = useAds();
-    const { play, setPlay } = usePlay();
+    const { current, deQueue, pop, shuffle, queue, enQueue } = useQueue();
+    const { repeat, setRepeat, mute, setMute, volume, setVolume, aiShuffle } = useControls();
+    
 
     const socket = useSocket();
     const { connected, roomId } = useSocketEvents();
@@ -73,6 +79,15 @@ export const Player = () => {
         },
         isLoading: boolean,
     } = useAccount();
+
+    useAiShuffleWorker({
+        currentId: current?.id || '',
+        visited: visited,
+        aiShuffle: aiShuffle,
+        queue: queue,
+        enQueue: enQueue,
+        setVisited: setVisited
+    });
 
     
     const Icon = play ? FaPause : FaPlay;
@@ -379,6 +394,7 @@ export const Player = () => {
                             >
                                 <ShuffleIcon />
                             </button>
+                            <AiShuffleButton className="max-lg:hidden shrink-0"/>
                             <button
                                 onClick={toggleRepeat}
                                 disabled={connected}

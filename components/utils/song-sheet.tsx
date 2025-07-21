@@ -27,6 +27,7 @@ import { ArtistCard } from "../artist/artist-card";
 import { Ad } from "@prisma/client";
 import { LyricsComponent } from "./lyrics";
 import { RelatedSongs } from "../song/related-songs";
+import { AiShuffleButton } from "./ai-shuffle-button";
 
 
 interface SongSheet {
@@ -175,6 +176,7 @@ export const SongSheet = ({
                                             </button>
                                             <RepeatIcon onClick={toggleRepeat}  className="h-8 w-8 text-white cursor-pointer" />
                                             <LikeButton id={current?.id} className="h-8 w-8 block" disabled = {isAdPlaying} />
+                                            <AiShuffleButton className="h-8 w-8 block" />
                                         </div>
                                     </BlurFade>
                                 </div>
@@ -252,6 +254,7 @@ export const SongSheet = ({
                                 <div className="w-full text-left pb-2">
                                     <div className="flex items-center justify-between gap-x-4">       
                                         <h2 className="text-2xl font-bold line-clamp-1 drop-shadow-2xl flex-1 select-none" >{isAdPlaying ? "End Audio Ads": current?.name}</h2>
+                                        <ShuffleIcon className="h-6 w-6" onClick={shuffle} />
                                         <LikeButton id={current?.id} className="h-6 w-6" disabled = {isAdPlaying} />
                                     </div>
                                 </div>
@@ -271,7 +274,7 @@ export const SongSheet = ({
                                 </div>
                                 <div className="grid grid-cols-5 w-full items-center justify-items-center">
                                     <div className="flex justify-start w-full">
-                                        <ShuffleIcon onClick={shuffle} />
+                                        <AiShuffleButton className="h-6 w-6 fill-zinc-200" />
                                     </div>
                                     <div className="flex justify-start w-full" >
                                         <button 

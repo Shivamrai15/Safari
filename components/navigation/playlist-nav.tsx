@@ -52,10 +52,8 @@ export const PlaylistNav = () => {
                                         />
                                     </div>
                                 </TooltipTrigger>
-                                <TooltipContent side="right"  align="center" className="bg-neutral-800 rounded-sm border-none" style={{ background : playlist.color || "#262626" }}>
-                                    <div>
-                                        {playlist.name}
-                                    </div>
+                                <TooltipContent side="right"  align="center" className="bg-neutral-800 rounded-sm border-none" color={playlist.color ?? "#262626"}>
+                                    <span className="font-medium text-[13px] text-white">{playlist.name}</span>
                                 </TooltipContent>
                             </Tooltip>
                         </div>

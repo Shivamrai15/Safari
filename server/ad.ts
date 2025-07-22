@@ -3,22 +3,15 @@
 import { db } from "@/lib/db";
 import { cache } from "react";
 import { Ad } from "@prisma/client";
-import { redisClient } from "@/lib/redis";
 
 const getAds = cache(async (): Promise<Ad[]>=> {
     try {
         
-        const cacheKey = `/safari/ads`;
-        const cachedAds = await redisClient.get(cacheKey);
-        if (cachedAds) {
-            return JSON.parse(cachedAds as string);
-        }
         const ads = await db.ad.findMany();
-        await redisClient.setex(cacheKey, 3600*24, JSON.stringify(ads));
         return ads;
         
     } catch (error) {
-        console.log("ADS API ERROR");
+        console.log("ADS API ERROR", error);
         return [];
     }
 })

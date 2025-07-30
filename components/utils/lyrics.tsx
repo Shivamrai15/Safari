@@ -6,6 +6,7 @@ import { SyncLoader } from "react-spinners";
 import { Lyrics } from "@prisma/client";
 import { SyncedLyrics } from "./synced-lyrics";
 import { UnsyncedLyrics } from "./unsynced-lyrics";
+import { useCallback } from "react";
 
 
 interface LyricsProps {
@@ -27,6 +28,7 @@ export const LyricsComponent = ({
     currentTime,
     seekTime
 }: LyricsProps) => {
+
     
     const { data, isPending, error } : QueryResponse = useQuery({
         queryFn : async()=>{
@@ -48,14 +50,13 @@ export const LyricsComponent = ({
         );
     }
 
+    
     if (error) {
-        console.error("Error fetching lyrics:", error instanceof AxiosError);
-        console.error("Error fetching lyrics:", error instanceof AxiosError ? error.response : error   );
         return (
-            <div className="h-full flex items-center justify-center">
-                <div className="text-xl md:text-3xl font-bold text-white select-none">
+            <div className="h-full flex items-center">
+                <div className="text-2xl sm:text-4xl lg:text-6xl font-bold text-white select-none px-6 lg:px-24 max-w-3xl w-full">
                     {
-                        error instanceof AxiosError && error.response?.status==404 ? "No Lyrics Found" : "Something went wrong"
+                        error instanceof AxiosError && error.response?.status==404 ? error.response.data : "Something went wrong"
                     }
                 </div>
             </div>

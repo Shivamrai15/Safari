@@ -122,7 +122,7 @@ export const SongSheet = ({
                                     </BlurFade>
                                     <div className="flex items-center justify-between gap-x-4">
                                         <BlurFade delay={0.25} inView>
-                                            <h2 className="text-5xl lg:text-8xl font-bold md:font-extrabold line-clamp-1 drop-shadow-2xl flex-1 select-none" >{isAdPlaying ? "End Audio Ads": current?.name}</h2>
+                                            <h2 className="text-5xl lg:text-8xl font-bold md:font-extrabold line-clamp-1 drop-shadow-2xl flex-1 select-none py-2" >{isAdPlaying ? "End Audio Ads": current?.name}</h2>
                                         </BlurFade>
                                     </div>
                                 </div>

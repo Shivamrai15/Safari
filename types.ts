@@ -59,3 +59,15 @@ export type AccountResponse = {
     isActive : boolean;
     showRecommendations: boolean;
 }
+
+export type Status = {
+  status: "up" | "down";
+  timestamp: number;
+  response_time: number;
+  message: string;
+};
+
+export type Service = {
+  service: string;
+  statuses: Status[];
+};

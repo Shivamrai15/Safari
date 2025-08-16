@@ -2,6 +2,7 @@ import { AccountSection } from "@/components/account/account-section";
 import { HelpSection } from "@/components/account/help-section";
 import { PaymentSection } from "@/components/account/payment-section";
 import { PrivacyAndSecurity } from "@/components/account/privacy-and-security";
+import { Status } from "@/components/account/status";
 import { Metadata } from "next";
 
 
@@ -17,6 +18,7 @@ const AccountPage = () => {
                 <AccountSection/>
                 <PaymentSection/>
                 <PrivacyAndSecurity/>
+                <Status/>
                 {/* <HelpSection/> */}
             </div>
         </main>

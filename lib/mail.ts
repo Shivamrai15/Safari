@@ -1,6 +1,6 @@
 "use server";
 import nodemailer from "nodemailer";
-import { emailVerificationTemplate, forgetPasswordTemplate } from "./mail-templates";
+import { emailVerificationTemplate, forgetPasswordTemplate, otpTemplate } from "./mail-templates";
 
 const transporter = nodemailer.createTransport({
     service : "gmail",
@@ -11,7 +11,7 @@ const transporter = nodemailer.createTransport({
 });
 
 
-export const sendVerificationEmail = async( email : string, name : string, token : string ) => {
+export const sendVerificationEmail = async( email : string, name : string | undefined, token : string ) => {
     try {
         
         const verificationUrl = `${process.env.ORIGIN}/verification?token=${token}`;
@@ -41,5 +41,20 @@ export const sendForgetPasswordEmail = async( email : string, name : string, tok
 
     } catch (error) {
         console.error("NODEMAILER FORGET PASSWORD EMAIL ERROR", email);
+    }
+}
+
+export const sendOTPEmail = async ( email: string, otp: string ) => {
+    try {
+        await transporter.sendMail({
+        from: process.env.EMAIL_USERNAME,
+        to: email,
+        subject: "Your One-Time Password (OTP)",
+        html: otpTemplate(otp)
+        });
+        console.log(`OTP email sent to ${email}`);
+    } catch (error) {
+        console.error("NODEMAILER OTP EMAIL ERROR", error);
+        throw error;
     }
 }

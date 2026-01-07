@@ -3,6 +3,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 
 import { db } from "@/lib/db";
 import authConfig from "@/auth.config";
+import { generateLoginNotification } from "./server/notification";
  
 export const {
     handlers,
@@ -21,6 +22,11 @@ export const {
                 data : { emailVerified : new Date() }
             });
 
+        },
+        signIn: async({user}) => {
+            if (user.id) {
+                await generateLoginNotification(user.id);
+            }
         }
     },
     callbacks :{

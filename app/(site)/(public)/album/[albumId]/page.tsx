@@ -52,7 +52,19 @@ export async function generateMetadata(
                 width : 1200
             }], 
         },
-        category : "music streaming"
+        category : "music streaming",
+        appLinks : {
+            android : {
+                package : "com.shivamrai6836.Safari",
+                app_name : "Safari",
+                url : "safarimusic://album/" + params.albumId
+            },
+        },
+        other: {
+            "al:android:url": "safarimusic://album/" + params.albumId,
+            "al:android:package": "com.shivamrai6836.Safari",
+            "al:android:app_name": "Safari",
+        }
     }
 }
 

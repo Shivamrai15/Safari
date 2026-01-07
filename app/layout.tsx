@@ -47,7 +47,20 @@ export const metadata: Metadata = {
             width : 720
         },
         type : "website",
-    },  
+    },
+    appLinks : {
+        android : {
+            package : "com.shivamrai6836.Safari",
+            app_name : "Safari",
+            url : "safarimusic://"
+        },
+    },
+    other: {
+        "al:android:url": "safarimusic://",
+        "al:android:package": "com.shivamrai6836.Safari",
+        "al:android:app_name": "Safari",
+    },
+    category : "music",
 };
 
 export default async function RootLayout({

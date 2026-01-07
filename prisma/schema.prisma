@@ -30,6 +30,7 @@ model User {
   Authenticator       Authenticator[]
   autoPlaylists       AutoPlaylist[]
   dailyMixes          DailyMix[]
+  notifications       Notification[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -421,14 +422,13 @@ model DailyMixSong {
 }
 
 model Mood {
-  id    String  @id @default(auto()) @map("_id") @db.ObjectId
-  name  String  @unique
-  color String?
-  image String?
-  metadataIds String[] @db.ObjectId
-  metadata   Metadata[] @relation(fields: [metadataIds], references: [id])
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  name        String     @unique
+  color       String?
+  image       String?
+  metadataIds String[]   @db.ObjectId
+  metadata    Metadata[] @relation(fields: [metadataIds], references: [id])
 }
-
 
 model Metadata {
   id              String   @id @default(auto()) @map("_id") @db.ObjectId
@@ -441,7 +441,32 @@ model Metadata {
   lyricist        String
   tempo           String
   description     String
-  moodIds        String[] @db.ObjectId
-  moods          Mood[]   @relation(fields: [moodIds], references: [id])
+  moodIds         String[] @db.ObjectId
+  moods           Mood[]   @relation(fields: [moodIds], references: [id])
   instrumentation String[]
+}
+
+enum NotificationType {
+  INFO
+  WARNING
+  ALERT
+}
+
+model Notification {
+  id           String           @id @default(auto()) @map("_id") @db.ObjectId
+  userId       String           @db.ObjectId
+  user         User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type         NotificationType
+  title        String
+  message      String
+  image        String?
+  webIcon      String?
+  appIcon      String?
+  webActionUrl String?
+  appActionUrl String?
+  read         Boolean          @default(false)
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  @@index([userId])
 }

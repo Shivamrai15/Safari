@@ -47,7 +47,19 @@ export async function generateMetadata(
                 width : 1200
             }], 
         },
-        category : "music streaming"
+        category : "music streaming",
+        appLinks : {
+            android : {
+                package : "com.shivamrai6836.Safari",
+                app_name : "Safari",
+                url : "safarimusic://mood-songs/" + params.moodId
+            }, 
+        },
+        other: {
+            "al:android:url": "safarimusic://mood-songs/" + params.moodId,
+            "al:android:package": "com.shivamrai6836.Safari",
+            "al:android:app_name": "Safari",    
+        }
     }
 }
 

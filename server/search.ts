@@ -26,7 +26,7 @@ export const getTopSearches =  cache(async( query: string ) => {
             collection,
             {
                 vector: queryVector,
-                score_threshold: 0.1,
+                score_threshold: 0.5,
                 limit: 5
             }
         ));

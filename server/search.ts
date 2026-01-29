@@ -21,16 +21,16 @@ export const getTopSearches =  cache(async( query: string ) => {
     try {
 
         const queryVector = await generateEmbeddings(query);
+        
         const searchPromise = ["album", "song", "artist"].map((collection)=>qdrant.search(
             collection,
             {
                 vector: queryVector,
-                score_threshold: 0.5,
+                score_threshold: 0.1,
                 limit: 5
             }
         ));
         const [ albumData, songData, artistData ] = await Promise.all(searchPromise);
-
         const ids = songData.map((v_data)=>v_data.payload?.id as string).filter((id) => id !== undefined);
 
         const songs = await db.song.findMany({

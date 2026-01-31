@@ -1,4 +1,3 @@
-import { Artist } from "@prisma/client";
 import { getArtistSearches } from "@/server/search";
 import { ArtistCard } from "@/components/search/artist-card";
 
@@ -22,8 +21,8 @@ export const SearchArtist = async({ query }: SearchArtistProps) => {
     return (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-2 gap-y-4 md:gap-y-8 py-10">
             {
-                data.map(({id, payload})=>(
-                    <ArtistCard key={id} artist={payload as Artist} />
+                data.map((artist)=>(
+                    <ArtistCard key={artist.id} artist={artist} />
                 ))
             }
         </div>

@@ -9,6 +9,7 @@ import {
 } from "react";
 import Hls from "hls.js";
 import axios from "axios";
+import { sendHistory } from "@/lib/history.service";
 
 
 import {
@@ -52,30 +53,33 @@ import { AiShuffleButton } from "./ai-shuffle-button";
 export const Player = () => {
 
     const [currentTime, setCurrentTime] = useState(0);
-    const audioRef = useRef<HTMLAudioElement|null>(null);
-    const [ metadataLoading, setMetadataLoading ] = useState(true);
+    const audioRef = useRef<HTMLAudioElement | null>(null);
+    const [metadataLoading, setMetadataLoading] = useState(true);
     const [isAdPlaying, setIsAdPlaying] = useState(false);
-    const [ad, setAd] = useState<Ad|null>(null);
+    const [ad, setAd] = useState<Ad | null>(null);
+
+    const playStartTimeRef = useRef<number>(0);
+    const playStartPositionRef = useRef<number>(0);
 
     const { onOpen } = useSheet();
     const { play, setPlay } = usePlay();
     const { visited, setVisited } = useShuffleList();
-    const { setAlbumId, setSongId , setIsPlaying } = usePlayer();
+    const { setAlbumId, setSongId, setIsPlaying } = usePlayer();
     const { prevAdTimeStamp, setPrevAdTimeStamp } = useAds();
     const { current, deQueue, pop, shuffle, queue, enQueue } = useQueue();
     const { repeat, setRepeat, mute, setMute, volume, setVolume, aiShuffle } = useControls();
-    
+
 
     const socket = useSocket();
     const { connected, roomId } = useSocketEvents();
 
 
-    const { data , isLoading } : { 
-        data : { 
+    const { data, isLoading }: {
+        data: {
             name: string | null,
             id: string,
             privateSession: boolean,
-            isActive : boolean
+            isActive: boolean
         },
         isLoading: boolean,
     } = useAccount();
@@ -89,42 +93,42 @@ export const Player = () => {
         setVisited: setVisited
     });
 
-    
+
     const Icon = play ? FaPause : FaPlay;
     const RepeatIcon = repeat ? Repeat1 : Repeat;
 
 
-    const VolumeIcon = useMemo(()=>{
+    const VolumeIcon = useMemo(() => {
         if (mute) {
             return VolumeX;
         }
-        if(volume === 0 ) {
+        if (volume === 0) {
             return VolumeX;
         }
-        if(volume <= 0.5) {
+        if (volume <= 0.5) {
             return Volume1;
         }
         return Volume2;
     }, [volume, mute]);
 
     const togglePlay = () => {
-        if ( audioRef.current ) {
-            if ( play ) {
+        if (audioRef.current) {
+            if (play) {
                 audioRef.current.pause();
-                if ( connected ) {
-                    socket.emit(PAUSE, {roomId});
+                if (connected) {
+                    socket.emit(PAUSE, { roomId });
                 }
             } else {
                 audioRef.current.play();
-                if ( connected ) {
-                    socket.emit(PLAY, {roomId});
+                if (connected) {
+                    socket.emit(PLAY, { roomId });
                 }
             }
         }
     }
 
     const toggleRepeat = () => {
-        if(repeat){
+        if (repeat) {
             setRepeat(false);
         } else {
             setRepeat(true);
@@ -140,37 +144,50 @@ export const Player = () => {
     }
 
     const handleTimeUpdate = () => {
-        if ( audioRef.current ) {
+        if (audioRef.current) {
             setCurrentTime(audioRef.current.currentTime);
         }
     };
 
-    const updateHistory = async() => {
+    const updateHistory = async () => {
         if (current) {
             try {
-                await axios.post("/api/v1/user/history", { songId : current.id });
-                await axios.post("/api/v1/views", { songId : current.id });
+                await axios.post("/api/v1/user/history", { songId: current.id });
+                await axios.post("/api/v1/views", { songId: current.id });
             } catch (error) {
                 console.log(error);
             }
         }
     }
 
+    const captureAndSendHistory = () => {
+        if (isAdPlaying || !current || !data?.id || !audioRef.current) return;
+        const playedDuration = Math.floor(audioRef.current.currentTime - playStartPositionRef.current);
+        if (playedDuration <= 0) return;
+        sendHistory([{
+            userId: data.id,
+            trackId: current.id,
+            songDuration: current.duration,
+            playedDuration,
+            playedAt: new Date(playStartTimeRef.current),
+        }]);
+    }
 
-    const hlsPlayer = ( song : Song & { album: Album }, audio: MutableRefObject<HTMLAudioElement|null>)=> {
-        if (!audio.current){
-            return ;
+
+    const hlsPlayer = (song: Song & { album: Album }, audio: MutableRefObject<HTMLAudioElement | null>) => {
+        if (!audio.current) {
+            return;
         }
 
         setMetadataLoading(true);
-        setAlbumId( song.albumId );
-        setSongId( song.id );
-                        
+        setAlbumId(song.albumId);
+        setSongId(song.id);
+
         if (Hls.isSupported()) {
             const hls = new Hls();
             hls.loadSource(song.url);
             hls.attachMedia(audio.current);
-            hls.on(Hls.Events.MANIFEST_PARSED, ()=>{
+            hls.on(Hls.Events.MANIFEST_PARSED, () => {
                 audio.current?.play();
             });
         } else if (audio.current.canPlayType('application/vnd.apple.mpegurl')) {
@@ -183,44 +200,44 @@ export const Player = () => {
 
     useEffect(() => {
 
-        const updateData = async() => {
+        const updateData = async () => {
             try {
-                if ( data?.isActive ) {
+                if (data?.isActive) {
                     if (current && audioRef.current) {
                         hlsPlayer(current, audioRef);
-                        if ( !isLoading && !data.privateSession ) {
+                        if (!isLoading && !data.privateSession) {
                             updateHistory();
                         }
                     }
                     return;
                 }
-    
-                if ( isAdPlaying ) {
+
+                if (isAdPlaying) {
                     return;
                 }
-    
-                if ( prevAdTimeStamp && ( (Date.now() - prevAdTimeStamp)/60000 < 30 ) ) {
+
+                if (prevAdTimeStamp && ((Date.now() - prevAdTimeStamp) / 60000 < 30)) {
                     if (current && audioRef.current) {
                         hlsPlayer(current, audioRef);
-                        if ( !isLoading && !data.privateSession ) {
+                        if (!isLoading && !data.privateSession) {
                             updateHistory();
                         }
                     }
                     return;
                 }
-    
-                if ( audioRef.current ) {
+
+                if (audioRef.current) {
                     setIsAdPlaying(true);
                     const randomAd = await getRandomAd();
                     if (Hls.isSupported() && randomAd) {
                         const hls = new Hls();
                         hls.loadSource(randomAd.url);
                         hls.attachMedia(audioRef.current);
-                        hls.on(Hls.Events.MANIFEST_PARSED, ()=>{
+                        hls.on(Hls.Events.MANIFEST_PARSED, () => {
                             audioRef.current?.play();
                         });
                     } else if (audioRef.current.canPlayType('application/vnd.apple.mpegurl')) {
-                        audioRef.current.src = randomAd?.url||"";
+                        audioRef.current.src = randomAd?.url || "";
                         audioRef.current.addEventListener('loadedmetadata', () => {
                             audioRef.current?.play();
                         });
@@ -230,7 +247,7 @@ export const Player = () => {
                     setSongId("");
                 }
             } catch (error) {
-                console.log("Update error", error);   
+                console.log("Update error", error);
             }
 
         }
@@ -238,39 +255,39 @@ export const Player = () => {
     }, [current, isAdPlaying]);
 
 
-    useEffect(()=>{
+    useEffect(() => {
         if (audioRef.current) {
             audioRef.current.volume = volume
         }
     }, [volume, current]);
 
 
-    const seekTime = ( num : number ) => {
+    const seekTime = (num: number) => {
         if (audioRef.current) {
             audioRef.current.currentTime = num;
             setCurrentTime(num);
-            if ( connected ){
-                socket.emit(SEEK, { roomId, time:num });
+            if (connected) {
+                socket.emit(SEEK, { roomId, time: num });
             }
         }
     }
 
-    const handleUpdateMetadata = ()=>{
-        if ( 'mediaSession' in navigator ){
+    const handleUpdateMetadata = () => {
+        if ('mediaSession' in navigator) {
             navigator.mediaSession.metadata = new MediaMetadata({
-                title : current?.name || "",
-                album : current?.album.name || "",
+                title: current?.name || "",
+                album: current?.album.name || "",
                 artwork: [
                     { src: `${current?.image}`, sizes: '96x96', type: 'image/avif' },
                     { src: `${current?.image}`, sizes: '96x96', type: 'image/webp' },
-                    { src: current?.image||"", sizes: '96x96', type: 'image/jpeg' },
+                    { src: current?.image || "", sizes: '96x96', type: 'image/jpeg' },
                 ],
             });
-            
+
         }
     }
 
-    useEffect(()=>{
+    useEffect(() => {
 
         const handleSeekEvent = (payload: { roomId: string, time: number }) => {
             if (audioRef.current) {
@@ -280,13 +297,13 @@ export const Player = () => {
         }
 
         const handlePlayEvent = () => {
-            if ( audioRef.current ) {
+            if (audioRef.current) {
                 audioRef.current.play();
             }
         }
 
         const handlePauseEvent = () => {
-            if ( audioRef.current ) {
+            if (audioRef.current) {
                 audioRef.current.pause();
             }
         }
@@ -305,13 +322,14 @@ export const Player = () => {
 
 
     const handleOnEnd = () => {
-        if ( isAdPlaying ) {
+        if (isAdPlaying) {
             setIsAdPlaying(false);
             return;
         }
+        captureAndSendHistory();
         deQueue();
-        if ( connected ) {
-            socket.emit(DEQUEUE, {roomId});
+        if (connected) {
+            socket.emit(DEQUEUE, { roomId });
         }
     }
 
@@ -319,16 +337,16 @@ export const Player = () => {
         <>
             <div className="w-full h-full bg-neutral-900 hidden md:block relative">
                 <div className="w-full absolute -top-5 py-2">
-                    <Slider 
+                    <Slider
                         className={cn(
                             "cursor-pointer h-5",
-                            data?.isActive === false && "md:cursor-not-allowed" 
+                            data?.isActive === false && "md:cursor-not-allowed"
                         )}
                         value={[currentTime]}
                         step={1}
-                        max={isAdPlaying ? (ad?.duration||1) : (current?.duration||1)}
-                        onValueChange={(e)=>seekTime(e[0])}
-                        disabled = {data?.isActive === false}
+                        max={isAdPlaying ? (ad?.duration || 1) : (current?.duration || 1)}
+                        onValueChange={(e) => seekTime(e[0])}
+                        disabled={data?.isActive === false}
                     />
                 </div>
                 <div className="w-full h-full flex items-center justify-center px-6 lg:px-10">
@@ -338,20 +356,21 @@ export const Player = () => {
                                 isAdPlaying ? (
                                     <AdInfo ad={ad} />
                                 ) : (
-                                    <PlayerSongInfo song={current} />  
+                                    <PlayerSongInfo song={current} />
                                 )
                             }
                         </div>
                         <div className="w-full flex items-center justify-center gap-x-5 lg:gap-x-6">
                             <span className="w-8 text-sm text-zinc-300">{songLength(Math.floor(currentTime))}</span>
                             <button
-                                onClick={()=>{
+                                onClick={() => {
+                                    captureAndSendHistory();
                                     pop();
-                                    if ( connected ) {
-                                        socket.emit(POP, {roomId});
+                                    if (connected) {
+                                        socket.emit(POP, { roomId });
                                     }
                                 }}
-                                disabled = {data?.isActive === false}
+                                disabled={data?.isActive === false}
                                 className="focus:outline-none"
                             >
                                 <FaBackwardStep
@@ -363,7 +382,7 @@ export const Player = () => {
                             </button>
                             {
                                 metadataLoading ? (
-                                    <Loader2 className="h-8 w-8 text-zinc-300 animate-spin"/>
+                                    <Loader2 className="h-8 w-8 text-zinc-300 animate-spin" />
                                 ) : (
                                     <Icon
                                         className="h-8 w-8 cursor-pointer"
@@ -373,17 +392,17 @@ export const Player = () => {
                             }
                             <button
                                 onClick={handleOnEnd}
-                                disabled = {isAdPlaying}
+                                disabled={isAdPlaying}
                                 className="focus:outline-none"
                             >
                                 <FaForwardStep
                                     className="h-5 w-5 text-zinc-300 hover:text-white cursor-pointer"
                                 />
                             </button>
-                            <span className="text-sm text-zinc-300" >{ songLength(isAdPlaying ? (ad?.duration||1) : (current?.duration||1))}</span>
+                            <span className="text-sm text-zinc-300" >{songLength(isAdPlaying ? (ad?.duration || 1) : (current?.duration || 1))}</span>
                         </div>
                         <div className="w-full flex items-center justify-end gap-x-3 lg:gap-x-6">
-                            <LikeButton id = { current?.id } className="h-6 w-6" disabled = {isAdPlaying} />
+                            <LikeButton id={current?.id} className="h-6 w-6" disabled={isAdPlaying} />
                             <button
                                 disabled={connected}
                                 onClick={shuffle}
@@ -394,7 +413,7 @@ export const Player = () => {
                             >
                                 <ShuffleIcon />
                             </button>
-                            <AiShuffleButton className="max-lg:hidden shrink-0"/>
+                            <AiShuffleButton className="max-lg:hidden shrink-0" />
                             <button
                                 onClick={toggleRepeat}
                                 disabled={connected}
@@ -418,21 +437,21 @@ export const Player = () => {
                                     onValueChange={(e) => setVolume(e[0])}
                                 />
                             </div>
-                            <Maximize2 className="h-5 w-5 text-white cursor-pointer" onClick={()=>onOpen()} />
+                            <Maximize2 className="h-5 w-5 text-white cursor-pointer" onClick={() => onOpen()} />
                         </div>
                     </div>
                 </div>
             </div>
             <div className="md:hidden w-full h-full px-1">
                 <div
-                    onClick={()=>onOpen()}
+                    onClick={() => onOpen()}
                     className="w-full h-full bg-neutral-900 rounded-lg overflow-hidden relative"
-                    style={{background : isAdPlaying? `${ad?.image}` :`${current?.album.color}`}}
+                    style={{ background: isAdPlaying ? `${ad?.image}` : `${current?.album.color}` }}
                 >
                     <Slider
                         value={[currentTime]}
                         step={1}
-                        max={isAdPlaying ? (ad?.duration||1) : (current?.duration||1)}
+                        max={isAdPlaying ? (ad?.duration || 1) : (current?.duration || 1)}
                     />
                     <div className="flex items-center h-full px-4">
                         <div className="w-[calc(100%-3.5rem)] h-8">
@@ -447,11 +466,11 @@ export const Player = () => {
                         <div className="w-14 h-10 flex items-center justify-center">
                             {
                                 metadataLoading ? (
-                                    <Loader2 className="h-8 w-8 text-zinc-300 animate-spin"/>
+                                    <Loader2 className="h-8 w-8 text-zinc-300 animate-spin" />
                                 ) : (
                                     <Icon
                                         className="h-7 w-7 cursor-default"
-                                        onClick={(e)=>{
+                                        onClick={(e) => {
                                             e.stopPropagation();
                                             togglePlay();
                                         }}
@@ -463,26 +482,32 @@ export const Player = () => {
                 </div>
             </div>
             <audio
-                    ref = {audioRef}
-                    onPlay={()=>{
-                        setPlay(true);
-                        setIsPlaying(true);
-                    }}
-                    onPause={()=>{
-                        setPlay(false);
-                        setIsPlaying(false);
-                    }}
-                    onEnded={handleOnEnd}
-                    onLoadedMetadata={()=>handleUpdateMetadata()}
-                    onTimeUpdate={handleTimeUpdate}
-                    loop = {repeat}
-                    muted = {mute}
-                    title={current?.name}
-                    className="h-0 w-0 sr-only"
-                    autoPlay
-                    onWaiting={()=>setMetadataLoading(true)}
-                    onPlaying={()=>setMetadataLoading(false)}
-            >   
+                ref={audioRef}
+                onPlay={() => {
+                    setPlay(true);
+                    setIsPlaying(true);
+                }}
+                onPause={() => {
+                    setPlay(false);
+                    setIsPlaying(false);
+                }}
+                onEnded={handleOnEnd}
+                onLoadedMetadata={() => handleUpdateMetadata()}
+                onTimeUpdate={handleTimeUpdate}
+                loop={repeat}
+                muted={mute}
+                title={current?.name}
+                className="h-0 w-0 sr-only"
+                autoPlay
+                onWaiting={() => setMetadataLoading(true)}
+                onPlaying={() => {
+                    setMetadataLoading(false);
+                    if (!isAdPlaying) {
+                        playStartTimeRef.current = Date.now();
+                        playStartPositionRef.current = audioRef.current?.currentTime ?? 0;
+                    }
+                }}
+            >
             </audio>
             <SongSheet
                 currentTime={currentTime}
@@ -491,14 +516,14 @@ export const Player = () => {
                 Icon={Icon}
                 RepeatIcon={RepeatIcon}
                 toggleRepeat={toggleRepeat}
-                active = { data?.isActive }
-                play = { play }
-                handleOnEnd = { handleOnEnd }
-                isAdPlaying = { isAdPlaying }
-                ad = {ad}
+                active={data?.isActive}
+                play={play}
+                handleOnEnd={handleOnEnd}
+                isAdPlaying={isAdPlaying}
+                ad={ad}
             />
             <PlayerShortCutProvider
-                onClick = {togglePlay}
+                onClick={togglePlay}
                 audioRef={audioRef}
                 play={play}
             />

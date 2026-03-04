@@ -143,6 +143,8 @@ export const getTopSearches = cache(async (query: string) => {
             image: song.image,
             url: song.url,
             duration: song.duration,
+            language: song.language ?? "",
+            hasLyrics: song.hasLyrics ?? null,
             albumId: song.albumId.$oid,
             artistIds: song.artistIds.map((id) => id.$oid),
             album: {
@@ -336,6 +338,8 @@ export const getSongSearches = cache(async( query: string ) => {
             image: song.image,
             url: song.url,
             duration: song.duration,
+            language: song.language ?? "",
+            hasLyrics: song.hasLyrics ?? null,
             albumId: song.albumId.$oid,
             artistIds: song.artistIds.map((id) => id.$oid),
             album: {

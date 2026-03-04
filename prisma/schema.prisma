@@ -103,6 +103,8 @@ model Song {
   autoPlaylistSongs AutoPlaylistSong[]
   dailyMixSongs     DailyMixSong[]
   metadata          Metadata?
+  language          String             @default("")
+  hasLyrics         Boolean?
 
   @@index([albumId, name])
 }

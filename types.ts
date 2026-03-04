@@ -94,6 +94,8 @@ export type RawSong = {
     image: string;
     url: string;
     duration: number;
+    language: string;
+    hasLyrics?: boolean;
     albumId: { $oid: string };
     artistIds: { $oid: string }[];
     album: RawAlbum;

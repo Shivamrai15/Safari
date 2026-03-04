@@ -93,3 +93,19 @@ export const generateForgetPasswordToken = async( email: string ) => {
         return null;
     }
 }
+
+
+type TokenPayload = {
+    userId: string;
+    email: string;
+}
+
+export const getAccessToken = async (payload: TokenPayload) => {
+    try {
+        const token = jwt.sign(payload, process.env.AUTH_SECRET!, { expiresIn: "1m" });
+        return token;
+    } catch (error) {
+        console.error("GET ACCESS TOKEN ERROR", error);
+        return null;
+    }
+}

@@ -6,9 +6,17 @@ import { db } from "./db";
 
 const upsertProductRecord = async ( product : Stripe.Product ) => {
     try {
-        await db.product.create({
-            data : {
+        await db.product.upsert({
+            where : { productId : product.id },
+            create : {
                 productId : product.id,
+                active : product.active,
+                name : product.name,
+                description : product.description,
+                image : product.images[0],
+                metadeta : product.metadata
+            },
+            update : {
                 active : product.active,
                 name : product.name,
                 description : product.description,
@@ -24,11 +32,24 @@ const upsertProductRecord = async ( product : Stripe.Product ) => {
 
 const upsertPriceRecord = async( price : Stripe.Price ) => {
     try {
-        await db.price.create({
-            data : {
+        await db.price.upsert({
+            where : { priceId : price.id },
+            create : {
                 productId : typeof price.product==="string" ? price.product : "",
                 active : price.active,
                 priceId : price.id,
+                currency : price.currency,
+                description : price.nickname,
+                pricing_type : price.type,
+                unit_amount : price.unit_amount,
+                interval : price.recurring?.interval || "",
+                interval_count : price.recurring?.interval_count,
+                trial_period_days : price.recurring?.trial_period_days,
+                metadeta : price.metadata
+            },
+            update : {
+                productId : typeof price.product==="string" ? price.product : "",
+                active : price.active,
                 currency : price.currency,
                 description : price.nickname,
                 pricing_type : price.type,

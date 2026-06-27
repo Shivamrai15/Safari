@@ -35,7 +35,9 @@ export async function POST(
         if ( !sign || !webhookSecret ) return;
         event = stripe.webhooks.constructEvent(body, sign, webhookSecret);
     } catch ( error : any) {
-        console.log("Error Message", error.message);
+        console.log("Error Message", error.message,);
+        console.log("body", body);
+        console.log("sign", sign);
         return new NextResponse(`Webhook Error ${error.message}`, { status : 400 });
     }
 

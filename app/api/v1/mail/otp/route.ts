@@ -4,7 +4,7 @@ import { sendOTPEmail } from "@/lib/mail";
 
 
 const schema = z.object({
-    key : z.string().length(32),
+    key : z.string().min(1, { message: "Key is required" }),
     token: z.string().length(6, { message: "OTP must be 6 characters long" }).regex(/^\d{6}$/, { message: "OTP must be a 6-digit number" }),
     email: z.string().email(),
 })

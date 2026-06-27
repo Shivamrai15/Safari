@@ -16,6 +16,7 @@ const relevantEvents = new Set([
     'price.created',
     'price.updated',
     'checkout.session.completed',
+    'customer.subscription.created',
     'customer.subscription.updated',
     'customer.subscription.deleted',
 ]);
@@ -49,13 +50,14 @@ export async function POST(
                 case 'price.updated':
                     await upsertPriceRecord(event.data.object as Stripe.Price);
                     break;
+                case 'customer.subscription.created':
                 case 'customer.subscription.updated':
                 case 'customer.subscription.deleted':
                     const subscription = event.data.object as Stripe.Subscription;
                     await manageSubscriptionStatusChange(
                         subscription.customer as string,
                         subscription.id,
-                        false
+                        event.type === "customer.subscription.created"
                     );
                     break;
                 case 'checkout.session.completed':
@@ -80,4 +82,3 @@ export async function POST(
 
     return NextResponse.json({ received:true }, { status : 200 });
 }
-

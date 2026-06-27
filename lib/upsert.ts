@@ -133,7 +133,7 @@ const manageSubscriptionStatusChange = async (
         expand : ["default_payment_method"]
     });
 
-    await db.subscription.create({
+    const subscription = await db.subscription.create({
         data : {
             userId : data.id,
             stripePriceId : subscriptions.items.data[0].price.id,
@@ -142,6 +142,8 @@ const manageSubscriptionStatusChange = async (
             stripeCurrentPeriodEnd : toDateTime(subscriptions.current_period_end),
         }
     });
+
+    console.log("Subscription created:", subscription);
 
     if ( createAction && subscriptions.default_payment_method && data.id ) {
         await copyBillingDetailsToCustomer(subscriptions.default_payment_method as Stripe.PaymentMethod);

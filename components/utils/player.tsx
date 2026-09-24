@@ -28,11 +28,11 @@ import { usePlay } from "@/hooks/use-play";
 import { useSheet } from "@/hooks/use-sheet";
 import { useQueue } from "@/hooks/use-queue";
 import { usePlayer } from "@/hooks/use-player";
-import { useSocket } from "@/hooks/use-socket";
+import { useJam } from "@/hooks/use-jam";
+import { useJamAudioSync } from "@/hooks/use-jam-audio-sync";
 import { useAccount } from "@/hooks/use-account";
 import { useControls } from "@/hooks/use-controls";
 import { useShuffleList } from "@/hooks/use-shuffle-list";
-import { useSocketEvents } from "@/hooks/use-socket-events";
 import { useAiShuffleWorker } from "@/hooks/use-ai-shuffle-worker";
 
 import { Slider } from "@/components/ui/slider";
@@ -45,7 +45,6 @@ import { SongSheet } from "./song-sheet";
 import { LikeButton } from "./like-button";
 import { PlayerShortCutProvider } from "@/providers/player-shortcut-provider";
 import { AdInfo } from "./ad-info";
-import { DEQUEUE, PAUSE, PLAY, POP, SEEK } from "@/lib/events";
 import { Ad, Album, Song } from "@prisma/client";
 import { getRandomAd } from "@/server/ad";
 import { AiShuffleButton } from "./ai-shuffle-button";
@@ -70,8 +69,7 @@ export const Player = () => {
     const { repeat, setRepeat, mute, setMute, volume, setVolume, aiShuffle } = useControls();
 
 
-    const socket = useSocket();
-    const { connected, roomId } = useSocketEvents();
+    const jam = useJamAudioSync(audioRef);
 
 
     const { data, isLoading }: {
@@ -87,14 +85,16 @@ export const Player = () => {
     useAiShuffleWorker({
         currentId: current?.id || '',
         visited: visited,
-        aiShuffle: aiShuffle,
+        aiShuffle: aiShuffle && !jam.isActive,
         queue: queue,
         enQueue: enQueue,
         setVisited: setVisited
     });
 
 
-    const Icon = play ? FaPause : FaPlay;
+    const isPlayingNow = jam.isListener ? jam.isPlaying : play;
+    const displayTime = jam.isListener ? jam.listenerPositionSeconds : currentTime;
+    const Icon = isPlayingNow ? FaPause : FaPlay;
     const RepeatIcon = repeat ? Repeat1 : Repeat;
 
 
@@ -112,17 +112,15 @@ export const Player = () => {
     }, [volume, mute]);
 
     const togglePlay = () => {
+        if (jam.isActive) {
+            jam.togglePlayback();
+            return;
+        }
         if (audioRef.current) {
             if (play) {
                 audioRef.current.pause();
-                if (connected) {
-                    socket.emit(PAUSE, { roomId });
-                }
             } else {
                 audioRef.current.play();
-                if (connected) {
-                    socket.emit(PLAY, { roomId });
-                }
             }
         }
     }
@@ -188,12 +186,12 @@ export const Player = () => {
             hls.loadSource(song.url);
             hls.attachMedia(audio.current);
             hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                audio.current?.play();
+                jam.onSourceReady();
             });
         } else if (audio.current.canPlayType('application/vnd.apple.mpegurl')) {
             audio.current.src = song.url;
             audio.current.addEventListener('loadedmetadata', () => {
-                audio.current?.play();
+                jam.onSourceReady();
             });
         }
     }
@@ -202,7 +200,7 @@ export const Player = () => {
 
         const updateData = async () => {
             try {
-                if (data?.isActive) {
+                if (data?.isActive || useJam.getState().state) {
                     if (current && audioRef.current) {
                         hlsPlayer(current, audioRef);
                         if (!isLoading && !data.privateSession) {
@@ -263,12 +261,12 @@ export const Player = () => {
 
 
     const seekTime = (num: number) => {
-        if (audioRef.current) {
+        if (audioRef.current && !jam.isListener) {
             audioRef.current.currentTime = num;
             setCurrentTime(num);
-            if (connected) {
-                socket.emit(SEEK, { roomId, time: num });
-            }
+        }
+        if (jam.isActive) {
+            jam.seek(num);
         }
     }
 
@@ -287,39 +285,14 @@ export const Player = () => {
         }
     }
 
-    useEffect(() => {
-
-        const handleSeekEvent = (payload: { roomId: string, time: number }) => {
-            if (audioRef.current) {
-                audioRef.current.currentTime = payload.time;
-                setCurrentTime(payload.time);
-            }
+    const handleTrackEnd = () => {
+        if (!isAdPlaying && jam.isActive) {
+            captureAndSendHistory();
+            jam.trackEnded();
+            return;
         }
-
-        const handlePlayEvent = () => {
-            if (audioRef.current) {
-                audioRef.current.play();
-            }
-        }
-
-        const handlePauseEvent = () => {
-            if (audioRef.current) {
-                audioRef.current.pause();
-            }
-        }
-
-        socket.on(PAUSE, handlePauseEvent);
-        socket.on(PLAY, handlePlayEvent);
-        socket.on(SEEK, handleSeekEvent);
-
-        return () => {
-            socket.off(PAUSE, handlePauseEvent);
-            socket.off(PLAY, handlePlayEvent);
-            socket.off(SEEK, handleSeekEvent);
-        }
-
-    }, []);
-
+        handleOnEnd();
+    }
 
     const handleOnEnd = () => {
         if (isAdPlaying) {
@@ -328,9 +301,6 @@ export const Player = () => {
         }
         captureAndSendHistory();
         deQueue();
-        if (connected) {
-            socket.emit(DEQUEUE, { roomId });
-        }
     }
 
     return (
@@ -342,7 +312,7 @@ export const Player = () => {
                             "cursor-pointer h-5",
                             data?.isActive === false && "md:cursor-not-allowed"
                         )}
-                        value={[currentTime]}
+                        value={[displayTime]}
                         step={1}
                         max={isAdPlaying ? (ad?.duration || 1) : (current?.duration || 1)}
                         onValueChange={(e) => seekTime(e[0])}
@@ -361,14 +331,11 @@ export const Player = () => {
                             }
                         </div>
                         <div className="w-full flex items-center justify-center gap-x-5 lg:gap-x-6">
-                            <span className="w-8 text-sm text-zinc-300">{songLength(Math.floor(currentTime))}</span>
+                            <span className="w-8 text-sm text-zinc-300">{songLength(Math.floor(displayTime))}</span>
                             <button
                                 onClick={() => {
                                     captureAndSendHistory();
                                     pop();
-                                    if (connected) {
-                                        socket.emit(POP, { roomId });
-                                    }
                                 }}
                                 disabled={data?.isActive === false}
                                 className="focus:outline-none"
@@ -404,22 +371,18 @@ export const Player = () => {
                         <div className="w-full flex items-center justify-end gap-x-3 lg:gap-x-6">
                             <LikeButton id={current?.id} className="h-6 w-6" disabled={isAdPlaying} />
                             <button
-                                disabled={connected}
                                 onClick={shuffle}
-                                className={cn(
-                                    "focus:outline-none outline-none cursor-pointer",
-                                    connected && "cursor-not-allowed"
-                                )}
+                                className="focus:outline-none outline-none cursor-pointer"
                             >
                                 <ShuffleIcon />
                             </button>
                             <AiShuffleButton className="max-lg:hidden shrink-0" />
                             <button
                                 onClick={toggleRepeat}
-                                disabled={connected}
+                                disabled={jam.isActive}
                                 className={cn(
                                     "focus:outline-none outline-none cursor-pointer",
-                                    connected && "cursor-not-allowed"
+                                    jam.isActive && "cursor-not-allowed"
                                 )}
                             >
                                 <RepeatIcon className="h-6 w-6 text-white" />
@@ -449,7 +412,7 @@ export const Player = () => {
                     style={{ background: isAdPlaying ? `${ad?.image}` : `${current?.album.color}` }}
                 >
                     <Slider
-                        value={[currentTime]}
+                        value={[displayTime]}
                         step={1}
                         max={isAdPlaying ? (ad?.duration || 1) : (current?.duration || 1)}
                     />
@@ -491,14 +454,15 @@ export const Player = () => {
                     setPlay(false);
                     setIsPlaying(false);
                 }}
-                onEnded={handleOnEnd}
+                onEnded={handleTrackEnd}
                 onLoadedMetadata={() => handleUpdateMetadata()}
                 onTimeUpdate={handleTimeUpdate}
-                loop={repeat}
+                loop={repeat && !jam.isActive}
                 muted={mute}
                 title={current?.name}
                 className="h-0 w-0 sr-only"
-                autoPlay
+                autoPlay={!jam.isActive}
+                onCanPlay={() => setMetadataLoading(false)}
                 onWaiting={() => setMetadataLoading(true)}
                 onPlaying={() => {
                     setMetadataLoading(false);
@@ -510,14 +474,14 @@ export const Player = () => {
             >
             </audio>
             <SongSheet
-                currentTime={currentTime}
+                currentTime={displayTime}
                 seekTime={seekTime}
                 togglePlay={togglePlay}
                 Icon={Icon}
                 RepeatIcon={RepeatIcon}
                 toggleRepeat={toggleRepeat}
                 active={data?.isActive}
-                play={play}
+                play={isPlayingNow}
                 handleOnEnd={handleOnEnd}
                 isAdPlaying={isAdPlaying}
                 ad={ad}
@@ -525,7 +489,7 @@ export const Player = () => {
             <PlayerShortCutProvider
                 onClick={togglePlay}
                 audioRef={audioRef}
-                play={play}
+                play={isPlayingNow}
             />
         </>
     )

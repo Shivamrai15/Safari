@@ -12,9 +12,6 @@ import { Audio } from "react-loader-spinner";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 import { usePlaylist } from "@/hooks/use-playlist";
-import { useSocket } from "@/hooks/use-socket";
-import { useSocketEvents } from "@/hooks/use-socket-events";
-import { PRIORITY_ENQUEUE } from "@/lib/events";
 import { Song } from "@/types";
 
 interface ListItemProps {
@@ -37,8 +34,6 @@ export const ListItem = ({
     const { current ,priorityEnqueue } = useQueue();
     const session = useSession();
 
-    const socket = useSocket();
-    const { connected, roomId } = useSocketEvents();
     const { isPlaying } = usePlayer();
     const { mutate } = usePlaylist();
 
@@ -60,9 +55,6 @@ export const ListItem = ({
             onClick={()=>{
                 if ( session.status === "authenticated" ) {
                     priorityEnqueue([song]);
-                    if ( connected ) {
-                        socket.emit(PRIORITY_ENQUEUE, { roomId, songs:[song] });
-                    }
                 }
             }}
         >

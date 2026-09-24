@@ -5,15 +5,6 @@ import {
     LikedSongs as LS
 } from "@prisma/client";
 
-export interface User {
-    name : string;
-    email : string;
-    socketId : string;
-    isHost : boolean;
-    image : string|undefined
-}
-
-
 export type Artist = {
     id: string;
     name: string;
@@ -31,15 +22,6 @@ export type Song = S & {
 export type PlaylistSong = PS & { song : Song };
 
 export type LikedSong =  ( LS & { song: Song });
-
-
-export type RoomUser = {
-    name : string;
-    email : string;
-    socketId : string;
-    isHost : boolean;
-    image : string|undefined|null
-}
 
 
 export type HistoryItem = {

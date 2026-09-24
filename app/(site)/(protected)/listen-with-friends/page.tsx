@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useAccount } from "@/hooks/use-account";
 import { Connections } from "@/components/socket/connections";
-import { CreateRoomCard } from "@/components/socket/create-room-card";
+import { JamCard } from "@/components/socket/jam-card";
 
 
 const ListenWithFriendsPage = () => {
@@ -27,7 +27,7 @@ const ListenWithFriendsPage = () => {
     return (
         <main className="w-full px-6 md:px-14 lg:px-20 pb-20 md:pb-10 pt-10 md:pt-20">
             <div className="md:pr-32 space-y-16">
-                <CreateRoomCard/>
+                <JamCard/>
                 <Connections/>
             </div>
         </main>

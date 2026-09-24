@@ -133,6 +133,8 @@ const manageSubscriptionStatusChange = async (
         expand : ["default_payment_method"]
     });
 
+    if ( subscriptions.status !== "active" && subscriptions.status !== "trialing" ) return;
+
     const subscription = await db.subscription.create({
         data : {
             userId : data.id,

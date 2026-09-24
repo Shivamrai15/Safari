@@ -40,9 +40,6 @@ import { usePlaylist } from "@/hooks/use-playlist";
 import { toast } from "sonner";
 import { useAccount } from "@/hooks/use-account";
 import { usePremiumModal } from "@/hooks/use-premium-modal";
-import { useSocket } from "@/hooks/use-socket";
-import { useSocketEvents } from "@/hooks/use-socket-events";
-import { ENQUEUE, PLAYNEXT } from "@/lib/events";
 
 interface SmallDevicesSongOptionsProps {
     song : Song & {
@@ -64,8 +61,6 @@ export const SmallDevicesSongOptions = ({
     const { onOpenPremiumModal } = usePremiumModal();
     const account = useAccount();
 
-    const socket = useSocket();
-    const { connected, roomId } = useSocketEvents();
 
 
     const handleAddSongInPlaylist = async( playlistId : string, name : string )=>{
@@ -146,9 +141,6 @@ export const SmallDevicesSongOptions = ({
                                 disabled = { session.status === "unauthenticated" }
                                 onClick={()=>{
                                     enQueue([song]);
-                                    if( connected ) {
-                                        socket.emit(ENQUEUE ,{roomId, songs:[song]});
-                                    }
                                 }}
                             >
                                 <ListMusic className="mr-3 h-5 w-5" />
@@ -161,9 +153,6 @@ export const SmallDevicesSongOptions = ({
                                 disabled = { session.status === "unauthenticated" || queue.length === 0 }
                                 onClick={()=>{
                                     playNext(song);
-                                    if (connected) {
-                                        socket.emit(PLAYNEXT, {roomId, song});
-                                    }
                                 }}
                             >
                                 <ListVideo className="mr-3 h-5 w-5" />

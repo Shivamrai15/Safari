@@ -8,29 +8,33 @@ datasource db {
 }
 
 model User {
-  id                  String          @id @default(auto()) @map("_id") @db.ObjectId
+  id                  String             @id @default(auto()) @map("_id") @db.ObjectId
   name                String?
-  email               String          @unique
+  email               String             @unique
   password            String?
   image               String?
   accountVerified     DateTime?
   emailVerified       DateTime?
-  twoFactorEnabled    Boolean         @default(false)
+  twoFactorEnabled    Boolean            @default(false)
   twoFactorSecret     String?
-  showRecommendations Boolean         @default(true)
+  showRecommendations Boolean            @default(true)
   history             History[]
   accounts            Account[]
-  privateSession      Boolean         @default(false)
+  privateSession      Boolean            @default(false)
   sessions            Session[]
   playlists           PlayList[]
   likedSongs          LikedSongs[]
-  followingIds        String[]        @db.ObjectId
-  following           Artist[]        @relation(fields: [followingIds], references: [id])
+  followingIds        String[]           @db.ObjectId
+  following           Artist[]           @relation(fields: [followingIds], references: [id])
   customer            Customer?
   Authenticator       Authenticator[]
   autoPlaylists       AutoPlaylist[]
   dailyMixes          DailyMix[]
   notifications       Notification[]
+  deviceTokens        DeviceToken[]
+  playlistMemberships PlaylistMember[]
+  playlistActivities  PlaylistActivity[]
+  addedPlaylistSongs  PlaylistSong[]     @relation("PlaylistSongAddedBy")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -107,6 +111,8 @@ model Song {
   hasLyrics         Boolean?
 
   @@index([albumId, name])
+  @@index([artistIds])
+  @@index([artistIds, name, id])
 }
 
 model LikedSongs {
@@ -148,6 +154,10 @@ model PlayList {
   user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   songs       PlaylistSong[]
 
+  isCollaborative Boolean?           @default(false)
+  members         PlaylistMember[]
+  activities      PlaylistActivity[]
+
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
   archivedAt DateTime?
@@ -161,10 +171,72 @@ model PlaylistSong {
   song       Song     @relation(fields: [songId], references: [id], onDelete: Cascade)
   playlistId String   @db.ObjectId
   playlist   PlayList @relation(fields: [playlistId], references: [id], onDelete: Cascade)
+  addedById  String?  @db.ObjectId
+  addedBy    User?    @relation("PlaylistSongAddedBy", fields: [addedById], references: [id], onDelete: SetNull)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
   @@unique([songId, playlistId])
+}
+
+enum PlaylistRole {
+  ADMIN
+  COLLABORATOR
+}
+
+enum PlaylistMemberStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+}
+
+enum PlaylistMemberDirection {
+  INVITE
+  REQUEST
+}
+
+model PlaylistMember {
+  id          String                  @id @default(auto()) @map("_id") @db.ObjectId
+  playlistId  String                  @db.ObjectId
+  playlist    PlayList                @relation(fields: [playlistId], references: [id], onDelete: Cascade)
+  userId      String                  @db.ObjectId
+  user        User                    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role        PlaylistRole            @default(COLLABORATOR)
+  status      PlaylistMemberStatus    @default(PENDING)
+  direction   PlaylistMemberDirection
+  invitedById String?                 @db.ObjectId
+  respondedAt DateTime?
+  createdAt   DateTime                @default(now())
+  updatedAt   DateTime                @updatedAt
+
+  @@unique([playlistId, userId])
+  @@index([userId, status])
+}
+
+enum PlaylistActivityType {
+  SONG_ADDED
+  SONG_REMOVED
+  DETAILS_UPDATED
+  MEMBER_INVITED
+  MEMBER_REQUESTED
+  MEMBER_JOINED
+  MEMBER_DECLINED
+  MEMBER_LEFT
+  MEMBER_REMOVED
+  ROLE_CHANGED
+}
+
+model PlaylistActivity {
+  id         String               @id @default(auto()) @map("_id") @db.ObjectId
+  playlistId String               @db.ObjectId
+  playlist   PlayList             @relation(fields: [playlistId], references: [id], onDelete: Cascade)
+  actorId    String               @db.ObjectId
+  actor      User                 @relation(fields: [actorId], references: [id], onDelete: Cascade)
+  type       PlaylistActivityType
+  payload    Json?
+  createdAt  DateTime             @default(now())
+
+  @@index([playlistId, createdAt])
 }
 
 model History {
@@ -189,6 +261,7 @@ model View {
 
   @@unique([songId, userId])
   @@index([songId])
+  @@index([userId])
 }
 
 model Genre {
@@ -452,6 +525,10 @@ enum NotificationType {
   INFO
   WARNING
   ALERT
+  PLAYLIST_INVITE
+  PLAYLIST_REQUEST
+  PLAYLIST_UPDATE
+  JAM_INVITE
 }
 
 model Notification {
@@ -466,9 +543,22 @@ model Notification {
   appIcon      String?
   webActionUrl String?
   appActionUrl String?
+  data         Json?
   read         Boolean          @default(false)
   createdAt    DateTime         @default(now())
   updatedAt    DateTime         @updatedAt
+
+  @@index([userId])
+}
+
+model DeviceToken {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  platform  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([userId])
 }

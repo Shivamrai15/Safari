@@ -13,9 +13,6 @@ import { Album, Song } from "@prisma/client";
 import { Ellipsis, ListMusic, Share } from "lucide-react";
 import { SlOptionsVertical } from "react-icons/sl";
 
-import { useSocket } from "@/hooks/use-socket";
-import { useSocketEvents } from "@/hooks/use-socket-events";
-import { ENQUEUE } from "@/lib/events";
 
 
 interface OptionsProps {
@@ -31,10 +28,8 @@ export const Options = ({
 } : OptionsProps ) => {
     
     const session = useSession();
-    const socket = useSocket();
 
     const { enQueue } = useQueue();
-    const { connected, roomId } = useSocketEvents();
 
     const share = async ( url: string , type : "song"|"album"|"artist"|"playlist" ) => {
         if ( navigator ) {
@@ -62,9 +57,6 @@ export const Options = ({
                     disabled = { session.status === "unauthenticated" }
                     onClick={()=>{
                         enQueue(songs);
-                        if ( connected ) {
-                            socket.emit(ENQUEUE, { roomId, songs });
-                        }
                     }}
                 >
                     <ListMusic className="h-5 w-5 mr-3"/>

@@ -9,10 +9,8 @@ import { songLength } from "@/lib/utils";
 import { SongOptions } from "./song-options";
 import { SmallDevicesSongOptions } from "./small-devices-song-options";
 import { useQueue } from "@/hooks/use-queue";
+import { useJam } from "@/hooks/use-jam";
 import { usePlayer } from "@/hooks/use-player";
-import { useSocket } from "@/hooks/use-socket";
-import { useSocketEvents } from "@/hooks/use-socket-events";
-import { PRIORITY_ENQUEUE } from "@/lib/events";
 import { AccountResponse, Song } from "@/types";
 import { useAccount } from "@/hooks/use-account";
 
@@ -30,11 +28,9 @@ export const ListItem = ({
 
     const router = useRouter();
     const session = useSession();
-    const socket = useSocket();
     const { priorityEnqueue, current, queue, enQueue } = useQueue();
     const { data, isLoading } : { data: AccountResponse, isLoading: boolean } = useAccount();
     const { isPlaying } = usePlayer();
-    const { connected, roomId } = useSocketEvents();
 
     const handlePlay = async ()=>{
         if ( !session.data ) {
@@ -42,10 +38,7 @@ export const ListItem = ({
             return;
         }
         priorityEnqueue([song]);
-        if ( connected ) {
-            socket.emit(PRIORITY_ENQUEUE, { roomId, songs:[song] });
-        } 
-        else if (queue.length==0 && !isLoading && data && data.showRecommendations){
+        if (!useJam.getState().state && queue.length==0 && !isLoading && data && data.showRecommendations){
             try {
                 const response = await axios.get(`/api/v1/song/recommendations?id=${song.id}`);
                 const recommendations = response.data as Song[];

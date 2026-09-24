@@ -14,9 +14,6 @@ import { usePlayer } from '@/hooks/use-player';
 import { useQueue } from '@/hooks/use-queue';
 import { FaPause, FaPlay } from 'react-icons/fa6';
 import { SongOptions } from '@/components/song/song-options';
-import { useSocket } from '@/hooks/use-socket';
-import { useSocketEvents } from '@/hooks/use-socket-events';
-import { PRIORITY_ENQUEUE } from '@/lib/events';
 import { MetadataModal } from '../modals/metadata';
 
 
@@ -42,8 +39,6 @@ export const Header = ({
     const [isOpen, setIsOpen] = useState(false);
     const { current, priorityEnqueue } = useQueue();
     const { isPlaying } = usePlayer();
-    const socket = useSocket();
-    const { connected, roomId } = useSocketEvents();
 
     return (
         <header className="px-4 md:px-20" style={{background :  `linear-gradient(160deg, ${song.album.color} 40%, #111 30%)` }}>
@@ -96,9 +91,6 @@ export const Header = ({
                                             return;
                                         } 
                                         priorityEnqueue([song]);
-                                        if ( connected ) {
-                                            socket.emit(PRIORITY_ENQUEUE, { roomId, songs:[song] });
-                                        }
                                     }}
                                 >
                                     {

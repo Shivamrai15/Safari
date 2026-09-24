@@ -7,12 +7,10 @@ import { cn, songLength } from "@/lib/utils";
 import { SongOptions } from "./song-options";
 import { SmallDevicesSongOptions } from "./small-devices-song-options";
 import { useQueue } from "@/hooks/use-queue";
+import { useJam } from "@/hooks/use-jam";
 import { Audio } from "react-loader-spinner";
 import { usePlayer } from "@/hooks/use-player";
 import { useSession } from "next-auth/react";
-import { useSocket } from "@/hooks/use-socket";
-import { useSocketEvents } from "@/hooks/use-socket-events";
-import { PRIORITY_ENQUEUE } from "@/lib/events";
 import { AccountResponse, Song } from "@/types";
 import { useAccount } from "@/hooks/use-account";
 
@@ -31,8 +29,6 @@ export const SongItem = ({
     const { isPlaying } = usePlayer();
     const { data, isLoading } : { data: AccountResponse, isLoading: boolean } = useAccount();
 
-    const socket = useSocket();
-    const { connected, roomId } = useSocketEvents();
 
     const handlePlay = async()=>{
         if(session.status === "unauthenticated") {
@@ -40,10 +36,7 @@ export const SongItem = ({
             return;
         }
         priorityEnqueue([song]);
-        if ( connected ) {
-            socket.emit(PRIORITY_ENQUEUE, { roomId, songs:[song] });
-        }
-        else if (queue.length==0 && !isLoading && data && data.showRecommendations){
+        if (!useJam.getState().state && queue.length==0 && !isLoading && data && data.showRecommendations){
             try {
                 const response = await axios.get(`/api/v1/song/recommendations?id=${song.id}`);
                 const recommendations = response.data as Song[];

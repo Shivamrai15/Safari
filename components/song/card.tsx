@@ -10,9 +10,6 @@ import { cn } from "@/lib/utils";
 import { useQueue } from "@/hooks/use-queue";
 import { usePlayer } from "@/hooks/use-player";
 import { FaPause, FaPlay } from "react-icons/fa6";
-import { useSocket } from "@/hooks/use-socket";
-import { useSocketEvents } from "@/hooks/use-socket-events";
-import { PRIORITY_ENQUEUE } from "@/lib/events";
 import { motion } from "framer-motion";
 
 interface CardProps {
@@ -26,11 +23,9 @@ export const Card = ({
 
     const router = useRouter();
     const session = useSession();
-    const socket = useSocket();
 
     const { isPlaying } = usePlayer();
     const { current, priorityEnqueue } = useQueue();
-    const { connected, roomId } = useSocketEvents();
     
     
     return (
@@ -64,9 +59,6 @@ export const Card = ({
                                     return;
                                 } 
                                 priorityEnqueue([song]);
-                                if ( connected ) {
-                                    socket.emit(PRIORITY_ENQUEUE, { roomId, songs:[song] });
-                                }
                             }}
                         >
                             {

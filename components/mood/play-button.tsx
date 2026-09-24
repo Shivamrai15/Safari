@@ -5,12 +5,9 @@ import { useSession } from "next-auth/react";
 import { useMoodStack } from "@/hooks/use-mood-stack";
 import { usePlayer } from "@/hooks/use-player";
 import { useQueue } from "@/hooks/use-queue";
-import { useSocket } from "@/hooks/use-socket";
-import { useSocketEvents } from "@/hooks/use-socket-events";
 
 import axios from "axios";
 import { Album, Song } from "@prisma/client";
-import { CLEAR, PRIORITY_ENQUEUE } from "@/lib/events";
 import { toast } from "sonner";
 import { FaPause, FaPlay } from "react-icons/fa";
 
@@ -23,9 +20,7 @@ export const PlayButton = ({
 }: PlayButtonProps) => {
 
     const session = useSession();
-    const socket = useSocket();
     const { isPlaying } = usePlayer();
-    const { connected, roomId } = useSocketEvents();
     const { current, priorityEnqueue, clear, queue, stack } = useQueue();
     const { data, setData, uuid, setUuid, clearUuid } = useMoodStack();
     const [ loading, setLoading ] = useState(false)
@@ -55,10 +50,6 @@ export const PlayButton = ({
             setUuid(id);
             clear();
             priorityEnqueue(response_data);
-            if ( connected ) {
-                socket.emit(CLEAR, {roomId});
-                socket.emit(PRIORITY_ENQUEUE, {roomId, songs:response_data});
-            }
 
         } catch (error) {
             console.error(error);

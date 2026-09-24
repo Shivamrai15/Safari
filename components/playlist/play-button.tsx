@@ -8,9 +8,6 @@ import { FaPause, FaPlay } from "react-icons/fa";
 import { Album, Song } from "@prisma/client";
 import axios from "axios";
 import { usePlaylistStack } from "@/hooks/use-playlist-stack";
-import { useSocket } from "@/hooks/use-socket";
-import { useSocketEvents } from "@/hooks/use-socket-events";
-import { CLEAR, PRIORITY_ENQUEUE } from "@/lib/events";
 
 interface PlayButtonProps {
     id :  string;
@@ -21,9 +18,7 @@ export const PlayButton = ({
 } : PlayButtonProps ) => {
     
     const session = useSession();
-    const socket = useSocket();
     const { isPlaying } = usePlayer();
-    const { connected, roomId } = useSocketEvents();
     const { current, priorityEnqueue, clear, queue, stack } = useQueue();
     const [ loading, setLoading ] = useState(false);
     const { data, setData, uuid, setUuid, clearUuid } = usePlaylistStack();
@@ -51,10 +46,6 @@ export const PlayButton = ({
             setUuid(id);
             clear();
             priorityEnqueue(response_data);
-            if ( connected ) {
-                socket.emit(CLEAR, {roomId});
-                socket.emit(PRIORITY_ENQUEUE, {roomId, songs:response_data});
-            }
 
         } catch (error) {
             console.error(error);

@@ -1,18 +1,23 @@
 "use client";
-import { RoomUser } from "@/types";
+import { ReactNode } from "react";
 import {
     Avatar,
     AvatarFallback,
     AvatarImage
 } from "@/components/ui/avatar";
 import { getShortName } from "@/lib/utils";
+import { JamMember } from "@/lib/jam-types";
 
 interface UserCardInterface {
-    user : RoomUser;
+    user : JamMember;
+    label?: string;
+    children?: ReactNode;
 }
 
 const UserCard = ({
-    user
+    user,
+    label,
+    children
 }: UserCardInterface) => {
     return (
         <li className="relative group">
@@ -24,7 +29,11 @@ const UserCard = ({
                         <AvatarFallback>{getShortName(user.name)}</AvatarFallback>
                     </Avatar>
                 </div>
-                <h3 className="text-zinc-200 font-medium truncate sm:text-center">{user.name}</h3>
+                <div className="flex-1 sm:text-center">
+                    <h3 className="text-zinc-200 font-medium truncate">{user.name}</h3>
+                    {label && <p className="text-xs text-red-400 font-semibold">{label}</p>}
+                </div>
+                {children}
             </div>
             <div className="max-sm:hidden pointer-events-none absolute inset-px rounded-lg shadow ring-1 ring-white/10" />
         </li>

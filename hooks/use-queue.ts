@@ -1,8 +1,9 @@
 import { create } from 'zustand';
 import { Album, Song } from '@prisma/client';
+import { getJamQueueHandler } from '@/lib/jam-queue-bridge';
 
 interface UseQueueProps {
-    
+
     queue : (Song & { album : Album })[];
     stack : (Song & { album : Album })[];
     current : ( Song & { album : Album } ) | null;
@@ -20,11 +21,13 @@ interface UseQueueProps {
 }
 
 export const useQueue = create<UseQueueProps>((set, get)=>({
-   
+
         queue : [],
         stack : [],
         current : null,
         enQueue : ( songs : ( Song & { album : Album } )[], clear?: boolean ) => {
+            const jam = getJamQueueHandler();
+            if ( jam ) return jam.enQueue(songs, clear);
             if (clear) {
                 set({ queue: songs, stack : [], current : null  });
             } else {
@@ -34,6 +37,8 @@ export const useQueue = create<UseQueueProps>((set, get)=>({
             }
         },
         deQueue : () => {
+            const jam = getJamQueueHandler();
+            if ( jam ) return jam.deQueue();
             const queueList = [...get().queue];
             if ( queueList.length > 0 ) {
                 const deQueuedSong = queueList.shift();
@@ -44,6 +49,8 @@ export const useQueue = create<UseQueueProps>((set, get)=>({
         },
         push : ( song : ( Song & { album : Album } ) ) => set({ stack : [...get().stack, song] }),
         pop : () => {
+            const jam = getJamQueueHandler();
+            if ( jam ) return jam.pop();
             const stackList = [...get().stack];
             if ( stackList.length > 0 ) {
                 const popedSong = stackList.pop();
@@ -53,6 +60,8 @@ export const useQueue = create<UseQueueProps>((set, get)=>({
             }
         },
         priorityEnqueue : ( songs : ( Song & { album : Album } )[] ) => {
+            const jam = getJamQueueHandler();
+            if ( jam ) return jam.priorityEnqueue(songs);
             const currentQueue = get().queue;
             const uniqueSongs = songs.filter(song => !currentQueue.some(qSong => qSong.id === song.id));
             if ( songs.length === 1 && uniqueSongs.length === 0 ) {
@@ -71,8 +80,13 @@ export const useQueue = create<UseQueueProps>((set, get)=>({
                 }
             }
         },
-        clear : () => set({ queue: [], stack : [], current: null }),
+        clear : () => {
+            if ( getJamQueueHandler() ) return;
+            set({ queue: [], stack : [], current: null });
+        },
         shiftToTopOfQueue : (id : string) => {
+            const jam = getJamQueueHandler();
+            if ( jam ) return jam.shiftToTopOfQueue(id);
             const queueList = [...get().queue];
             const index = queueList.findIndex((song)=>song.id === id);
             if ( index !== -1 ) {
@@ -92,14 +106,21 @@ export const useQueue = create<UseQueueProps>((set, get)=>({
 
             queueList.splice(source, 1);
             queueList.splice(destination, 0, songToMove);
+
+            const jam = getJamQueueHandler();
+            if ( jam ) return jam.reorderUpcoming(queueList.slice(1).map((song)=>song.id));
             set({queue : queueList});
         },
         remove : ( id : string ) => {
+            const jam = getJamQueueHandler();
+            if ( jam ) return jam.remove(id);
             const queueList = [...get().queue];
             const filteredQueue = queueList.filter((item)=>item.id!==id);
             set({ queue: filteredQueue })
         },
         shuffle : () => {
+            const jam = getJamQueueHandler();
+            if ( jam ) return jam.shuffle();
             const queueList = [...get().queue];
             if ( queueList.length > 2 ) {
                 const currentItem = queueList.shift();
@@ -113,6 +134,8 @@ export const useQueue = create<UseQueueProps>((set, get)=>({
             }
         },
         playNext : ( song : ( Song & { album : Album } ) ) => {
+            const jam = getJamQueueHandler();
+            if ( jam ) return jam.playNext(song);
             const remainingSongs = get().queue.slice(1);
             const songs = [ get().queue[0], song, ...remainingSongs ];
             set({ queue : songs });
